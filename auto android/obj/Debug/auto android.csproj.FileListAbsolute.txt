@@ -1,0 +1,49 @@
+C:\Users\thuan\source\repos\auto android\auto android\bin\Debug\auto android.exe.config
+C:\Users\thuan\source\repos\auto android\auto android\bin\Debug\auto android.exe
+C:\Users\thuan\source\repos\auto android\auto android\bin\Debug\auto android.pdb
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto android.csprojAssemblyReference.cache
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto_android.Form1.resources
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto_android.Properties.Resources.resources
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto android.csproj.GenerateResource.cache
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto android.csproj.CoreCompileInputs.cache
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto android.exe
+C:\Users\thuan\source\repos\auto android\auto android\obj\Debug\auto android.pdb
+E:\project\autoandroid\project\auto android\bin\Debug\x64\concrt140.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\cvextern.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\msvcp140.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\msvcp140_1.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\msvcp140_2.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\msvcp140_codecvt_ids.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\opencv_videoio_ffmpeg430_64.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\vcruntime140.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x64\vcruntime140_1.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\concrt140.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\cvextern.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\msvcp140.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\msvcp140_1.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\msvcp140_2.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\msvcp140_codecvt_ids.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\opencv_videoio_ffmpeg430.dll
+E:\project\autoandroid\project\auto android\bin\Debug\x86\vcruntime140.dll
+E:\project\autoandroid\project\auto android\bin\Debug\auto android.exe.config
+E:\project\autoandroid\project\auto android\bin\Debug\auto android.exe
+E:\project\autoandroid\project\auto android\bin\Debug\auto android.pdb
+E:\project\autoandroid\project\auto android\bin\Debug\Emgu.CV.Platform.NetFramework.dll
+E:\project\autoandroid\project\auto android\bin\Debug\Emgu.CV.Platform.NetStandard.dll
+E:\project\autoandroid\project\auto android\bin\Debug\log4net.dll
+E:\project\autoandroid\project\auto android\bin\Debug\Otp.NET.dll
+E:\project\autoandroid\project\auto android\bin\Debug\RandomNameGeneratorLibrary.dll
+E:\project\autoandroid\project\auto android\bin\Debug\zxing.dll
+E:\project\autoandroid\project\auto android\bin\Debug\zxing.pdb
+E:\project\autoandroid\project\auto android\bin\Debug\zxing.presentation.dll
+E:\project\autoandroid\project\auto android\bin\Debug\zxing.presentation.pdb
+E:\project\autoandroid\project\auto android\bin\Debug\WebDriver.dll
+E:\project\autoandroid\project\auto android\bin\Debug\WebDriver.xml
+E:\project\autoandroid\project\auto android\obj\Debug\auto_android.Main.resources
+E:\project\autoandroid\project\auto android\obj\Debug\auto_android.Properties.Resources.resources
+E:\project\autoandroid\project\auto android\obj\Debug\auto android.csproj.GenerateResource.cache
+E:\project\autoandroid\project\auto android\obj\Debug\auto android.csproj.CoreCompileInputs.cache
+E:\project\autoandroid\project\auto android\obj\Debug\auto android.csproj.CopyComplete
+E:\project\autoandroid\project\auto android\obj\Debug\auto android.exe
+E:\project\autoandroid\project\auto android\obj\Debug\auto android.pdb
+E:\project\autoandroid\project\auto android\obj\Debug\auto android.csprojAssemblyReference.cache

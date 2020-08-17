@@ -1,0 +1,555 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.7.2": {
+      "Emgu.CV/4.3.0.3890": {
+        "type": "package",
+        "compile": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        },
+        "runtime": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        }
+      },
+      "Emgu.CV.runtime.windows/4.3.0.3890": {
+        "type": "package",
+        "dependencies": {
+          "Emgu.CV": "[4.3.0.3890]"
+        },
+        "build": {
+          "build/Emgu.CV.runtime.windows.targets": {}
+        }
+      },
+      "log4net/2.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net45-full/log4net.dll": {}
+        },
+        "runtime": {
+          "lib/net45-full/log4net.dll": {}
+        }
+      },
+      "Otp.NET/1.2.2": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "System"
+        ],
+        "compile": {
+          "lib/net45/Otp.NET.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Otp.NET.dll": {}
+        }
+      },
+      "RandomNameGeneratorLibrary/1.2.2": {
+        "type": "package",
+        "compile": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        }
+      },
+      "ZXing.Net/0.16.5": {
+        "type": "package",
+        "compile": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        },
+        "runtime": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win": {
+      "Emgu.CV/4.3.0.3890": {
+        "type": "package",
+        "compile": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        },
+        "runtime": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        }
+      },
+      "Emgu.CV.runtime.windows/4.3.0.3890": {
+        "type": "package",
+        "dependencies": {
+          "Emgu.CV": "[4.3.0.3890]"
+        },
+        "build": {
+          "build/Emgu.CV.runtime.windows.targets": {}
+        }
+      },
+      "log4net/2.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net45-full/log4net.dll": {}
+        },
+        "runtime": {
+          "lib/net45-full/log4net.dll": {}
+        }
+      },
+      "Otp.NET/1.2.2": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "System"
+        ],
+        "compile": {
+          "lib/net45/Otp.NET.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Otp.NET.dll": {}
+        }
+      },
+      "RandomNameGeneratorLibrary/1.2.2": {
+        "type": "package",
+        "compile": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        }
+      },
+      "ZXing.Net/0.16.5": {
+        "type": "package",
+        "compile": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        },
+        "runtime": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x64": {
+      "Emgu.CV/4.3.0.3890": {
+        "type": "package",
+        "compile": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        },
+        "runtime": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        }
+      },
+      "Emgu.CV.runtime.windows/4.3.0.3890": {
+        "type": "package",
+        "dependencies": {
+          "Emgu.CV": "[4.3.0.3890]"
+        },
+        "build": {
+          "build/Emgu.CV.runtime.windows.targets": {}
+        }
+      },
+      "log4net/2.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net45-full/log4net.dll": {}
+        },
+        "runtime": {
+          "lib/net45-full/log4net.dll": {}
+        }
+      },
+      "Otp.NET/1.2.2": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "System"
+        ],
+        "compile": {
+          "lib/net45/Otp.NET.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Otp.NET.dll": {}
+        }
+      },
+      "RandomNameGeneratorLibrary/1.2.2": {
+        "type": "package",
+        "compile": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        }
+      },
+      "ZXing.Net/0.16.5": {
+        "type": "package",
+        "compile": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        },
+        "runtime": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x86": {
+      "Emgu.CV/4.3.0.3890": {
+        "type": "package",
+        "compile": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        },
+        "runtime": {
+          "lib/net461/Emgu.CV.Platform.NetFramework.dll": {},
+          "lib/net461/Emgu.CV.Platform.NetStandard.dll": {}
+        }
+      },
+      "Emgu.CV.runtime.windows/4.3.0.3890": {
+        "type": "package",
+        "dependencies": {
+          "Emgu.CV": "[4.3.0.3890]"
+        },
+        "build": {
+          "build/Emgu.CV.runtime.windows.targets": {}
+        }
+      },
+      "log4net/2.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net45-full/log4net.dll": {}
+        },
+        "runtime": {
+          "lib/net45-full/log4net.dll": {}
+        }
+      },
+      "Otp.NET/1.2.2": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "System"
+        ],
+        "compile": {
+          "lib/net45/Otp.NET.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Otp.NET.dll": {}
+        }
+      },
+      "RandomNameGeneratorLibrary/1.2.2": {
+        "type": "package",
+        "compile": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        },
+        "runtime": {
+          "lib/net40/RandomNameGeneratorLibrary.dll": {}
+        }
+      },
+      "ZXing.Net/0.16.5": {
+        "type": "package",
+        "compile": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        },
+        "runtime": {
+          "lib/net47/zxing.dll": {},
+          "lib/net47/zxing.presentation.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Emgu.CV/4.3.0.3890": {
+      "sha512": "yrENt3ycXeht1bRkPGY05ZpnfywCcL71iVOtBPn9R8x07zSlEOOeuA4kaKX6ZhrSp+J2QXVngUV55igSne9n7w==",
+      "type": "package",
+      "path": "emgu.cv/4.3.0.3890",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Emgu.CV.License.txt",
+        "emgu.cv.4.3.0.3890.nupkg.sha512",
+        "emgu.cv.nuspec",
+        "icon.png",
+        "lib/net461/Emgu.CV.Platform.NetFramework.dll",
+        "lib/net461/Emgu.CV.Platform.NetFramework.xml",
+        "lib/net461/Emgu.CV.Platform.NetStandard.dll",
+        "lib/net461/Emgu.CV.Platform.NetStandard.xml",
+        "lib/netcoreapp3.1/Emgu.CV.Platform.NetCore.dll",
+        "lib/netcoreapp3.1/Emgu.CV.Platform.NetCore.xml",
+        "lib/netcoreapp3.1/Emgu.CV.Platform.NetStandard.dll",
+        "lib/netcoreapp3.1/Emgu.CV.Platform.NetStandard.xml",
+        "lib/netstandard2.0/Emgu.CV.Platform.NetStandard.dll",
+        "lib/netstandard2.0/Emgu.CV.Platform.NetStandard.xml",
+        "lib/xamarinios10/Emgu.CV.Platform.NetStandard.dll",
+        "lib/xamarinios10/Emgu.CV.Platform.NetStandard.xml"
+      ]
+    },
+    "Emgu.CV.runtime.windows/4.3.0.3890": {
+      "sha512": "vvuz7KPB8aTf4nSg1XNClHBDJMVDQoxy32MCx8mat5leSvgc6jaX1JF0ly/w25VMGp1vpiezNuW/QIJPERBm5w==",
+      "type": "package",
+      "path": "emgu.cv.runtime.windows/4.3.0.3890",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Emgu.CV.License.txt",
+        "build/Emgu.CV.runtime.windows.targets",
+        "build/x64/concrt140.dll",
+        "build/x64/cvextern.dll",
+        "build/x64/msvcp140.dll",
+        "build/x64/msvcp140_1.dll",
+        "build/x64/msvcp140_2.dll",
+        "build/x64/msvcp140_codecvt_ids.dll",
+        "build/x64/opencv_videoio_ffmpeg430_64.dll",
+        "build/x64/vcruntime140.dll",
+        "build/x64/vcruntime140_1.dll",
+        "build/x86/concrt140.dll",
+        "build/x86/cvextern.dll",
+        "build/x86/msvcp140.dll",
+        "build/x86/msvcp140_1.dll",
+        "build/x86/msvcp140_2.dll",
+        "build/x86/msvcp140_codecvt_ids.dll",
+        "build/x86/opencv_videoio_ffmpeg430.dll",
+        "build/x86/vcruntime140.dll",
+        "emgu.cv.runtime.windows.4.3.0.3890.nupkg.sha512",
+        "emgu.cv.runtime.windows.nuspec",
+        "icon.png"
+      ]
+    },
+    "log4net/2.0.8": {
+      "sha512": "N41MQGHZImiCfn0cUuSBjZxrcNfIQCuCgQP0rpgB3J/NWponEh3lc1LxJEuIsPAR9Oc1jVvfkNNFCY1C5hf9LA==",
+      "type": "package",
+      "path": "log4net/2.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20-full/log4net.dll",
+        "lib/net20-full/log4net.xml",
+        "lib/net35-client/log4net.dll",
+        "lib/net35-client/log4net.xml",
+        "lib/net35-full/log4net.dll",
+        "lib/net35-full/log4net.xml",
+        "lib/net40-client/log4net.dll",
+        "lib/net40-client/log4net.xml",
+        "lib/net40-full/log4net.dll",
+        "lib/net40-full/log4net.xml",
+        "lib/net45-full/log4net.dll",
+        "lib/net45-full/log4net.xml",
+        "lib/netstandard1.3/log4net.dll",
+        "log4net.2.0.8.nupkg.sha512",
+        "log4net.nuspec"
+      ]
+    },
+    "Otp.NET/1.2.2": {
+      "sha512": "2hrZfkbzeWJ3tNXXt/1beg4IY+nS4F3gIfh4NVFvW0f6Pj51hGpiJ4prBz7Dmrr4ZYrA96rTERVGieZ4xYm7jA==",
+      "type": "package",
+      "path": "otp.net/1.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Otp.NET.dll",
+        "lib/netstandard1.3/Otp.NET.dll",
+        "lib/netstandard2.0/Otp.NET.dll",
+        "otp.net.1.2.2.nupkg.sha512",
+        "otp.net.nuspec"
+      ]
+    },
+    "RandomNameGeneratorLibrary/1.2.2": {
+      "sha512": "Sz9eseIDKZ99yopg4TEAGPVIoGOKWYsWDHIfGQENXlOJYBoIsL68rqe9jrc9yP+/dOYH5RaCag6d8ykaqsbFFw==",
+      "type": "package",
+      "path": "randomnamegeneratorlibrary/1.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/RandomNameGeneratorLibrary.dll",
+        "lib/netstandard1.6/RandomNameGeneratorLibrary.dll",
+        "randomnamegeneratorlibrary.1.2.2.nupkg.sha512",
+        "randomnamegeneratorlibrary.nuspec"
+      ]
+    },
+    "ZXing.Net/0.16.5": {
+      "sha512": "FYZht7J1G8U3l7muiXl+OiBvJ7PkvsQKDgOhqUZe7/Sps7ys+ICWwLoYNygEOLPR476x8tJDB2we8V0a6bbz8A==",
+      "type": "package",
+      "path": "zxing.net/0.16.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid/zxing.monoandroid.dll",
+        "lib/MonoAndroid/zxing.monoandroid.pdb",
+        "lib/MonoAndroid/zxing.monoandroid.xml",
+        "lib/native/zxing.XML",
+        "lib/native/zxing.pdb",
+        "lib/native/zxing.pri",
+        "lib/native/zxing.winmd",
+        "lib/net20-cf/zxing.ce2.0.dll",
+        "lib/net20-cf/zxing.ce2.0.pdb",
+        "lib/net20-cf/zxing.ce2.0.xml",
+        "lib/net20/zxing.XML",
+        "lib/net20/zxing.dll",
+        "lib/net20/zxing.pdb",
+        "lib/net35-cf/zxing.ce3.5.dll",
+        "lib/net35-cf/zxing.ce3.5.pdb",
+        "lib/net35-cf/zxing.ce3.5.xml",
+        "lib/net35/zxing.XML",
+        "lib/net35/zxing.dll",
+        "lib/net35/zxing.pdb",
+        "lib/net40/zxing.XML",
+        "lib/net40/zxing.dll",
+        "lib/net40/zxing.pdb",
+        "lib/net40/zxing.presentation.XML",
+        "lib/net40/zxing.presentation.dll",
+        "lib/net40/zxing.presentation.pdb",
+        "lib/net45/zxing.XML",
+        "lib/net45/zxing.dll",
+        "lib/net45/zxing.pdb",
+        "lib/net45/zxing.presentation.XML",
+        "lib/net45/zxing.presentation.dll",
+        "lib/net45/zxing.presentation.pdb",
+        "lib/net461/zxing.XML",
+        "lib/net461/zxing.dll",
+        "lib/net461/zxing.pdb",
+        "lib/net461/zxing.presentation.XML",
+        "lib/net461/zxing.presentation.dll",
+        "lib/net461/zxing.presentation.pdb",
+        "lib/net47/zxing.XML",
+        "lib/net47/zxing.dll",
+        "lib/net47/zxing.pdb",
+        "lib/net47/zxing.presentation.XML",
+        "lib/net47/zxing.presentation.dll",
+        "lib/net47/zxing.presentation.pdb",
+        "lib/net48/zxing.XML",
+        "lib/net48/zxing.dll",
+        "lib/net48/zxing.pdb",
+        "lib/net48/zxing.presentation.XML",
+        "lib/net48/zxing.presentation.dll",
+        "lib/net48/zxing.presentation.pdb",
+        "lib/netcoreapp3.0/zxing.dll",
+        "lib/netcoreapp3.0/zxing.pdb",
+        "lib/netcoreapp3.0/zxing.xml",
+        "lib/netstandard1.0/zxing.dll",
+        "lib/netstandard1.0/zxing.pdb",
+        "lib/netstandard1.0/zxing.xml",
+        "lib/netstandard1.1/zxing.dll",
+        "lib/netstandard1.1/zxing.pdb",
+        "lib/netstandard1.1/zxing.xml",
+        "lib/netstandard1.3/zxing.dll",
+        "lib/netstandard1.3/zxing.pdb",
+        "lib/netstandard1.3/zxing.xml",
+        "lib/netstandard2.0/zxing.dll",
+        "lib/netstandard2.0/zxing.pdb",
+        "lib/netstandard2.0/zxing.xml",
+        "lib/portable-win+net40+sl4+sl5+wp7+wp71+wp8/zxing.portable.XML",
+        "lib/portable-win+net40+sl4+sl5+wp7+wp71+wp8/zxing.portable.dll",
+        "lib/portable-win+net40+sl4+sl5+wp7+wp71+wp8/zxing.portable.pdb",
+        "lib/sl3-wp/zxing.wp7.0.XML",
+        "lib/sl3-wp/zxing.wp7.0.dll",
+        "lib/sl3-wp/zxing.wp7.0.pdb",
+        "lib/sl4-wp71/zxing.wp7.1.XML",
+        "lib/sl4-wp71/zxing.wp7.1.dll",
+        "lib/sl4-wp71/zxing.wp7.1.pdb",
+        "lib/sl4/zxing.sl4.XML",
+        "lib/sl4/zxing.sl4.dll",
+        "lib/sl4/zxing.sl4.pdb",
+        "lib/sl5/zxing.sl5.XML",
+        "lib/sl5/zxing.sl5.dll",
+        "lib/sl5/zxing.sl5.pdb",
+        "lib/uap10/zxing.dll",
+        "lib/uap10/zxing.pdb",
+        "lib/uap10/zxing.pri",
+        "lib/uap10/zxing.xml",
+        "lib/windows8-managed/zxing.winrt.XML",
+        "lib/windows8-managed/zxing.winrt.dll",
+        "lib/windows8-managed/zxing.winrt.pdb",
+        "lib/windows8/zxing.XML",
+        "lib/windows8/zxing.pdb",
+        "lib/windows8/zxing.pri",
+        "lib/windows8/zxing.winmd",
+        "lib/wp8/zxing.wp8.0.XML",
+        "lib/wp8/zxing.wp8.0.dll",
+        "lib/wp8/zxing.wp8.0.pdb",
+        "zxing.net.0.16.5.nupkg.sha512",
+        "zxing.net.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.7.2": [
+      "Emgu.CV >= 4.3.0.3890",
+      "Emgu.CV.runtime.windows >= 4.3.0.3890",
+      "Otp.NET >= 1.2.2",
+      "RandomNameGeneratorLibrary >= 1.2.2",
+      "ZXing.Net >= 0.16.5",
+      "log4net >= 2.0.8"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\thuan\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "E:\\project\\autoandroid\\project\\auto android\\auto android.csproj",
+      "projectName": "auto android",
+      "projectPath": "E:\\project\\autoandroid\\project\\auto android\\auto android.csproj",
+      "packagesPath": "C:\\Users\\thuan\\.nuget\\packages\\",
+      "outputPath": "E:\\project\\autoandroid\\project\\auto android\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "configFilePaths": [
+        "C:\\Users\\thuan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net472"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net472": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net472": {
+        "dependencies": {
+          "Emgu.CV": {
+            "target": "Package",
+            "version": "[4.3.0.3890, )"
+          },
+          "Emgu.CV.runtime.windows": {
+            "target": "Package",
+            "version": "[4.3.0.3890, )"
+          },
+          "Otp.NET": {
+            "target": "Package",
+            "version": "[1.2.2, )"
+          },
+          "RandomNameGeneratorLibrary": {
+            "target": "Package",
+            "version": "[1.2.2, )"
+          },
+          "ZXing.Net": {
+            "target": "Package",
+            "version": "[0.16.5, )"
+          },
+          "log4net": {
+            "target": "Package",
+            "version": "[2.0.8, )"
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      },
+      "win-x64": {
+        "#import": []
+      },
+      "win-x86": {
+        "#import": []
+      }
+    }
+  }
+}
