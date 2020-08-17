@@ -22,7 +22,12 @@ namespace auto_android.AutoHelper
         private static string INPUT = "adb -s {0} shell input text \"{1}\"";
         private static string KEY = "adb -s {0} shell input keyevent {1}";
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private string _deviceId = string.Empty;
 
+        public AdbHelper(string deviceId)
+        {
+            this._deviceId = deviceId;
+        }
         public static string RunCMD(string cmdCommand)
         {
             string result;

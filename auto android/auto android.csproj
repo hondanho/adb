@@ -61,6 +61,8 @@
     <Compile Include="AutoHelper\QRCode.cs" />
     <Compile Include="AutoHelper\GetTextFromImage.cs" />
     <Compile Include="AutoHelper\ImageScanOpenCV.cs" />
+    <Compile Include="AutoHelper\RegFb.cs" />
+    <Compile Include="AutoHelper\WaitHelper.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="AutoHelper\FunctionHelper.cs" />
     <Compile Include="Main.cs">

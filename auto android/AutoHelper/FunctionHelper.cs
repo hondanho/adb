@@ -1,22 +1,16 @@
 ﻿using auto_android.AutoHelper;
-using RandomNameGeneratorLibrary;
+using log4net;
+using OpenQA.Selenium.Chrome;
+using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
-using System.Threading;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
-using System.Web.Security;
-using log4net;
 using System.Reflection;
-using System.Threading.Tasks;
-using OtpNet;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 
 namespace auto_android
 {
@@ -205,6 +199,34 @@ namespace auto_android
             return Regex.Match(code, @"(?<=secret=)([^\&]+)(?=\&?)").Value;
         }
 
+        public static string GetUserName(string qrPath)
+        {
+            var code = QRCode.DecodeQR(qrPath);
+            return Regex.Match(code, @"(?<=ID:)([^\?]+)(?=\??)").Value;
+        }
+
+        public static string GetUid(string qrPath)
+        {
+            var code = QRCode.DecodeQR(qrPath);
+            return Regex.Match(code, @"(?<=ID:)([^\?]+)(?=\??)").Value;
+        }
+
+        public static string Get2faCurrentScreen(string deviceId)
+        {
+            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
+            AdbHelper.ScreenShot(deviceId, screenPath);
+
+            return Get2fa(screenPath);
+        }
+
+        public static string GetUserNameCurrentScreen(string deviceId)
+        {
+            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
+            AdbHelper.ScreenShot(deviceId, screenPath);
+
+            return GetUserName(screenPath);
+        }
+
         public static string GetTotp(string secret)
         {
             var secretKey = Base32Encoding.ToBytes(secret);
@@ -221,9 +243,7 @@ namespace auto_android
             chromeOptions.AddExcludedArgument("enable-automation");
             chromeOptions.AddAdditionalCapability("useAutomationExtension", false);
             chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
-            chromeOptions.AddArguments("--disable-notifications");
-            chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
-            chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+            chromeOptions.AddUserProfilePreference("credentials_enable_service", true);
             return new ChromeDriver(ChromeDriverService.CreateDefaultService(), chromeOptions);
         }
 
@@ -243,7 +263,18 @@ namespace auto_android
 
         public static string GetRandomMatkhau()
         {
-            return Membership.GeneratePassword(10, 0);
+            var random = new Random();
+            var passwordLength = random.Next(14, 18);
+            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ!@$?_-";
+            char[] chars = new char[passwordLength];
+            Random rd = new Random();
+
+            for (int i = 0; i < passwordLength; i++)
+            {
+                chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
+            }
+
+            return new string(chars);
         }
 
         public static string GetRandomYear()
@@ -265,133 +296,15 @@ namespace auto_android
                 return day.ToString();
             }
         }
-        public static Point? CheckImgExist(string deviceId, string subPath)
+
+        public static Point? IsExistImg(string deviceId, string subPath)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
             AdbHelper.ScreenShot(deviceId, screenPath);
 
-            return ImageScanOpenCV.FindOutPoint(screenPath, subPath);
-        }
-
-        public static TResult WaitTimeout<TResult>(Func<TResult> task, TimeSpan timeSpan)
-        {
-            var success = default(TResult);
-            int elapsed = 0;
-
-            while (elapsed < timeSpan.TotalMilliseconds)
-            {
-                Thread.Sleep(1000);
-                elapsed += 1000;
-                success = task.Invoke();
-
-                if (success != null)
-                {
-                    var isBreak = true;
-                    foreach (var pi in success.GetType().GetProperties())
-                    {
-                        if (pi.GetType() == typeof(bool))
-                        {
-                            bool val = (bool)pi.GetValue(success);
-                            if (!val)
-                            {
-                                isBreak = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (isBreak) break;
-                }
-            }
-            return success;
-        }
-    }
-    public class WaitHelper<T>
-    {
-        public TimeSpan TimeOut;
-        public T Input;
-
-        public WaitHelper(T input, TimeSpan timeOut)
-        {
-            this.Input = input;
-            this.TimeOut = timeOut;
-        }
-
-        public WaitHelper(TimeSpan timeOut)
-        {
-            this.Input = default;
-            this.TimeOut = timeOut;
-        }
-
-        public TResult Until<TResult>(Func<TResult> condition)
-        {
-            TResult result = default(TResult);
-
-            Task runCondition = new Task(() =>
-            {
-
-                while (true)
-                {
-                    result = condition.Invoke();
-                    if (result != null)
-                    {
-                        var isBreak = true;
-                        foreach (var pi in result.GetType().GetProperties())
-                        {
-                            if (pi.GetType() == typeof(bool))
-                            {
-                                bool val = (bool)pi.GetValue(result);
-                                if (!val)
-                                {
-                                    isBreak = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (isBreak) break;
-                    }
-                };
-            });
-            runCondition.Start();
-
-            Task.WhenAny(runCondition, Task.Delay(this.TimeOut)).Wait();
-
-            return result;
-        }
-
-        public TResult Until<TResult>(Func<T, TResult> condition)
-        {
-            TResult result = default(TResult);
-
-            Task runCondition = new Task(() =>
-            {
-
-                while (true)
-                {
-                    result = condition.Invoke(this.Input);
-                    if (result != null)
-                    {
-                        var isBreak = true;
-                        foreach (var pi in result.GetType().GetProperties())
-                        {
-                            if (pi.GetType() == typeof(bool))
-                            {
-                                bool val = (bool)pi.GetValue(result);
-                                if (!val)
-                                {
-                                    isBreak = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (isBreak) break;
-                    }
-                };
-            });
-            runCondition.Start();
-
-            Task.WhenAny(runCondition, Task.Delay(this.TimeOut)).Wait();
-
-            return result;
+            var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
+            File.Delete(screenPath);
+            return point;
         }
     }
 }
