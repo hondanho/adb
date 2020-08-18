@@ -61,7 +61,7 @@ namespace auto_android.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 699.2 55.6.
+        ///   Looks up a localized string similar to 720.8 59.9.
         /// </summary>
         internal static string InputSearch {
             get {

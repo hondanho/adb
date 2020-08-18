@@ -7,7 +7,6 @@ using log4net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Reflection;
-using System.Linq;
 
 namespace auto_android.AutoHelper
 {

@@ -123,13 +123,14 @@ namespace auto_android.AutoHelper
                                     var codeMail = System.Text.RegularExpressions.Regex.Match(webElement.Text, @"\d+").Value;
                                     AdbHelper.TapImg(_deviceId, _defaultPathExec + Constant.inputCodeMail);
                                     AdbHelper.Input(_deviceId, codeMail);
+                                    Thread.Sleep(_timeout);
                                     AdbHelper.TapImg(_deviceId, _defaultPathExec + Constant.btnOk);
                                     Thread.Sleep(_timeout);
                                     AdbHelper.TapImg(_deviceId, _defaultPathExec + Constant.btnOk);
                                     Thread.Sleep(_timeout);
                                     AdbHelper.TapImg(_deviceId, _defaultPathExec + Constant.labelBoQua);
                                     Thread.Sleep(_timeout);
-                                    if(FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.askBoQua) != null)
+                                    if (FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.askBoQua) != null)
                                     {
                                         AdbHelper.TapImg(_deviceId, _defaultPathExec + Constant.askBoQua);
                                     }
@@ -148,7 +149,7 @@ namespace auto_android.AutoHelper
                         }
                     });
                 }
-                return false;
+                return true;
             }
             catch (Exception ex)
             {
@@ -175,34 +176,32 @@ namespace auto_android.AutoHelper
                 Thread.Sleep(_timeout);
             }
 
-            if (FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.iconSettingActive) != null)
+            AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.btnCaiDat);
+            Thread.Sleep(_timeout);
+            AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.baoMat);
+            Thread.Sleep(_timeout);
+            AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.xacThuc2YeuTo);
+            Thread.Sleep(_timeout);
+            AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.fa2UngDung);
+            Thread.Sleep(_timeout);
+
+            if (FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.nhapMatKhau) != null)
             {
-                AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.btnCaiDat);
-                Thread.Sleep(_timeout);
-                AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.baoMat);
-                Thread.Sleep(_timeout);
-                AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.xacThuc2YeuTo);
-                Thread.Sleep(_timeout);
-                AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.fa2UngDung);
-                Thread.Sleep(_timeout);
+                AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.nhapMatKhau);
+                AdbHelper.Input(this._deviceId, this._password.ToCharArray());
+                AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.btnTiepTuc);
 
-                if (FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.nhapMatKhau) != null)
-                {
-                    AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.nhapMatKhau);
-                    AdbHelper.Input(this._deviceId, this._password.ToCharArray());
-                    AdbHelper.TapImg(this._deviceId, _defaultPathExec + Constant.btnTiepTuc);
-
-                }
-                if (FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.screenCode2fa) != null)
-                {
-                    this._2Fa = FunctionHelper.Get2faCurrentScreen(this._deviceId);
-                }
             }
-            return false;
+            if (FunctionHelper.IsExistImg(this._deviceId, _defaultPathExec + Constant.screenCode2fa) != null)
+            {
+                this._2Fa = FunctionHelper.Get2faCurrentScreen(this._deviceId);
+            }
+            return true;
         }
 
         public string GetInfo()
         {
+            this._2Fa = FunctionHelper.Get2faCurrentScreen(this._deviceId);
             return string.Join("|", _uid, _email, _password, _2Fa);
         }
     }

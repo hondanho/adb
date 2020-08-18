@@ -22,6 +22,18 @@
           "build/Emgu.CV.runtime.windows.targets": {}
         }
       },
+      "IronOcr/4.4.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Drawing"
+        ],
+        "compile": {
+          "lib/net40/IronOcr.dll": {}
+        },
+        "runtime": {
+          "lib/net40/IronOcr.dll": {}
+        }
+      },
       "log4net/2.0.8": {
         "type": "package",
         "compile": {
@@ -42,15 +54,6 @@
         },
         "runtime": {
           "lib/net45/Otp.NET.dll": {}
-        }
-      },
-      "RandomNameGeneratorLibrary/1.2.2": {
-        "type": "package",
-        "compile": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
-        },
-        "runtime": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
         }
       },
       "ZXing.Net/0.16.5": {
@@ -86,6 +89,18 @@
           "build/Emgu.CV.runtime.windows.targets": {}
         }
       },
+      "IronOcr/4.4.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Drawing"
+        ],
+        "compile": {
+          "lib/net40/IronOcr.dll": {}
+        },
+        "runtime": {
+          "lib/net40/IronOcr.dll": {}
+        }
+      },
       "log4net/2.0.8": {
         "type": "package",
         "compile": {
@@ -106,15 +121,6 @@
         },
         "runtime": {
           "lib/net45/Otp.NET.dll": {}
-        }
-      },
-      "RandomNameGeneratorLibrary/1.2.2": {
-        "type": "package",
-        "compile": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
-        },
-        "runtime": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
         }
       },
       "ZXing.Net/0.16.5": {
@@ -150,6 +156,18 @@
           "build/Emgu.CV.runtime.windows.targets": {}
         }
       },
+      "IronOcr/4.4.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Drawing"
+        ],
+        "compile": {
+          "lib/net40/IronOcr.dll": {}
+        },
+        "runtime": {
+          "lib/net40/IronOcr.dll": {}
+        }
+      },
       "log4net/2.0.8": {
         "type": "package",
         "compile": {
@@ -170,15 +188,6 @@
         },
         "runtime": {
           "lib/net45/Otp.NET.dll": {}
-        }
-      },
-      "RandomNameGeneratorLibrary/1.2.2": {
-        "type": "package",
-        "compile": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
-        },
-        "runtime": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
         }
       },
       "ZXing.Net/0.16.5": {
@@ -214,6 +223,18 @@
           "build/Emgu.CV.runtime.windows.targets": {}
         }
       },
+      "IronOcr/4.4.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Drawing"
+        ],
+        "compile": {
+          "lib/net40/IronOcr.dll": {}
+        },
+        "runtime": {
+          "lib/net40/IronOcr.dll": {}
+        }
+      },
       "log4net/2.0.8": {
         "type": "package",
         "compile": {
@@ -234,15 +255,6 @@
         },
         "runtime": {
           "lib/net45/Otp.NET.dll": {}
-        }
-      },
-      "RandomNameGeneratorLibrary/1.2.2": {
-        "type": "package",
-        "compile": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
-        },
-        "runtime": {
-          "lib/net40/RandomNameGeneratorLibrary.dll": {}
         }
       },
       "ZXing.Net/0.16.5": {
@@ -315,6 +327,20 @@
         "icon.png"
       ]
     },
+    "IronOcr/4.4.0": {
+      "sha512": "tOZdFo40tnmsHIEnKa0jcEAcvBPpgSexob3dLJt1Yqrvk5VZCcXRO8xto/bXB1Lj+Rkjm5zxLycU8zgruxEnsg==",
+      "type": "package",
+      "path": "ironocr/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ironocr.4.4.0.nupkg.sha512",
+        "ironocr.nuspec",
+        "lib/net40/IronOcr.dll",
+        "lib/net40/IronOcr.xml",
+        "readme.txt"
+      ]
+    },
     "log4net/2.0.8": {
       "sha512": "N41MQGHZImiCfn0cUuSBjZxrcNfIQCuCgQP0rpgB3J/NWponEh3lc1LxJEuIsPAR9Oc1jVvfkNNFCY1C5hf9LA==",
       "type": "package",
@@ -351,19 +377,6 @@
         "lib/netstandard2.0/Otp.NET.dll",
         "otp.net.1.2.2.nupkg.sha512",
         "otp.net.nuspec"
-      ]
-    },
-    "RandomNameGeneratorLibrary/1.2.2": {
-      "sha512": "Sz9eseIDKZ99yopg4TEAGPVIoGOKWYsWDHIfGQENXlOJYBoIsL68rqe9jrc9yP+/dOYH5RaCag6d8ykaqsbFFw==",
-      "type": "package",
-      "path": "randomnamegeneratorlibrary/1.2.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/RandomNameGeneratorLibrary.dll",
-        "lib/netstandard1.6/RandomNameGeneratorLibrary.dll",
-        "randomnamegeneratorlibrary.1.2.2.nupkg.sha512",
-        "randomnamegeneratorlibrary.nuspec"
       ]
     },
     "ZXing.Net/0.16.5": {
@@ -475,8 +488,8 @@
     ".NETFramework,Version=v4.7.2": [
       "Emgu.CV >= 4.3.0.3890",
       "Emgu.CV.runtime.windows >= 4.3.0.3890",
+      "IronOcr >= 4.4.0",
       "Otp.NET >= 1.2.2",
-      "RandomNameGeneratorLibrary >= 1.2.2",
       "ZXing.Net >= 0.16.5",
       "log4net >= 2.0.8"
     ]
@@ -521,11 +534,11 @@
             "target": "Package",
             "version": "[4.3.0.3890, )"
           },
-          "Otp.NET": {
+          "IronOcr": {
             "target": "Package",
-            "version": "[1.2.2, )"
+            "version": "[4.4.0, )"
           },
-          "RandomNameGeneratorLibrary": {
+          "Otp.NET": {
             "target": "Package",
             "version": "[1.2.2, )"
           },
