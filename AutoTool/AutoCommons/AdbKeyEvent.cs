@@ -1,5 +1,5 @@
 ﻿
-namespace auto_android.AutoHelper
+namespace AutoTool.AutoCommons
 {
     public enum AdbKeyEvent : int
     {

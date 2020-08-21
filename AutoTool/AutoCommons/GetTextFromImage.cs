@@ -1,7 +1,7 @@
 ﻿using IronOcr;
 using static IronOcr.AdvancedOcr;
 
-namespace auto_android.AutoHelper
+namespace AutoTool.AutoCommons
 {
     internal class GetTextFromImage
 	{

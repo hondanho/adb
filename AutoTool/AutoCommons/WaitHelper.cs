@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace auto_android.AutoHelper
+namespace AutoTool.AutoCommons
 {
     public class WaitHelper
     {

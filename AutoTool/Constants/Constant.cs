@@ -1,5 +1,5 @@
 ﻿
-namespace auto_android
+namespace AutoTool
 {
     public static class Constant
     {

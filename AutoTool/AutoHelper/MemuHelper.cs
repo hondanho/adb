@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace auto_android.AutoHelper
+namespace AutoTool.AutoHelper
 {
     public class MemuHelper
     {
@@ -39,6 +39,7 @@ namespace auto_android.AutoHelper
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 result = null;
             }
             return result;

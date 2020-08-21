@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6A898D5F-4DFB-496E-B300-4EFA22E208B9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>auto_android</RootNamespace>
-    <AssemblyName>auto android</AssemblyName>
+    <RootNamespace>AutoTool</RootNamespace>
+    <AssemblyName>AutoTool</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -55,23 +55,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoHelper\MemuCommandHelper.cs" />
     <Compile Include="AutoHelper\AdbHelper.cs" />
-    <Compile Include="AutoHelper\AdbKeyEvent.cs" />
-    <Compile Include="AutoHelper\GetTextFromImage.cs" />
+    <Compile Include="AutoCommons\AdbKeyEvent.cs" />
+    <Compile Include="AutoCommons\GetTextFromImage.cs" />
     <Compile Include="AutoHelper\MemuHelper.cs" />
-    <Compile Include="AutoHelper\QRCode.cs" />
-    <Compile Include="AutoHelper\ImageScanOpenCV.cs" />
+    <Compile Include="AutoCommons\QRCode.cs" />
+    <Compile Include="AutoCommons\ImageScanOpenCV.cs" />
     <Compile Include="AutoHelper\RegFb.cs" />
-    <Compile Include="AutoHelper\WaitHelper.cs" />
+    <Compile Include="AutoCommons\WaitHelper.cs" />
+    <Compile Include="AutoMethods\IEmulatorFunc.cs" />
+    <Compile Include="AutoMethods\MEmuFunc.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="AutoHelper\FunctionHelper.cs" />
+    <Compile Include="Constants\MEmuConsts.cs" />
+    <Compile Include="Models\EmulatorInfo.cs" />
+    <Compile Include="Models\FacebookAccountInfo.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\GlobalVar.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">
@@ -123,6 +128,7 @@
       <Version>0.16.5</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Target Name="AfterBuild">
     <Copy SourceFiles="@(SomeDir)" DestinationFiles="@(MySourceFiles->'E:\project\autoandroid\bin\Debug\')" />
   </Target>

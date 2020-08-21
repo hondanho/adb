@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace auto_android
+namespace AutoTool
 {
     static class Program
     {

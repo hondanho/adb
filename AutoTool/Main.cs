@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.UI;
 using System.Windows.Forms;
-using auto_android.AutoHelper;
+using AutoTool.AutoHelper;
+using AutoTool.AutoMethods;
+using AutoTool.Models;
 using log4net;
 
-namespace auto_android
+namespace AutoTool
 {
     public partial class Main : Form, IDisposable
     {
@@ -19,10 +21,9 @@ namespace auto_android
         private string _pathAccountFailer = "accountFailer.txt";
         private StreamWriter _fileAccountSuccess;
         private StreamWriter _fileAccountFailer;
-        private MemuCommandHelper _memuHelper;
+        private IEmulatorFunc _memuHelper;
         public delegate void ShowLog(string message);
         public delegate void LogInfo(string info);
-        private Thread _regFbThread;
         private bool _regFbIsRunning = false;
         private List<Thread> _regFbThreads = new List<Thread>();
 
@@ -39,7 +40,8 @@ namespace auto_android
         public Main()
         {
             InitializeComponent();
-            _memuHelper = new MemuCommandHelper(this.txtMEmuRootPath.Text);
+            GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text;
+            _memuHelper = new MEmuFunc();
             this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
             this._fileAccountFailer = File.AppendText(_pathAccountFailer);
             this._log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -74,13 +76,13 @@ namespace auto_android
             }
         }
 
-        public void Exec(MEmuDevice device)
+        public void Exec(EmulatorInfo device)
         {
-            _memuHelper.StartMemu(device.Id);
+            _memuHelper.StartDevice(device);
             var fb = new RegFb(device, _memuHelper, this._log);
 
             //fb.TurnHma();
-            fb.Turn1111();
+            fb.Turn1111On();
 
             bool registered = fb.RegisterFb();
             if (registered)
@@ -107,8 +109,6 @@ namespace auto_android
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this._regFbThread != null)
-                this._regFbThread.Abort();
             if (this._fileAccountFailer != null) this._fileAccountFailer.Dispose();
             if (this._fileAccountSuccess != null) this._fileAccountSuccess.Dispose();
         }
@@ -121,7 +121,7 @@ namespace auto_android
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    _memuHelper.MEmuRootPath = this.txtMEmuRootPath.Text = fbd.SelectedPath;
+                    GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text = fbd.SelectedPath;
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace auto_android
                 var devices = _memuHelper.GetDevices();
 
                 // Stop all devices
-                _memuHelper.StopDevice();
+                _memuHelper.StopDevice(null);
 
                 // Remove all devices
                 var removeDeviceTasks = new List<Task>();
@@ -180,7 +180,7 @@ namespace auto_android
                 {
                     var removeDeviceTask = new Task(() =>
                     {
-                        _memuHelper.RemoveDevice(device.Id);
+                        _memuHelper.RemoveDevice(device);
                     });
                     removeDeviceTask.Start();
                     removeDeviceTasks.Add(removeDeviceTask);
@@ -189,13 +189,13 @@ namespace auto_android
 
                 // Restore base device
                 var ovaPath = this.txtMEmuZipBase.Text;
-                _memuHelper.RestoreFromMemuFile(ovaPath, this.txtMEmuRootPath.Text + @"\MemuHypervVMs_FB_CLONE");
+                _RestoreFromMemuFile(ovaPath, this.txtMEmuRootPath.Text + @"\MemuHypervVMs_FB_CLONE");
                 // Get base device
                 var baseDevice = _memuHelper.GetDevices().LastOrDefault();
 
                 if (baseDevice != null)
                 {
-                    _memuHelper.RenameDeviceById(baseDevice.Id, "REG_FB_CLONE_0");
+                    _memuHelper.RenameDevice(baseDevice, "REG_FB_CLONE_0");
                     // Clone from Base (with id = 0)
                     var noMemu = this.nupNoMEmuDevices.Value;
                     var cloneDeviceTasks = new List<Task>();
@@ -204,7 +204,7 @@ namespace auto_android
                     {
                         var cloneDeviceTask = new Task((c) =>
                         {
-                            _memuHelper.CloneMemu(baseDevice.Id, string.Format("REG_FB_CLONE_{0}", c));
+                            _memuHelper.CloneDevice(baseDevice, string.Format("REG_FB_CLONE_{0}", c));
                         }, count);
                         cloneDeviceTask.Start();
                         cloneDeviceTasks.Add(cloneDeviceTask);
@@ -242,7 +242,6 @@ namespace auto_android
 
             if (confirm == DialogResult.Yes)
             {
-                _regFbThread.Abort();
                 if (this._fileAccountFailer != null)
                 {
                     this._fileAccountFailer.Flush();
@@ -259,6 +258,22 @@ namespace auto_android
                 this.btnStop.Enabled = false;
                 _regFbIsRunning = false;
             }
+        }
+
+        private void _RestoreFromMemuFile(string zipPath, string hypervPath)
+        {
+            if (!Directory.Exists(hypervPath))
+            {
+                Directory.CreateDirectory(hypervPath);
+            }
+            else
+            {
+                Directory.Delete(hypervPath, true);
+                Directory.CreateDirectory(hypervPath);
+            }
+            ZipFile.ExtractToDirectory(zipPath, hypervPath);
+            var path = Path.Combine(hypervPath, @"MEmu\MEmu.memu");
+            _memuHelper.RestoreDevice(path);
         }
     }
 }

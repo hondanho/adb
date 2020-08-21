@@ -4,7 +4,7 @@ using ZXing;
 using ZXing.QrCode.Internal;
 using ZXing.Rendering;
 
-namespace auto_android.AutoHelper
+namespace AutoTool.AutoCommons
 {
     public class QRCode
     {

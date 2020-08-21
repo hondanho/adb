@@ -1,4 +1,4 @@
-﻿using auto_android.AutoHelper;
+﻿using AutoTool.AutoHelper;
 using log4net;
 using OpenQA.Selenium.Chrome;
 using OtpNet;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace auto_android
+namespace AutoTool
 {
     public class FunctionHelper
     {

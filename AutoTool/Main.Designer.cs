@@ -1,4 +1,4 @@
-﻿namespace auto_android
+﻿namespace AutoTool
 {
     partial class Main
     {

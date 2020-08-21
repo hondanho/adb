@@ -7,8 +7,9 @@ using log4net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Reflection;
+using AutoTool.AutoCommons;
 
-namespace auto_android.AutoHelper
+namespace AutoTool.AutoHelper
 {
     public class AdbHelper
     {
