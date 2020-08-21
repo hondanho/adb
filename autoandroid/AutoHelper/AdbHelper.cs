@@ -12,7 +12,7 @@ namespace auto_android.AutoHelper
 {
     public class AdbHelper
     {
-        private static string ADB_FOLDER_PATH = "";
+        private static string ADB_FOLDER_PATH = "adb";
         private static string LIST_DEVICES = "adb devices";
         private static string SCREEN_SHOT = "adb -s {0} shell screencap -p \"{1}\" && adb -s {0} pull \"{1}\" \"{2}\" && adb -s {0} shell rm -f \"{1}\"";
         private static string TAP = "adb -s {0} shell input tap {1} {2}";
@@ -20,13 +20,9 @@ namespace auto_android.AutoHelper
         private static string SWIPE_LONG = "adb -s {0} shell input swipe {1} {2} {3} {4} {5}";
         private static string INPUT = "adb -s {0} shell input text \"{1}\"";
         private static string KEY = "adb -s {0} shell input keyevent {1}";
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private string _deviceId = string.Empty;
+        private static string CLEAR = "adb -s {0} shell pm clear {1}";
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AdbHelper(string deviceId)
-        {
-            this._deviceId = deviceId;
-        }
         public static string RunCMD(string cmdCommand)
         {
             string result;
@@ -51,8 +47,9 @@ namespace auto_android.AutoHelper
                 string text = process.StandardOutput.ReadToEnd();
                 result = text;
             }
-            catch
+            catch(Exception ex)
             {
+                _log.Error(ex.Message);
                 result = null;
             }
             return result;
@@ -77,7 +74,7 @@ namespace auto_android.AutoHelper
                         "device"
                     }, StringSplitOptions.None);
 
-                    log.Info(string.Format("Init amount device: {0}", array.Length));
+                    _log.Info(string.Format("Init amount device: {0}", array.Length));
                     for (int i = 0; i < array.Length - 1; i++)
                     {
                         string text3 = array[i];
@@ -108,9 +105,25 @@ namespace auto_android.AutoHelper
             InputNumber(deviceId, numberDir, number.ToString());
         }
 
+        public static void ClearApp(string deviceId, string packageName)
+        {
+            RunCMD(string.Format(CLEAR, deviceId, packageName));
+        }
+
+
         public static void SendKey(string deviceId, int key)
         {
             RunCMD(string.Format(KEY, deviceId, key));
+        }
+
+        public static void LongPress(string deviceID, int x, int y, int duration = 1000)
+        {
+            RunCMD(string.Format(SWIPE_LONG, deviceID, x, y, x, y, duration));
+        }
+
+        public static void LongPress(string deviceID, Point point, int duration = 1000)
+        {
+            LongPress(deviceID, point.X, point.Y, duration);
         }
 
         public static void Tap(string deviceId, Point point)
@@ -128,7 +141,7 @@ namespace auto_android.AutoHelper
             RunCMD(string.Format(SWIPE, deviceId, point1.X, point1.Y, point2.X, point2.Y));
         }
 
-        public static void SwipeLong(string deviceId, Point point1, Point point2, int millisecond)
+        public static void SwipeLong(string deviceId, Point point1, Point point2, int millisecond = 1000)
         {
             RunCMD(string.Format(SWIPE_LONG, deviceId, point1.X, point1.Y, point2.X, point2.Y, millisecond));
         }
@@ -160,7 +173,7 @@ namespace auto_android.AutoHelper
             while (point == null)
             {
                 File.Delete(screenPath);
-                log.Error(string.Format("Not found :{0} in {1}", path, screenPath));
+                _log.Error(string.Format("Not found :{0} in {1}", path, screenPath));
                 Thread.Sleep(1);
                 ScreenShot(deviceId, screenPath);
                 point = ImageScanOpenCV.FindOutPoint(screenPath, path);

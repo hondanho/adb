@@ -17,20 +17,6 @@ namespace auto_android
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static bool startDevices()
-        {
-            Process[] pname = Process.GetProcessesByName(ConfigurationManager.AppSettings["servicename"]);
-            if (pname.Length == 0)
-            {
-                AdbHelper.RunCMD(string.Format("cd \"{0}\" && start {1}",
-                 Path.GetDirectoryName(ConfigurationManager.AppSettings["pathdevice"]),
-                 Path.GetFileName(ConfigurationManager.AppSettings["pathdevice"])
-                 ));
-            }
-
-            return true;
-        }
-
         public static string getMaleRandom()
         {
             var randomNumber = new Random();
@@ -192,38 +178,19 @@ namespace auto_android
             return listTen[randomNumber.Next(0, listTen.Count - 1)];
         }
 
-        public static string Get2fa(string qrPath)
+        public static string Get2faFromQR(string stringQr)
         {
-            var code = QRCode.DecodeQR(qrPath);
-            return Regex.Match(code, @"(?<=secret=)([^\&]+)(?=\&?)").Value;
+            return Regex.Match(stringQr, @"(?<=secret=)([^\&]+)(?=\&?)").Value;
         }
 
-        public static string GetUserName(string qrPath)
+        public static string GetUserNameFromQR(string stringQr)
         {
-            var code = QRCode.DecodeQR(qrPath);
-            return Regex.Match(code, @"(?<=ID:)([^\?]+)(?=\??)").Value;
+            return Regex.Match(stringQr, "(?<=content=\")([^\\?]+)(?=\\?\")").Value;
         }
 
-        public static string GetUid(string qrPath)
+        public static string GetUidFromQR(string stringQr)
         {
-            var code = QRCode.DecodeQR(qrPath);
-            return Regex.Match(code, @"(?<=ID:)([^\?]+)(?=\??)").Value;
-        }
-
-        public static string Get2faCurrentScreen(string deviceId)
-        {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            AdbHelper.ScreenShot(deviceId, screenPath);
-
-            return Get2fa(screenPath);
-        }
-
-        public static string GetUserNameCurrentScreen(string deviceId)
-        {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            AdbHelper.ScreenShot(deviceId, screenPath);
-
-            return GetUserName(screenPath);
+            return Regex.Match(stringQr, @"(?<=ID:)([^\?]+)(?=\??)").Value;
         }
 
         public static string GetTotp(string secret)
@@ -236,6 +203,10 @@ namespace auto_android
         public static ChromeDriver InitWebDriver()
         {
             ChromeOptions chromeOptions = new ChromeOptions();
+            var service = ChromeDriverService.CreateDefaultService();
+            service.SuppressInitialDiagnosticInformation = true;
+            service.HideCommandPromptWindow = true;
+            chromeOptions.AddArguments("--window-size=300,700");
             chromeOptions.AddArguments("--disable-notifications");
             chromeOptions.AddArgument("--disable-blink-features=AutomationControlled");
             chromeOptions.AddArguments("profile.default_content_setting_values.images", "2");
@@ -243,28 +214,22 @@ namespace auto_android
             chromeOptions.AddAdditionalCapability("useAutomationExtension", false);
             chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
             chromeOptions.AddUserProfilePreference("credentials_enable_service", true);
-            return new ChromeDriver(ChromeDriverService.CreateDefaultService(), chromeOptions);
+            return new ChromeDriver(service, chromeOptions);
         }
 
         public static string GetRandomMonth()
         {
             var number = new Random();
             var month = number.Next(1, 12);
-            if (month < 10)
-            {
-                return "0" + month;
-            }
-            else
-            {
-                return month.ToString();
-            }
+            if (month < 10) return ("0" + month);
+            return month.ToString();
         }
 
-        public static string GetRandomMatkhau()
+        public static string GetMatkhauRandom()
         {
             var random = new Random();
-            var passwordLength = random.Next(14, 18);
-            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ!@$?_-";
+            var passwordLength = random.Next(10, 12);
+            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ";
             char[] chars = new char[passwordLength];
             Random rd = new Random();
 
@@ -276,34 +241,18 @@ namespace auto_android
             return new string(chars);
         }
 
-        public static string GetRandomYear()
+        public static string GetYearRandom()
         {
             var number = new Random();
             return number.Next(1980, 2002).ToString();
         }
 
-        public static string GetRandomDay()
+        public static string GetDayRandom()
         {
             var number = new Random();
             var day = number.Next(1, 28);
-            if (day < 10)
-            {
-                return "0" + day;
-            }
-            else
-            {
-                return day.ToString();
-            }
-        }
-
-        public static Point? IsExistImg(string deviceId, string subPath)
-        {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            AdbHelper.ScreenShot(deviceId, screenPath);
-
-            var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
-            File.Delete(screenPath);
-            return point;
+            if (day < 10) return ("0" + day);
+            return day.ToString();
         }
     }
 }

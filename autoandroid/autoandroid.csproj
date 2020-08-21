@@ -40,6 +40,8 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
@@ -51,15 +53,13 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\webdriver.3.141.0.0\WebDriver.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoHelper\MemuCommandHelper.cs" />
     <Compile Include="AutoHelper\AdbHelper.cs" />
     <Compile Include="AutoHelper\AdbKeyEvent.cs" />
     <Compile Include="AutoHelper\GetTextFromImage.cs" />
+    <Compile Include="AutoHelper\MemuHelper.cs" />
     <Compile Include="AutoHelper\QRCode.cs" />
     <Compile Include="AutoHelper\ImageScanOpenCV.cs" />
     <Compile Include="AutoHelper\RegFb.cs" />
@@ -116,19 +116,18 @@
     <PackageReference Include="Otp.NET">
       <Version>1.2.2</Version>
     </PackageReference>
+    <PackageReference Include="Selenium.WebDriver">
+      <Version>3.141.0</Version>
+    </PackageReference>
     <PackageReference Include="ZXing.Net">
       <Version>0.16.5</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\packages\webdriver.3.141.0.0\chromedriver.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <SomeDir Include="E:\project\autoandroid\packages\source\**\*.*" />
-  </ItemGroup>
   <Target Name="AfterBuild">
-	  <Copy SourceFiles="@(SomeDir)" 
-	  DestinationFiles="@(MySourceFiles->'E:\project\autoandroid\bin\Debug\')"/>
+    <Copy SourceFiles="@(SomeDir)" DestinationFiles="@(MySourceFiles->'E:\project\autoandroid\bin\Debug\')" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /E /Y "$(SolutionDir)resources" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
