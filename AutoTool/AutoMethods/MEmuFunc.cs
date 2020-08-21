@@ -7,7 +7,6 @@ using log4net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Reflection;
-using System.IO.Compression;
 using AutoTool.Constants;
 using AutoTool.AutoCommons;
 using AutoTool.Models;

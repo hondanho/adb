@@ -19,7 +19,6 @@ namespace AutoTool.AutoCommons
             }
         }
 
-
         public Bitmap GenerateQR(int width, int height, string text, string imgPath)
         {
             var bw = new ZXing.BarcodeWriter();
