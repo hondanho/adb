@@ -46,8 +46,6 @@ namespace auto_android.AutoHelper
         {
             _memuHelper.StartApp(_device.Id, _onedotonePck);
             Thread.Sleep(_timeout);
-            _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.icon1111);
-            Thread.Sleep(_timeout);
 
             var iconOff = _memuHelper.IsExistImg(_device.Id, _defaultPathExec + Constant.iconTurnOn1111);
             var iconOn = _memuHelper.IsExistImg(_device.Id, _defaultPathExec + Constant.iconTurned1111);
@@ -63,8 +61,6 @@ namespace auto_android.AutoHelper
         public void TurnHma()
         {
             _memuHelper.StartApp(_device.Id, _hmaPck);
-            Thread.Sleep(_timeout);
-            _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.iconHma);
             Thread.Sleep(_timeout);
 
             var iconOff = _memuHelper.IsExistImg(_device.Id, _defaultPathExec + Constant.iconOffHma);
@@ -85,7 +81,7 @@ namespace auto_android.AutoHelper
                 this._uid = "error";
                 // go to form reg
                 _memuHelper.StartApp(_device.Id, _facebookLitePck);
-                _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.iconFbLite);
+                Thread.Sleep(_timeout);
 
                 // set language
 
