@@ -225,11 +225,14 @@ namespace auto_android.AutoHelper
                 numberDir = numberDir + "\\";
             }
             var source = number.ToCharArray();
+            var lstImgs = new List<string>();
             for (int i = 0; i < source.Length; i++)
             {
                 var numberPath = string.Format("{0}{1}.png", numberDir, source[i]);
-                TapImg(deviceId, numberPath);
+                lstImgs.Add(numberPath);
             }
+
+            TapImgs(deviceId, lstImgs);
         }
 
         public void InputNumber(string deviceId, string numberDir, int number)
@@ -300,7 +303,7 @@ namespace auto_android.AutoHelper
         public Point? TapImg(string deviceId, string path, Point? pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            while(!File.Exists(screenPath))
+            while (!File.Exists(screenPath))
             {
                 ScreenShot(deviceId, screenPath);
             }
@@ -310,7 +313,6 @@ namespace auto_android.AutoHelper
             {
                 File.Delete(screenPath);
                 _log.Error(string.Format("Not found :{0} in {1}", path, screenPath));
-                Thread.Sleep(1);
                 ScreenShot(deviceId, screenPath);
                 point = ImageScanOpenCV.FindOutPoint(screenPath, path);
             }
@@ -321,6 +323,33 @@ namespace auto_android.AutoHelper
 
             return point;
         }
+
+        public void TapImgs(string deviceId, List<string> lstPath, Point? pointAdd = null)
+        {
+            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
+            while(!File.Exists(screenPath))
+            {
+                ScreenShot(deviceId, screenPath);
+            }
+
+            foreach (var path in lstPath)
+            {
+                var point = ImageScanOpenCV.FindOutPoint(screenPath, path);
+                while (point == null)
+                {
+                    File.Delete(screenPath);
+                    _log.Error(string.Format("Not found :{0} in {1}", path, screenPath));
+                    ScreenShot(deviceId, screenPath);
+                    point = ImageScanOpenCV.FindOutPoint(screenPath, path);
+                }
+
+                point = pointAdd == null ? point : new Point(point.Value.X + pointAdd.Value.X, point.Value.Y + pointAdd.Value.Y);
+                Tap(deviceId, point.Value);
+            }
+           
+            File.Delete(screenPath);
+        }
+
         public string GetQRCode(string deviceId)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);

@@ -85,9 +85,7 @@ namespace auto_android.AutoHelper
                 this._uid = "error";
                 // go to form reg
                 _memuHelper.StartApp(_device.Id, _facebookLitePck);
-                Thread.Sleep(_timeout);
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.iconFbLite);
-                Thread.Sleep(_timeout);
 
                 // set language
 
@@ -99,7 +97,7 @@ namespace auto_android.AutoHelper
                         var pointLabelLanguageVn = _memuHelper.IsExistImg(_device.Id, _defaultPathExec + Constant.labelLanguageVn);
                         if (!pointLabelLanguageVn.HasValue) return null;
                         _memuHelper.Tap(_device.Id, pointLabelLanguageVn.Value);
-                        Thread.Sleep(1000);
+                        Thread.Sleep(100);
                     }
                     return pointFound;
                 });
@@ -111,10 +109,7 @@ namespace auto_android.AutoHelper
                 }
 
                 _memuHelper.Tap(_device.Id, pointVtnRegVn.Value);
-                Thread.Sleep(1000);
-
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.btnTiep);
-                Thread.Sleep(_timeout);
 
                 // insert name
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.inputHo, new Point(0, 30));
@@ -122,9 +117,7 @@ namespace auto_android.AutoHelper
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.inputTen);
                 _memuHelper.Input(_device.Id, FunctionHelper.getTenRandom());
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.btnTiep);
-                Thread.Sleep(_timeout);
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.linkRegMail);
-                Thread.Sleep(_timeout);
 
                 // mail
                 var inputMail = _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.labelMail, new Point(0, 30));
@@ -145,11 +138,8 @@ namespace auto_android.AutoHelper
 
                 // birth day
                 _memuHelper.InputNumber(_device.Id, _defaultPathExec + Constant.sourceNumber, FunctionHelper.GetDayRandom());
-                Thread.Sleep(10);
                 _memuHelper.InputNumber(_device.Id, _defaultPathExec + Constant.sourceNumber, FunctionHelper.GetRandomMonth());
-                Thread.Sleep(10);
                 _memuHelper.InputNumber(_device.Id, _defaultPathExec + Constant.sourceNumber, FunctionHelper.GetYearRandom());
-                Thread.Sleep(10);
                 _memuHelper.TapImg(_device.Id, _defaultPathExec + Constant.btnTiep);
                 Thread.Sleep(_timeout);
 
