@@ -65,6 +65,7 @@
     <Compile Include="AutoCommons\WaitHelper.cs" />
     <Compile Include="AutoMethods\IEmulatorFunc.cs" />
     <Compile Include="AutoMethods\MEmuFunc.cs" />
+    <Compile Include="Models\FbGender.cs" />
     <Compile Include="Models\FbRegResult.cs" />
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="AutoHelper\FunctionHelper.cs" />
