@@ -40,6 +40,7 @@ namespace auto_android
         public const string nhapMatKhau = "\\source\\facebook-lite\\2fa\\nhap-mat-khau.png";
         public const string btnTiepTuc = "\\source\\facebook-lite\\2fa\\btn-tiep-tuc.png";
         public const string screenCode2fa = "\\source\\facebook-lite\\2fa\\screen-code-2fa.png";
+        public const string verify2fa = "\\source\\facebook-lite\\2fa\\verify-2fa.png";
 
         // app 1111
         public const string icon1111 = "\\source\\1111\\icon-1111.png";

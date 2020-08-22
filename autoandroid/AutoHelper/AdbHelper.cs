@@ -167,7 +167,10 @@ namespace auto_android.AutoHelper
         public static Point? TapImg(string deviceId, string path, Point? pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            ScreenShot(deviceId, screenPath);
+            while (!File.Exists(screenPath))
+            {
+                ScreenShot(deviceId, screenPath);
+            }
 
             var point = ImageScanOpenCV.FindOutPoint(screenPath, path);
             while (point == null)

@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Reflection;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Emgu.CV.Ocl;
 using System.IO.Compression;
 
 namespace auto_android.AutoHelper
@@ -28,6 +26,7 @@ namespace auto_android.AutoHelper
 
         private static string CLONE_MEMU_BY_NAME = "memuc clone -i {0}";
         private static string START_MEMU = "memuc -i {0} start";
+        private static string MEMU_STATUSMEMU_NAME = "memuc -i {0} adb get-status";
         private static string MEMU_STARTAPP_NAME = "memuc -i {0} startapp {1}";
         private static string RESTORE_MEMU = "memuc import \"{0}\"";
         private static string STOP_ALL_DEVICES = "memuc stopall";
@@ -214,6 +213,12 @@ namespace auto_android.AutoHelper
             {
                 RunCMDWithTime(string.Format(START_MEMU, deviceId), timeOut.Value);
             }
+            while (true)
+            {
+                var statusApp = RunCMD(string.Format(MEMU_STATUSMEMU_NAME, deviceId));
+                if (statusApp.Contains("already connected") && !statusApp.Contains("ERROR: MEmu is not launched")) break;
+                Thread.Sleep(1000);
+            }
         }
 
         public void InputNumber(string deviceId, string numberDir, string number)
@@ -353,15 +358,20 @@ namespace auto_android.AutoHelper
         public string GetQRCode(string deviceId)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            ScreenShot(deviceId, screenPath);
-
+            while (!File.Exists(screenPath))
+            {
+                ScreenShot(deviceId, screenPath);
+            }
             return QRCode.DecodeQR(screenPath);
         }
 
         public Point? IsExistImg(string deviceId, string subPath)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            ScreenShot(deviceId, screenPath);
+            while (!File.Exists(screenPath))
+            {
+                ScreenShot(deviceId, screenPath);
+            }
 
             var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
             File.Delete(screenPath);

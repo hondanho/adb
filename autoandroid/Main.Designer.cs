@@ -105,6 +105,7 @@
             0,
             0,
             0});
+            this.nudThreadNo.ValueChanged += new System.EventHandler(this.nudThreadNo_ValueChanged);
             // 
             // label3
             // 

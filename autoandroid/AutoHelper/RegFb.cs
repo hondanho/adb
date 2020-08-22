@@ -27,13 +27,13 @@ namespace auto_android.AutoHelper
         private string xpathUid = "//*[@id=\"facebook\"]/head/meta[10]";
         private string xpathEmail = "//*[@id=\"mail\"]";
 
-        public RegFb(MEmuDevice device, MemuCommandHelper memuHelper, ILog log, int timeout = 1000)
+        public RegFb(MEmuDevice device, MemuCommandHelper memuHelper, ILog log, ChromeDriver chromeDriver, int timeout = 1000)
         {
             _memuHelper = memuHelper;
             _device = device;
             this._timeout = timeout;
             _log = log;
-            _chromeDriver = FunctionHelper.InitWebDriver();
+            _chromeDriver = chromeDriver;
             InitApp();
         }
         public void InitApp()
@@ -45,6 +45,7 @@ namespace auto_android.AutoHelper
         public void Turn1111()
         {
             _memuHelper.StartApp(_device.Id, _onedotonePck);
+            
             Thread.Sleep(_timeout);
 
             var iconOff = _memuHelper.IsExistImg(_device.Id, _defaultPathExec + Constant.iconTurnOn1111);
@@ -289,8 +290,16 @@ namespace auto_android.AutoHelper
                 this._qrCode = _memuHelper.GetQRCode(this._device.Id);
                 _memuHelper.TapImg(this._device.Id, _defaultPathExec + Constant.btnTiepTuc);
                 Thread.Sleep(_timeout);
+
+                this._2Fa = FunctionHelper.Get2faFromQR(this._qrCode);
+                _memuHelper.TapImg(this._device.Id, _defaultPathExec + Constant.verify2fa, new Point(0, 35));
+                _memuHelper.Input(this._device.Id, this._2Fa);
+                _memuHelper.TapImg(this._device.Id, _defaultPathExec + Constant.btnTiepTuc);
+                return true;
             }
-            return true;
+
+
+            return false;
         }
 
         public string GetInfo()

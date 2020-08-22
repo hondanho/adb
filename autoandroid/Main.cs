@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.UI;
 using System.Windows.Forms;
 using auto_android.AutoHelper;
 using log4net;
+using OpenQA.Selenium.Chrome;
 
 namespace auto_android
 {
@@ -23,8 +23,7 @@ namespace auto_android
         public delegate void ShowLog(string message);
         public delegate void LogInfo(string info);
         private Thread _regFbThread;
-        private bool _regFbIsRunning = false;
-        private List<Thread> _regFbThreads = new List<Thread>();
+        private List<ChromeDriver> _chromeDrivers;
 
         static public void Info(string s)
         {
@@ -43,13 +42,13 @@ namespace auto_android
             this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
             this._fileAccountFailer = File.AppendText(_pathAccountFailer);
             this._log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            _chromeDrivers = new List<ChromeDriver>();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
             try
             {
-                _regFbIsRunning = true;
                 if (this._fileAccountSuccess == null) this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
                 if (this._fileAccountFailer == null) this._fileAccountFailer = File.AppendText(_pathAccountFailer);
 
@@ -57,16 +56,32 @@ namespace auto_android
 
                 this.btnStart.Enabled = false;
                 this.btnStop.Enabled = true;
-
-                foreach (var device in devices)
+                _regFbThread = new Thread(() =>
                 {
-                    var t = new Thread(() =>
+                    var lstTask = new List<Task>();
+                    for (var i = 0; i < Math.Min(devices.Count, this.nudThreadNo.Value) - 1; i++)
                     {
-                        Exec(device);
-                    });
-                    _regFbThreads.Add(t);
-                    t.Start();
-                }
+                        var t = new Task((index) =>
+                        {
+                            //this._fileAccountFailer.WriteLine(index);
+                            Exec(devices[(int)index]);
+                        }, i);
+                        lstTask.Add(t);
+                    }
+
+                    while (true)
+                    {
+                        foreach (var task in lstTask)
+                        {
+                            if (!task.IsCompleted && (task.Status == TaskStatus.Faulted || task.Status == TaskStatus.Created))
+                            {
+                                task.Start();
+                            }
+                        }
+                    }
+                });
+
+                _regFbThread.Start();
             }
             catch (Exception ex)
             {
@@ -77,7 +92,9 @@ namespace auto_android
         public void Exec(MEmuDevice device)
         {
             _memuHelper.StartMemu(device.Id);
-            var fb = new RegFb(device, _memuHelper, this._log);
+            var chrom = FunctionHelper.InitWebDriver();
+            _chromeDrivers.Add(chrom);
+            var fb = new RegFb(device, _memuHelper, this._log, chrom);
 
             //fb.TurnHma();
             fb.Turn1111();
@@ -107,10 +124,13 @@ namespace auto_android
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this._regFbThread != null)
-                this._regFbThread.Abort();
+            if (this._regFbThread != null) this._regFbThread.Abort();
             if (this._fileAccountFailer != null) this._fileAccountFailer.Dispose();
             if (this._fileAccountSuccess != null) this._fileAccountSuccess.Dispose();
+            foreach (var chrom in _chromeDrivers)
+            {
+                chrom.Quit();
+            }
         }
 
         private void txtMEmuRootPath_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -128,7 +148,7 @@ namespace auto_android
 
         private void btnSetupMEmu_Click(object sender, EventArgs e)
         {
-            if (_regFbIsRunning)
+            if (_regFbThread != null && _regFbThread.IsAlive)
             {
                 Warning("Stop reg facebook trước khi cài đặt lại MEmu");
                 return;
@@ -242,7 +262,7 @@ namespace auto_android
 
             if (confirm == DialogResult.Yes)
             {
-                _regFbThread.Abort();
+                if (_regFbThread != null) _regFbThread.Abort();
                 if (this._fileAccountFailer != null)
                 {
                     this._fileAccountFailer.Flush();
@@ -257,8 +277,12 @@ namespace auto_android
                 }
                 this.btnStart.Enabled = true;
                 this.btnStop.Enabled = false;
-                _regFbIsRunning = false;
             }
+        }
+
+        private void nudThreadNo_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
