@@ -68,8 +68,18 @@ namespace AutoTool.AutoHelper
         {
             if (_chromeDriver != null)
             {
-                _chromeDriver.Close();
-                _chromeDriver.Dispose();
+                try
+                {
+                    _chromeDriver.Close();
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex);
+                }
+                finally
+                {
+                    _chromeDriver.Dispose();
+                }
             }
         }
 
@@ -80,7 +90,7 @@ namespace AutoTool.AutoHelper
             _timeout = timeout;
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-            _chromeDriver = FunctionHelper.InitWebDriver();
+            _chromeDriver = FunctionHelper.InitWebDriver(device.Index);
 
             // Init Facebook info
             var random = new Random();
@@ -92,10 +102,10 @@ namespace AutoTool.AutoHelper
             FbAcc.Gender = (FbGender)random.Next(0, 1);
         }
 
-        public RegFb(FacebookAccountInfo fb)
+        public RegFb(FacebookAccountInfo fb, int idx)
         {
             FbAcc = fb;
-            _chromeDriver = FunctionHelper.InitWebDriver();
+            _chromeDriver = FunctionHelper.InitWebDriver(idx);
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 

@@ -31,6 +31,10 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.gbGeneralSetting = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.cbTurn2faOn = new System.Windows.Forms.CheckBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.nudThreadNo = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.btnSetupMEmu = new System.Windows.Forms.Button();
@@ -47,11 +51,7 @@
             this.btnChooseBaseMEmu = new System.Windows.Forms.Button();
             this.txtMEmuZipBase = new System.Windows.Forms.TextBox();
             this.btnStop = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.cbTurn2faOn = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.gbGeneralSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupNoMEmuDevices)).BeginInit();
@@ -99,13 +99,55 @@
             this.gbGeneralSetting.TabStop = false;
             this.gbGeneralSetting.Text = "Cài đặt chung";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(15, 65);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(60, 18);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "Bật 2FA";
+            // 
+            // cbTurn2faOn
+            // 
+            this.cbTurn2faOn.AutoSize = true;
+            this.cbTurn2faOn.Checked = true;
+            this.cbTurn2faOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTurn2faOn.Location = new System.Drawing.Point(112, 64);
+            this.cbTurn2faOn.Name = "cbTurn2faOn";
+            this.cbTurn2faOn.Size = new System.Drawing.Size(18, 17);
+            this.cbTurn2faOn.TabIndex = 12;
+            this.cbTurn2faOn.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(112, 136);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(84, 26);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(8, 136);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(84, 26);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // nudThreadNo
             // 
             this.nudThreadNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nudThreadNo.Location = new System.Drawing.Point(112, 33);
             this.nudThreadNo.Margin = new System.Windows.Forms.Padding(4);
             this.nudThreadNo.Maximum = new decimal(new int[] {
-            4,
+            8,
             0,
             0,
             0});
@@ -152,7 +194,7 @@
             this.nupNoMEmuDevices.Location = new System.Drawing.Point(168, 68);
             this.nupNoMEmuDevices.Margin = new System.Windows.Forms.Padding(4);
             this.nupNoMEmuDevices.Maximum = new decimal(new int[] {
-            16,
+            8,
             0,
             0,
             0});
@@ -316,28 +358,6 @@
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(8, 136);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(84, 26);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(112, 136);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(84, 26);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // lblStatus
             // 
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -346,26 +366,6 @@
             this.lblStatus.Size = new System.Drawing.Size(742, 26);
             this.lblStatus.TabIndex = 10;
             this.lblStatus.Text = "lblStatus";
-            // 
-            // cbTurn2faOn
-            // 
-            this.cbTurn2faOn.AutoSize = true;
-            this.cbTurn2faOn.Checked = true;
-            this.cbTurn2faOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbTurn2faOn.Location = new System.Drawing.Point(112, 64);
-            this.cbTurn2faOn.Name = "cbTurn2faOn";
-            this.cbTurn2faOn.Size = new System.Drawing.Size(18, 17);
-            this.cbTurn2faOn.TabIndex = 12;
-            this.cbTurn2faOn.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 65);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(60, 18);
-            this.label8.TabIndex = 13;
-            this.label8.Text = "Bật 2FA";
             // 
             // Main
             // 

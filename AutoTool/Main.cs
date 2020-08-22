@@ -55,7 +55,16 @@ namespace AutoTool
         {
             try
             {
-                var devices = _memuHelper.GetDevices();
+                //var devices = _memuHelper.GetDevices();
+                var devices = new List<EmulatorInfo>
+                {
+                    new EmulatorInfo("1", "1111"),
+                    new EmulatorInfo("2", "2222"),
+                    new EmulatorInfo("3", "3333"),
+                    new EmulatorInfo("4", "4444"),
+                    new EmulatorInfo("5", "5555"),
+                    new EmulatorInfo("6", "6666")
+                };
                 // Caculate number of threads
                 _numberOfThread = Math.Min(this.nudThreadNo.Value, devices.Count);
 
@@ -66,14 +75,19 @@ namespace AutoTool
                     
                     for (var i = 0; i < _numberOfThread; i++)
                     {
-                        var t = new Thread(() =>
+                        var device = devices[i];
+                        device.Index = i + 1;
+                        var t = new Thread((d) =>
                         {
-                            RegisterAccountFacebook(devices[i]);
-                            Thread.Sleep(500);
+                            for (;;)
+                            {
+                                RegisterAccountFacebook((EmulatorInfo)d);
+                                Thread.Sleep(500);
+                            }
                         })
                         { Name = "Facebook Clone Register Thread " + (i + 1) };
                         _RegisFbThreads.Add(t);
-                        t.Start();
+                        t.Start(device);
                     }
                 }
             }
@@ -353,16 +367,16 @@ namespace AutoTool
             ////regFb.TurnOn2Fa();
             ////regFb.GetUid();
 
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < 8; i++)
             {
-                var t = new Thread((s) => {
+                var t = new Thread((obj) => {
                     for (; ; )
                     {
-                        RegisFb((string)s);
+                        RegisFb((int)obj);
                     }
                 });
                 _RegisFbThreads.Add(t);
-                t.Start("number_" + (i + 1) + "\r\n");
+                t.Start(i + 1);
             }
         }
 
@@ -371,16 +385,16 @@ namespace AutoTool
             AbortRegisFbThreads();
         }
 
-        private void RegisFb(string name)
+        private void RegisFb(int idx)
         {
             var fb = new FacebookAccountInfo();
             fb.Email = "ficeboh599@synevde.com";
             fb.Passwd = "quocThang12321";
-            var regFb = new RegFb(fb);
+            var regFb = new RegFb(fb, idx);
             try
             {
                 regFb.TurnOn2Fa();
-                this.Invoke((ShowLog)printResult, name);
+                this.Invoke((ShowLog)printResult, "name_" + idx);
             }
             catch(Exception ex)
             {
@@ -397,6 +411,6 @@ namespace AutoTool
             this.txtSuccess.AppendText(result);
         }
 
-        #endregion
+#endregion
     }
 }

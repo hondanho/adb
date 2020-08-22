@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace AutoTool
@@ -200,13 +201,29 @@ namespace AutoTool
             return totp.ComputeTotp();
         }
 
-        public static ChromeDriver InitWebDriver()
+        public static ChromeDriver InitWebDriver(int idx = 1)
         {
+            var workingArea = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+            var width = workingArea.Width;
+            var height = workingArea.Height;
+            var ww = 4;
+            var hh = 2;
+            if (height > width) { hh = 4; ww = 2; }
+            var bh = height / hh;
+            var bw = width / ww;
+            var xx = idx % ww == 0 ? ww - 1 : (idx % ww) - 1;
+            var yy = idx % ww > 0 ? idx / ww : (idx / ww) - 1;
+            var x = xx * bw;
+            var y = yy * bh;
+
+
+
             ChromeOptions chromeOptions = new ChromeOptions();
             var service = ChromeDriverService.CreateDefaultService();
             service.SuppressInitialDiagnosticInformation = true;
             service.HideCommandPromptWindow = true;
-            chromeOptions.AddArguments("--window-size=300,700");
+            chromeOptions.AddArguments($"--window-size={bw},{bh}");
+            chromeOptions.AddArguments($"--window-position={x},{y}");
             chromeOptions.AddArguments("--disable-notifications");
             chromeOptions.AddArgument("--disable-blink-features=AutomationControlled");
             chromeOptions.AddArguments("profile.default_content_setting_values.images", "2");
