@@ -47,12 +47,12 @@ namespace AutoTool.AutoHelper
         private string _xMbasicBtnLogin = "//*[@id='login_form']/ul/li[3]/input";
         private string _xMbasicBtnLogout = "//*[@id='mbasic_logout_button']";
         private string _xMbasicBtnUseAuthApp = "//*[@id='root']/table/tbody/tr/td/div/div/div/div/div[1]/div/table/tbody/tr/td[2]/div/div[3]/a";
-        private string _zMbasicQrcode = "//*[@id='root']/table/tbody/tr/td/form/div[2]/div/table/tbody/tr/td/div/div[1]/div/img";
+        //private string _zMbasicQrcode = "//*[@id='root']/table/tbody/tr/td/form/div[2]/div/table/tbody/tr/td/div/div[1]/div/img";
         private string _xMbasic2faSecret = "//*[@id='root']/table/tbody/tr/td/form/div[2]/div/table/tbody/tr/td/div/div[2]/div[2]";
         private string _xMbasicBtnQrConfirm = "//*[@id='qr_confirm_button']";
         private string _xMbasicInputTotp = "//*[@id='type_code_container']";
         private string _xMbasicBtnSubmitTotp = "//*[@id='submit_code_button']";
-        private string _xMbasicBtn2faDone = "//*[@id='TwoFactButton']/form/input[2]";
+        //private string _xMbasicBtn2faDone = "//*[@id='TwoFactButton']/form/input[2]";
         private string _xMbasicHrefRemove2fa = "//*[@id='root']/table/tbody/tr/td/div[2]/div/div[2]/div[2]/div[2]/a";
 
         private string _xMbasicInputLoginApprovalCode = "//*[@id='approvals_code']";
