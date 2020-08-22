@@ -25,7 +25,8 @@ namespace AutoTool
         public delegate void ShowLog(string message);
         public delegate void LogInfo(string info);
         private bool _regFbIsRunning = false;
-        private List<Thread> _regFbThreads = new List<Thread>();
+        private decimal _numberOfThread = 0;
+        private List<Thread> _RegisFbThreads = new List<Thread>();
 
         static public void Info(string s)
         {
@@ -40,6 +41,7 @@ namespace AutoTool
         public Main()
         {
             InitializeComponent();
+            this.lblStatus.Text = "Stopped";
             GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text;
             _memuHelper = new MEmuFunc();
             this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
@@ -47,84 +49,136 @@ namespace AutoTool
             this._log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
+        #region Register Facebook Clone
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             try
             {
-                _regFbIsRunning = true;
-                if (this._fileAccountSuccess == null) this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
-                if (this._fileAccountFailer == null) this._fileAccountFailer = File.AppendText(_pathAccountFailer);
-
                 var devices = _memuHelper.GetDevices();
+                // Caculate number of threads
+                _numberOfThread = Math.Min(this.nudThreadNo.Value, devices.Count);
 
-                this.btnStart.Enabled = false;
-                this.btnStop.Enabled = true;
-
-                foreach (var device in devices)
+                if (_numberOfThread > 0)
                 {
-                    var t = new Thread(() =>
+                    _regFbIsRunning = true;
+                    _SetStartUI();
+                    
+                    for (var i = 0; i < _numberOfThread; i++)
                     {
-                        Exec(device);
-                    });
-                    _regFbThreads.Add(t);
-                    t.Start();
+                        var t = new Thread(() =>
+                        {
+                            RegisterAccountFacebook(devices[i]);
+                            Thread.Sleep(500);
+                        })
+                        { Name = "Facebook Clone Register Thread " + (i + 1) };
+                        _RegisFbThreads.Add(t);
+                        t.Start();
+                    }
                 }
             }
             catch (Exception ex)
             {
+                Warning("Có lỗi xảy ra");
                 _log.Error(ex.Message);
+                AbortRegisFbThreads();
+                _SetStopUI();
+                _regFbIsRunning = false;
             }
         }
 
-        public void Exec(EmulatorInfo device)
+        private void btnStop_Click(object sender, EventArgs e)
         {
-            _memuHelper.StartDevice(device);
-            var fb = new RegFb(device, _memuHelper, this._log);
+            var confirm = MessageBox.Show(this, "Bạn có chắc chắn muốn dừng không?", "Xác nhận", MessageBoxButtons.YesNo);
 
-            //fb.TurnHma();
-            fb.Turn1111On();
-
-            bool registered = fb.RegisterFb();
-            if (registered)
+            if (confirm == DialogResult.Yes)
             {
-                bool turned2faOn = fb.Turn2Fa();
-                var info = fb.GetInfo();
+                AbortRegisFbThreads();
+                _SetStopUI();
+                _regFbIsRunning = false;
+            }
+        }
 
+        private void _SetStartUI()
+        {
+            this.btnStart.Enabled = false;
+            this.btnStop.Enabled = true;
+            this.nupNoMEmuDevices.Enabled = false;
+            this.cbTurn2faOn.Enabled = false;
+            this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
+
+            if (this._fileAccountSuccess == null)
+            {
+                this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
+            }
+            if (this._fileAccountFailer == null)
+            {
+                this._fileAccountFailer = File.AppendText(_pathAccountFailer);
+            }
+        }
+
+        private void _SetStopUI()
+        {
+            if (this._fileAccountFailer != null)
+            {
+                this._fileAccountFailer.Flush();
+                this._fileAccountFailer.Dispose();
+                this._fileAccountFailer = null;
+            }
+            if (this._fileAccountSuccess != null)
+            {
+                this._fileAccountSuccess.Flush();
+                this._fileAccountSuccess.Dispose();
+                this._fileAccountSuccess = null;
+            }
+            this.btnStart.Enabled = true;
+            this.btnStop.Enabled = false;
+            this.nupNoMEmuDevices.Enabled = true;
+            this.cbTurn2faOn.Enabled = true;
+            this.lblStatus.Text = "Stopped";
+        }
+
+        private void AbortRegisFbThreads()
+        {
+            while (_RegisFbThreads.Count > 0)
+            {
+                _RegisFbThreads[0].Abort();
+                _RegisFbThreads.RemoveAt(0);
+            }
+        }
+
+        private void RegisterAccountFacebook(EmulatorInfo device)
+        {
+            var fb = new RegFb(device);
+                        
+            var create = fb.RegisterFacebook();
+
+            if (create.Status == FbRegStatus.SUCCESS_WITH_VERI)
+            {
+                fb.GetUid();
+                if (cbTurn2faOn.Checked)
+                {
+                    fb.TurnOn2Fa();
+                }
                 this.Invoke((LogInfo)((logInfo) =>
                 {
-                    this._fileAccountSuccess.WriteLine(logInfo);
-                    this.txtSuccess.Text += logInfo + "\r\n";
-                }), info);
+                    _fileAccountSuccess.WriteLine(logInfo);
+                    txtSuccess.AppendText(logInfo + "\r\n");
+                }), fb.FbAcc.StringInfo());
             }
             else
             {
-                var info = fb.GetInfo();
                 this.Invoke((LogInfo)((logInfo) =>
                 {
-                    this._fileAccountFailer.WriteLine(logInfo);
-                    this.txtFail.Text += logInfo + "\r\n";
-                }), info);
+                    _fileAccountFailer.WriteLine(logInfo);
+                    txtFail.AppendText(logInfo + "\r\n");
+                }), fb.FbAcc.StringInfo() + " <<< " + create.Message);
             }
         }
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (this._fileAccountFailer != null) this._fileAccountFailer.Dispose();
-            if (this._fileAccountSuccess != null) this._fileAccountSuccess.Dispose();
-        }
+        #endregion
 
-        private void txtMEmuRootPath_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text = fbd.SelectedPath;
-                }
-            }
-        }
+        #region MEmu Settings
 
         private void btnSetupMEmu_Click(object sender, EventArgs e)
         {
@@ -162,6 +216,35 @@ namespace AutoTool
                     this.btnSetupMEmu.Text = "Cài đặt";
                 });
             }).Start();
+        }
+
+        private void txtMEmuRootPath_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text = fbd.SelectedPath;
+                }
+            }
+        }
+
+        private void btnChooseBaseMEmu_Click(object sender, EventArgs e)
+        {
+            using (var fd = new OpenFileDialog())
+            {
+                fd.Filter = "Zip files (*.zip, *.7z)|*.zip;*.7z";
+                fd.FilterIndex = 0;
+                fd.RestoreDirectory = true;
+                DialogResult result = fd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fd.FileName))
+                {
+                    this.txtMEmuZipBase.Text = fd.FileName;
+                }
+            }
         }
 
         private bool SetupMenu()
@@ -220,46 +303,6 @@ namespace AutoTool
             return isSuccess;
         }
 
-        private void btnChooseBaseMEmu_Click(object sender, EventArgs e)
-        {
-            using (var fd = new OpenFileDialog())
-            {
-                fd.Filter = "Zip files (*.zip, *.7z)|*.zip;*.7z";
-                fd.FilterIndex = 0;
-                fd.RestoreDirectory = true;
-                DialogResult result = fd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fd.FileName))
-                {
-                    this.txtMEmuZipBase.Text = fd.FileName;
-                }
-            }
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            var confirm = MessageBox.Show(this, "Bạn có chắc chắn muốn dừng không?", "Xác nhận", MessageBoxButtons.YesNo);
-
-            if (confirm == DialogResult.Yes)
-            {
-                if (this._fileAccountFailer != null)
-                {
-                    this._fileAccountFailer.Flush();
-                    this._fileAccountFailer.Dispose();
-                    this._fileAccountFailer = null;
-                }
-                if (this._fileAccountSuccess != null)
-                {
-                    this._fileAccountSuccess.Flush();
-                    this._fileAccountSuccess.Dispose();
-                    this._fileAccountSuccess = null;
-                }
-                this.btnStart.Enabled = true;
-                this.btnStop.Enabled = false;
-                _regFbIsRunning = false;
-            }
-        }
-
         private void _RestoreFromMemuFile(string zipPath, string hypervPath)
         {
             if (!Directory.Exists(hypervPath))
@@ -275,5 +318,59 @@ namespace AutoTool
             var path = Path.Combine(hypervPath, @"MEmu\MEmu.memu");
             _memuHelper.RestoreDevice(path);
         }
+
+        #endregion
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AbortRegisFbThreads();
+            if (this._fileAccountFailer != null) this._fileAccountFailer.Dispose();
+            if (this._fileAccountSuccess != null) this._fileAccountSuccess.Dispose();
+        }
+
+        #region For testing
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //var fb = new FacebookAccountInfo();
+            //fb.Email = "ficeboh599@synevde.com";
+            //fb.Passwd = "quocThang12321";
+            //fb.TwoFacAuth = "";
+            //var regFb = new RegFb(fb);
+            ////regFb.TurnOn2Fa();
+            ////regFb.GetUid();
+
+            for (var i = 0; i < 4; i++)
+            {
+                var t = new Thread((s) => {
+                    for (; ; )
+                    {
+                        RegisFb((string)s);
+                    }
+                });
+                _RegisFbThreads.Add(t);
+                t.Start("number_" + (i + 1) + "\r\n");
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            AbortRegisFbThreads();
+        }
+
+        private void RegisFb(string name)
+        {
+            var ran = new Random();
+            var timeOut = ran.Next(2, 5);
+            Thread.Sleep(TimeSpan.FromSeconds(timeOut));
+            this.Invoke((ShowLog)printResult, name);
+        }
+
+        private void printResult(string result)
+        {
+            this.txtSuccess.AppendText(result);
+        }
+
+        #endregion
     }
 }

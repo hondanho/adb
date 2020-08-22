@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AutoTool.AutoCommons
@@ -12,32 +13,59 @@ namespace AutoTool.AutoCommons
         }
         public TResult Until<TResult>(Func<TResult> condition)
         {
-            TResult result = default(TResult);
+            if (condition == null)
+            {
+                throw new ArgumentNullException("condition", "condition cannot be null");
+            }
+            Type typeFromHandle = typeof(TResult);
+            if ((typeFromHandle.IsValueType && typeFromHandle != typeof(bool)) || !typeof(object).IsAssignableFrom(typeFromHandle))
+            {
+                throw new ArgumentException("Can only wait on an object or boolean response, tried to use type: " + typeFromHandle.ToString(), "condition");
+            }
 
+            TResult result = default;
             Task runCondition = new Task(() =>
             {
-
                 while (true)
                 {
-                    result = condition.Invoke();
-                    if (result != null)
+                    TResult tresult = condition();
+                    if (typeFromHandle == typeof(bool))
                     {
-                        var isBreak = true;
-                        foreach (var pi in result.GetType().GetProperties())
+                        bool? flag = tresult as bool?;
+                        if (flag != null && flag.Value)
                         {
-                            if (pi.GetType() == typeof(bool))
-                            {
-                                bool val = (bool)pi.GetValue(result);
-                                if (!val)
-                                {
-                                    isBreak = false;
-                                    break;
-                                }
-                            }
+                            result = tresult;
+                            break;
                         }
-                        if (isBreak) break;
+                    }
+                    else if (tresult != null)
+                    {
+                        result = tresult;
+                        break;
                     }
                 };
+
+                //while (true)
+                //{
+                //    result = condition.Invoke();
+                //    if (result != null)
+                //    {
+                //        var isBreak = true;
+                //        foreach (var pi in result.GetType().GetProperties())
+                //        {
+                //            if (pi.GetType() == typeof(bool))
+                //            {
+                //                bool val = (bool)pi.GetValue(result);
+                //                if (!val)
+                //                {
+                //                    isBreak = false;
+                //                    break;
+                //                }
+                //            }
+                //        }
+                //        if (isBreak) break;
+                //    }
+                //};
             });
             runCondition.Start();
 
@@ -60,30 +88,36 @@ namespace AutoTool.AutoCommons
 
         public TResult Until<TResult>(Func<T, TResult> condition)
         {
-            TResult result = default(TResult);
+            if (condition == null)
+            {
+                throw new ArgumentNullException("condition", "condition cannot be null");
+            }
+            Type typeFromHandle = typeof(TResult);
+            if ((typeFromHandle.IsValueType && typeFromHandle != typeof(bool)) || !typeof(object).IsAssignableFrom(typeFromHandle))
+            {
+                throw new ArgumentException("Can only wait on an object or boolean response, tried to use type: " + typeFromHandle.ToString(), "condition");
+            }
 
+            TResult result = default;
             Task runCondition = new Task(() =>
             {
 
                 while (true)
                 {
-                    result = condition.Invoke(this.Input);
-                    if (result != null)
+                    TResult tresult = condition(this.Input);
+                    if (typeFromHandle == typeof(bool))
                     {
-                        var isBreak = true;
-                        foreach (var pi in result.GetType().GetProperties())
+                        bool? flag = tresult as bool?;
+                        if (flag != null && flag.Value)
                         {
-                            if (pi.GetType() == typeof(bool))
-                            {
-                                bool val = (bool)pi.GetValue(result);
-                                if (!val)
-                                {
-                                    isBreak = false;
-                                    break;
-                                }
-                            }
+                            result = tresult;
+                            break;
                         }
-                        if (isBreak) break;
+                    }
+                    else if (tresult != null)
+                    {
+                        result = tresult;
+                        break;
                     }
                 };
             });
