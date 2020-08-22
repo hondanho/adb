@@ -21,9 +21,9 @@ namespace AutoTool
         {
             var randomNumber = new Random();
             var male = randomNumber.Next(1, 2);
-            return male > 1 ? Constant.maleName : Constant.maleNu;
+            return male > 1 ? Constant.male : Constant.female;
         }
-        public static string getHoRandom()
+        public static string getFirstNameRandom()
         {
             var listHo = new List<string>() {
                 "Nguyen Van",
@@ -79,7 +79,7 @@ namespace AutoTool
             return listHo[randomNumber.Next(0, listHo.Count - 1)];
         }
 
-        public static string getTenRandom()
+        public static string getLastNameRandom()
         {
             var listTen = new List<string>() {
                 "Quynh",
@@ -225,7 +225,7 @@ namespace AutoTool
             return month.ToString();
         }
 
-        public static string GetMatkhauRandom()
+        public static string GetPasswordRandom()
         {
             var random = new Random();
             var passwordLength = random.Next(10, 12);

@@ -20,8 +20,8 @@ namespace AutoTool
         public const string labelCheckpoint = "\\source\\facebook-lite\\checkpoint.png";
         public const string controlPoint = "\\source\\facebook-lite\\control-point.png";
         public const string sourceNumber = "\\source\\facebook-lite\\number";
-        public const string maleName = "\\source\\facebook-lite\\male-nam.png";
-        public const string maleNu = "\\source\\facebook-lite\\male-nu.png";
+        public const string male = "\\source\\facebook-lite\\male-nam.png";
+        public const string female = "\\source\\facebook-lite\\male-nu.png";
         public const string labelMatkhau = "\\source\\facebook-lite\\label-password.png";
         public const string btnDangKy = "\\source\\facebook-lite\\btn-reg-fb.png";
         public const string labelSuccess = "\\source\\facebook-lite\\label-success.png";
