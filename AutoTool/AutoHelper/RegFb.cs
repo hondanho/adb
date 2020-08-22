@@ -59,6 +59,20 @@ namespace AutoTool.AutoHelper
         private string _xMbasicBtnSubmitLoginApprovalCode = "//*[@id='checkpointSubmitButton-actual-button']";
         private string _xMbasicBtnContinueLogin = "//*[@id='checkpointSubmitButton-actual-button']";
 
+        ~RegFb()
+        {
+            this.Close();
+        }
+
+        public void Close()
+        {
+            if (_chromeDriver != null)
+            {
+                _chromeDriver.Close();
+                _chromeDriver.Dispose();
+            }
+        }
+
         public RegFb(EmulatorInfo device, int timeout = 1000)
         {
             _memuHelper = new MEmuFunc();

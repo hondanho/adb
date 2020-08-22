@@ -149,30 +149,43 @@ namespace AutoTool
 
         private void RegisterAccountFacebook(EmulatorInfo device)
         {
-            var fb = new RegFb(device);
-                        
-            var create = fb.RegisterFacebook();
+            var regClone = new RegFb(device);
+            try
+            {
+                var create = regClone.RegisterFacebook();
 
-            if (create.Status == FbRegStatus.SUCCESS_WITH_VERI)
-            {
-                fb.GetUid();
-                if (cbTurn2faOn.Checked)
+                if (create.Status == FbRegStatus.SUCCESS_WITH_VERI)
                 {
-                    fb.TurnOn2Fa();
+                    regClone.GetUid();
+                    if (cbTurn2faOn.Checked)
+                    {
+                        regClone.TurnOn2Fa();
+                    }
+                    this.Invoke((LogInfo)((logInfo) =>
+                    {
+                        _fileAccountSuccess.WriteLine(logInfo);
+                        txtSuccess.AppendText(logInfo + "\r\n");
+                    }), regClone.FbAcc.StringInfo());
                 }
-                this.Invoke((LogInfo)((logInfo) =>
+                else
                 {
-                    _fileAccountSuccess.WriteLine(logInfo);
-                    txtSuccess.AppendText(logInfo + "\r\n");
-                }), fb.FbAcc.StringInfo());
+                    this.Invoke((LogInfo)((logInfo) =>
+                    {
+                        _fileAccountFailer.WriteLine(logInfo);
+                        txtFail.AppendText(logInfo + "\r\n");
+                    }), regClone.FbAcc.StringInfo() + " <<< " + create.Message);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                this.Invoke((LogInfo)((logInfo) =>
+                if (!(ex is ThreadAbortException))
                 {
-                    _fileAccountFailer.WriteLine(logInfo);
-                    txtFail.AppendText(logInfo + "\r\n");
-                }), fb.FbAcc.StringInfo() + " <<< " + create.Message);
+                    _log.Error(ex);
+                }
+            }
+            finally
+            {
+                regClone.Close();
             }
         }
 
@@ -360,10 +373,23 @@ namespace AutoTool
 
         private void RegisFb(string name)
         {
-            var ran = new Random();
-            var timeOut = ran.Next(2, 5);
-            Thread.Sleep(TimeSpan.FromSeconds(timeOut));
-            this.Invoke((ShowLog)printResult, name);
+            var fb = new FacebookAccountInfo();
+            fb.Email = "ficeboh599@synevde.com";
+            fb.Passwd = "quocThang12321";
+            var regFb = new RegFb(fb);
+            try
+            {
+                regFb.TurnOn2Fa();
+                this.Invoke((ShowLog)printResult, name);
+            }
+            catch(Exception ex)
+            {
+                _log.Error(ex);
+            }
+            finally
+            {
+                regFb.Close();
+            }
         }
 
         private void printResult(string result)
