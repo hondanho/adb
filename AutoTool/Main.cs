@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using AutoTool.AutoHelper;
 using AutoTool.AutoMethods;
 using AutoTool.Models;
+using AutoTool.Properties;
 using log4net;
 
 namespace AutoTool
@@ -27,6 +28,8 @@ namespace AutoTool
         private bool _regFbIsRunning = false;
         private decimal _numberOfThread = 0;
         private List<Thread> _RegisFbThreads = new List<Thread>();
+        private bool SettingInitialized = false;
+        private bool SettingChanged = false;
 
         static public void Info(string s)
         {
@@ -41,6 +44,8 @@ namespace AutoTool
         public Main()
         {
             InitializeComponent();
+            InitSetting();
+
             this.lblStatus.Text = "Stopped";
             GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text;
             _memuHelper = new MEmuFunc();
@@ -350,6 +355,16 @@ namespace AutoTool
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (SettingChanged)
+            {
+                var confirm = MessageBox.Show(this, "Bạn có muốn lưu lại cài đặt không?", "Xác nhận", MessageBoxButtons.YesNo);
+
+                if (confirm == DialogResult.Yes)
+                {
+                    SaveSetting();
+                }
+            }
+
             AbortRegisFbThreads();
             if (this._fileAccountFailer != null) this._fileAccountFailer.Dispose();
             if (this._fileAccountSuccess != null) this._fileAccountSuccess.Dispose();
@@ -411,6 +426,56 @@ namespace AutoTool
             this.txtSuccess.AppendText(result);
         }
 
-#endregion
+        #endregion
+
+        private void InitSetting()
+        {
+            // setting
+            this.nudThreadNo.Value = (decimal)Settings.Default["ThreadNos"];
+            this.cbTurn2faOn.Checked = (bool)Settings.Default["TurnOn2fa"];
+            this.nupNoMEmuDevices.Value = (decimal)Settings.Default["MEmuDeviceNos"];
+            this.txtMEmuRootPath.Text = Settings.Default["MEmuCommanderRootPath"].ToString();
+            SettingInitialized = true;
+        }
+
+        private void SaveSetting()
+        {
+            Settings.Default["ThreadNos"] = this.nudThreadNo.Value;
+            Settings.Default["TurnOn2fa"] = this.cbTurn2faOn.Checked;
+            Settings.Default["MEmuDeviceNos"] = this.nupNoMEmuDevices.Value;
+            Settings.Default["MEmuCommanderRootPath"] = this.txtMEmuRootPath.Text;
+            Settings.Default.Save();
+        }
+
+        private void btnSaveSetting_Click(object sender, EventArgs e)
+        {
+            SaveSetting();
+            SettingChanged = false;
+            btnSaveSetting.Enabled = false;
+            Info("Lưu cài đặt thành công");
+        }
+
+        private void btnResetSetting_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show(this, "Bạn có muốn Đặt cài đặt mặc định không?", "Xác nhận", MessageBoxButtons.YesNo);
+
+            if (confirm == DialogResult.Yes)
+            {
+                Settings.Default.Reset();
+                InitSetting();
+                SettingChanged = false;
+                btnSaveSetting.Enabled = false;
+                Info("Đặt cài đặt mặc định thành công");
+            }
+        }
+
+        private void SettingValueChanged(object sender, EventArgs e)
+        {
+            if (SettingInitialized)
+            {
+                SettingChanged = true;
+                btnSaveSetting.Enabled = true;
+            }
+        }
     }
 }
