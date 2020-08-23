@@ -119,8 +119,14 @@ namespace AutoTool.AutoHelper
             var result = new FbRegResult();
             try
             {
-                _memuHelper.StartDevice(_device);
-                Thread.Sleep(_timeout);
+                var mEmuStarted = _memuHelper.StartDevice(_device);
+                if (!mEmuStarted)
+                {
+                    result.Status = FbRegStatus.FAIL;
+                    result.Message = "Không mở được MEmu device";
+                    _log.Error(result.Message);
+                    return result;
+                }
 
                 Open1111();
                 OpenFbLite();

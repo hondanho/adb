@@ -10,6 +10,7 @@ using System.Reflection;
 using AutoTool.Constants;
 using AutoTool.AutoCommons;
 using AutoTool.Models;
+using System.Windows.Forms;
 
 namespace AutoTool.AutoMethods
 {
@@ -112,16 +113,17 @@ namespace AutoTool.AutoMethods
         {
             RunCMD(string.Format(MEmuConsts.START_MEMU, device.Id));
 
-            while (true)
+            var isMEmuRunning = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
             {
                 var isSuccess = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
                 if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
                 {
-                    break;
+                    return true;
                 }
-                Thread.Sleep(1000);
-            }
-            return true;
+                return false;
+            });
+
+            return isMEmuRunning;
         }
 
         public bool StopDevice(EmulatorInfo device)
