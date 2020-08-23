@@ -117,7 +117,6 @@ namespace AutoTool.AutoHelper
 
         public FbRegResult RegisterFacebook()
         {
-
             var result = new FbRegResult();
             try
             {
@@ -266,23 +265,21 @@ namespace AutoTool.AutoHelper
         {
             _memuHelper.ClearAppData(_device, _onedotonePck);
             _memuHelper.StartApp(_device, _onedotonePck);
-
             _TapImg(_device, _defaultPathExec + Constant.getStarted1111);
             _TapImg(_device, _defaultPathExec + Constant.done1111);
             _TapImg(_device, _defaultPathExec + Constant.accept1111);
-
-            var connected = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+            
+            var isConnectedPoint = new WaitHelper(TimeSpan.FromSeconds(50)).Until(() =>
             {
-                var isConnected = _IsExistImg(_device, _defaultPathExec + Constant.connected1111) != null;
-                if (!isConnected)
+                var connected = _IsExistImg(_device, _defaultPathExec + Constant.btnOpened1111);
+                if (connected == null)
                 {
                     _TapImg(_device, _defaultPathExec + Constant.btnNotOpen1111);
-                    Thread.Sleep(500);
                 }
-                return isConnected;
+                return connected;
             });
 
-            return connected;
+            return isConnectedPoint != null;
         }
 
         private void OpenHma()
@@ -295,7 +292,6 @@ namespace AutoTool.AutoHelper
             while ((iconOff != null && iconOn == null) || (iconOff == null && iconOn == null))
             {
                 _TapImg(_device, _defaultPathExec + Constant.iconOffHma);
-                Thread.Sleep(_timeout);
                 iconOff = _IsExistImg(_device, _defaultPathExec + Constant.iconOffHma);
                 iconOn = _IsExistImg(_device, _defaultPathExec + Constant.iconOnHma);
             }
@@ -304,9 +300,7 @@ namespace AutoTool.AutoHelper
         private void OpenFbLite()
         {
             _memuHelper.ClearAppData(_device, _facebookLitePck);
-            Thread.Sleep(_timeout);
             _memuHelper.StartApp(_device, _facebookLitePck);
-            Thread.Sleep(_timeout);
         }
 
         private bool VerifyMail()
@@ -315,7 +309,6 @@ namespace AutoTool.AutoHelper
             {
                 // Chuyển sang màn hình lấy code mail
                 _TapImg(_device, _defaultPathExec + Constant.btnOkReg);
-                Thread.Sleep(_timeout);
 
                 // get code mail
                 string codeMail = new WebDriverWait(_chromeDriver, TimeSpan.FromSeconds(30)).Until(x =>
@@ -568,17 +561,14 @@ namespace AutoTool.AutoHelper
                 if (pointAskBoQua != null)
                 {
                     _TapImg(_device, _defaultPathExec + Constant.askBoQua);
-                    Thread.Sleep(_timeout);
                 }
                 else if (pointBtnOk != null)
                 {
                     _TapImg(_device, _defaultPathExec + Constant.btnOkReg);
-                    Thread.Sleep(_timeout);
                 }
                 else if (pointlabelBoQua != null)
                 {
                     _TapImg(_device, _defaultPathExec + Constant.labelBoQua);
-                    Thread.Sleep(_timeout);
                 }
 
                 pointBtnOk = _IsExistImg(_device, _defaultPathExec + Constant.btnOkReg);
@@ -622,23 +612,17 @@ namespace AutoTool.AutoHelper
                 if (pointSetting1 != null)
                 {
                     _TapImg(this._device, _defaultPathExec + Constant.iconSetting);
-                    Thread.Sleep(_timeout);
                 }
                 else if (pointSetting2 != null)
                 {
                     _TapImg(this._device, _defaultPathExec + Constant.iconSetting2);
-                    Thread.Sleep(_timeout);
                 }
             }
 
             _TapImg(this._device, _defaultPathExec + Constant.btnCaiDat);
-            Thread.Sleep(_timeout);
             _TapImg(this._device, _defaultPathExec + Constant.baoMat);
-            Thread.Sleep(_timeout);
             _TapImg(this._device, _defaultPathExec + Constant.xacThuc2YeuTo);
-            Thread.Sleep(_timeout);
             _TapImg(this._device, _defaultPathExec + Constant.fa2UngDung);
-            Thread.Sleep(_timeout);
 
             if (_IsExistImg(_device, _defaultPathExec + Constant.nhapMatKhau) != null)
             {
@@ -650,7 +634,6 @@ namespace AutoTool.AutoHelper
             {
                 _qrCode = _GetCurrentQRCode(_device);
                 _TapImg(_device, _defaultPathExec + Constant.btnTiepTuc);
-                Thread.Sleep(_timeout);
             }
             return true;
         }
@@ -718,34 +701,44 @@ namespace AutoTool.AutoHelper
             _InputNumber(device, numberDir, number.ToString());
         }
 
+        public bool IsImgValid(string path)
+        {
+            try
+            {
+                if(File.Exists(path))
+                {
+                    using (var fs = new FileStream(path, FileMode.Open))
+                    {
+                        if (fs.CanRead && (Bitmap)Image.FromStream(fs) != null)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return false;
+        }
+
         private Point? _TapImg(EmulatorInfo device, string path, Point? pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            var isHasScreenPath = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
-            {
-                bool isExistPath = File.Exists(screenPath);
-                if (!isExistPath)
-                {
-                    _memuHelper.ScreenShot(device, screenPath);
-                }
-                return isExistPath;
-            });
 
-            if (!isHasScreenPath) return null;
             var point = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
             {
-                if (File.Exists(screenPath))
+                try
                 {
-                    var pointResult = ImageScanOpenCV.FindOutPoint(screenPath, path);
-                    if (pointResult == null)
-                    {
-                        _memuHelper.ScreenShot(device, screenPath);
-                    }
-
-                    return pointResult;
+                    _memuHelper.ScreenShot(device, screenPath);
+                    return ImageScanOpenCV.FindOutPoint(screenPath, path);
                 }
-
-                return null;
+                catch
+                {
+                    return null;
+                }
             });
 
             if (point != null)
@@ -764,22 +757,20 @@ namespace AutoTool.AutoHelper
         private void _TapImgs(EmulatorInfo device, List<string> lstPath, Point? pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            while (!File.Exists(screenPath))
-            {
-                _memuHelper.ScreenShot(device, screenPath);
-            }
 
             foreach (var path in lstPath)
             {
-                var point = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+                var point = new WaitHelper(TimeSpan.FromSeconds(20)).Until(() =>
                 {
-                    var pointResult = ImageScanOpenCV.FindOutPoint(screenPath, path);
-                    if (pointResult == null)
+                    try
                     {
                         _memuHelper.ScreenShot(device, screenPath);
+                        return ImageScanOpenCV.FindOutPoint(screenPath, path);
                     }
-
-                    return pointResult;
+                    catch
+                    {
+                        return null;
+                    }
                 });
 
                 if (point != null)
@@ -799,40 +790,26 @@ namespace AutoTool.AutoHelper
         private string _GetCurrentQRCode(EmulatorInfo device)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            var isHasScreenPath = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
-            {
-                bool isExistPath = File.Exists(screenPath);
-                if (!isExistPath)
-                {
-                    _memuHelper.ScreenShot(device, screenPath);
-                }
-                return isExistPath;
-            });
+            _memuHelper.ScreenShot(device, screenPath);
 
-            if (!isHasScreenPath) return string.Empty;
             return QRCode.DecodeQR(screenPath);
         }
 
         private Point? _IsExistImg(EmulatorInfo device, string subPath)
         {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-
-            var isHasScreenPath = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+            try
             {
-                bool isExistPath = File.Exists(screenPath);
-                if (!isExistPath)
-                {
-                    _memuHelper.ScreenShot(device, screenPath);
-                }
-                return isExistPath;
-            });
+                var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
+                _memuHelper.ScreenShot(device, screenPath);
 
-            if (!isHasScreenPath) return null;
-
-            var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
-            File.Delete(screenPath);
-
-            return point;
+                var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
+                File.Delete(screenPath);
+                return point;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         #endregion
