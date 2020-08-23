@@ -194,17 +194,11 @@ namespace AutoTool
                         txtFail.AppendText(logInfo + "\r\n");
                     }), regClone.FbAcc.StringInfo() + " <<< " + create.Message);
                 }
+                regClone.Dispose();
             }
-            catch (Exception ex)
+            catch (ThreadAbortException)
             {
-                if (!(ex is ThreadAbortException))
-                {
-                    _log.Error(ex);
-                }
-            }
-            finally
-            {
-                regClone.Close();
+                regClone.Dispose();
             }
         }
 
@@ -417,7 +411,7 @@ namespace AutoTool
             }
             finally
             {
-                regFb.Close();
+                regFb.Dispose();
             }
         }
 

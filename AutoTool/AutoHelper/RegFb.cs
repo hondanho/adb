@@ -15,7 +15,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace AutoTool.AutoHelper
 {
-    public class RegFb
+    public class RegFb : IDisposable
     {
         private string _qrCode = string.Empty;
         public FacebookAccountInfo FbAcc;
@@ -61,10 +61,10 @@ namespace AutoTool.AutoHelper
 
         ~RegFb()
         {
-            this.Close();
+            this.Dispose();
         }
 
-        public void Close()
+        public void Dispose()
         {
             if (_chromeDriver != null)
             {
@@ -79,6 +79,7 @@ namespace AutoTool.AutoHelper
                 finally
                 {
                     _chromeDriver.Dispose();
+                    GC.SuppressFinalize(this);
                 }
             }
         }
