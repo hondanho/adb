@@ -60,16 +60,16 @@ namespace AutoTool
         {
             try
             {
-                //var devices = _memuHelper.GetDevices();
-                var devices = new List<EmulatorInfo>
-                {
-                    new EmulatorInfo("1", "1111"),
-                    new EmulatorInfo("2", "2222"),
-                    new EmulatorInfo("3", "3333"),
-                    new EmulatorInfo("4", "4444"),
-                    new EmulatorInfo("5", "5555"),
-                    new EmulatorInfo("6", "6666")
-                };
+                var devices = _memuHelper.GetDevices();
+                //var devices = new List<EmulatorInfo>
+                //{
+                //    new EmulatorInfo("1", "1111"),
+                //    new EmulatorInfo("2", "2222"),
+                //    new EmulatorInfo("3", "3333"),
+                //    new EmulatorInfo("4", "4444"),
+                //    new EmulatorInfo("5", "5555"),
+                //    new EmulatorInfo("6", "6666")
+                //};
                 // Caculate number of threads
                 _numberOfThread = Math.Min(this.nudThreadNo.Value, devices.Count);
 
@@ -161,6 +161,7 @@ namespace AutoTool
         {
             while (_RegisFbThreads.Count > 0)
             {
+
                 _RegisFbThreads[0].Abort();
                 _RegisFbThreads.RemoveAt(0);
             }

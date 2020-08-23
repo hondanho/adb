@@ -34,6 +34,10 @@ namespace AutoTool.AutoHelper
         private string _xpathUid = "//*[@id=\"facebook\"]/head/meta[10]";
         private string _xpathEmail = "//*[@id=\"mail\"]";
 
+        // template mail
+        private string _urlTemplateMail = "https://temp-mail.org/vi";
+        private string _xpathChangeMail = "//*[@id='click-to-delete']";
+
         // mbasic fb
         private string _linkMbasic = "https://mbasic.facebook.com/";
         private string _linkMbasic2faIntro = "https://mbasic.facebook.com/security/2fac/setup/intro/metadata/?source=1";
@@ -116,9 +120,9 @@ namespace AutoTool.AutoHelper
             try
             {
                 _memuHelper.StartDevice(_device);
+                Thread.Sleep(_timeout);
 
                 Open1111();
-
                 OpenFbLite();
 
                 // Change language
@@ -147,17 +151,20 @@ namespace AutoTool.AutoHelper
                 var inputMail = _TapImg(_device, _defaultPathExec + Constant.labelMail, new Point(0, 30));
                 _memuHelper.SwipeLong(_device, new Point(20, inputMail.Value.Y), new Point(500, inputMail.Value.Y), 1500);
                 _memuHelper.SendKey(_device, AdbKeyEvent.KEYCODE_DEL);
-                _chromeDriver.Navigate().GoToUrl("https://temp-mail.org/vi");
+
+                _chromeDriver.Navigate().GoToUrl(_urlTemplateMail);
                 Thread.Sleep(_timeout);
-                var webElement = _chromeDriver.FindElement(By.XPath(_xpathEmail));
-                new WebDriverWait(_chromeDriver, TimeSpan.FromSeconds(30)).Until(x =>
+
+                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
                 {
-                    webElement = x.FindElement(By.XPath(_xpathEmail));
+                    var webElement = _chromeDriver.FindElement(By.XPath(_xpathEmail));
                     FbAcc.Email = webElement.GetAttribute("value");
                     return !string.IsNullOrEmpty(FbAcc.Email) && FbAcc.Email.Contains("@");
                 });
+
                 // Nhập địa chỉ Email
                 _memuHelper.Input(_device, FbAcc.Email);
+                Thread.Sleep(_timeout);
 
                 // Chuyển sang bước tiếp theo (Bước nhập ngày tháng năm sinh)
                 _TapImg(_device, _defaultPathExec + Constant.btnTiep);
@@ -188,11 +195,12 @@ namespace AutoTool.AutoHelper
                 // 1: Success
                 // 0: Checkpoint
                 // null: time out
-                byte? createStatus = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+                byte? createStatus = new WaitHelper(TimeSpan.FromSeconds(10)).Until(() =>
                 {
                     byte? res = null;
                     var isPass = _IsExistImg(_device, _defaultPathExec + Constant.btnOkReg);
                     var isCheckpoint = _IsExistImg(_device, _defaultPathExec + Constant.labelCheckpoint);
+
 
                     if (isPass != null) res = 1;
                     if (isCheckpoint != null) res = 0;
@@ -241,16 +249,37 @@ namespace AutoTool.AutoHelper
         private void Open1111()
         {
             _memuHelper.StartApp(_device, _onedotonePck);
-            Thread.Sleep(_timeout);
 
-            var iconOff = _IsExistImg(_device, _defaultPathExec + Constant.iconTurnOn1111);
-            var iconOn = _IsExistImg(_device, _defaultPathExec + Constant.iconTurned1111);
-            while ((iconOff != null && iconOn == null) || (iconOff == null && iconOn == null))
+            var btnNotOpen = _IsExistImg(_device, _defaultPathExec + Constant.btnNotOpen1111);
+            var btnOpened = _IsExistImg(_device, _defaultPathExec + Constant.btnOpened1111);
+
+            var amountOpen1111 = 0;
+            while (amountOpen1111 < 1)
             {
-                _TapImg(_device, _defaultPathExec + Constant.iconTurnOn1111);
-                Thread.Sleep(_timeout);
-                iconOff = _IsExistImg(_device, _defaultPathExec + Constant.iconTurnOn1111);
-                iconOn = _IsExistImg(_device, _defaultPathExec + Constant.iconTurned1111);
+                if (btnNotOpen == null && btnOpened == null)
+                {
+                    if (_IsExistImg(_device, _defaultPathExec + Constant.labelOkOff1111) != null)
+                    {
+                        _TapImg(_device, _defaultPathExec + Constant.labelOkOff1111);
+                    }
+                    continue;
+                }
+
+                if (btnNotOpen == null && btnOpened != null)
+                {
+                    _TapImg(_device, _defaultPathExec + Constant.btnOpened1111);
+                    Thread.Sleep(500);
+                    _TapImg(_device, _defaultPathExec + Constant.labelOkOff1111);
+                }
+                else if(btnNotOpen != null && btnOpened == null)
+                {
+                    _TapImg(_device, _defaultPathExec + Constant.btnNotOpen1111);
+                    amountOpen1111++;
+                }
+
+                Thread.Sleep(500);
+                btnNotOpen = _IsExistImg(_device, _defaultPathExec + Constant.btnNotOpen1111);
+                btnOpened = _IsExistImg(_device, _defaultPathExec + Constant.btnOpened1111);
             }
         }
 
@@ -694,7 +723,7 @@ namespace AutoTool.AutoHelper
             {
                 _memuHelper.ScreenShot(device, screenPath);
             }
-
+            
             var point = ImageScanOpenCV.FindOutPoint(screenPath, path);
             while (point == null)
             {
@@ -741,15 +770,21 @@ namespace AutoTool.AutoHelper
         private string _GetCurrentQRCode(EmulatorInfo device)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            _memuHelper.ScreenShot(device, screenPath);
-
+            while (!File.Exists(screenPath))
+            {
+                _memuHelper.ScreenShot(device, screenPath);
+            }
             return QRCode.DecodeQR(screenPath);
         }
 
         private Point? _IsExistImg(EmulatorInfo device, string subPath)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            _memuHelper.ScreenShot(device, screenPath);
+
+            while (!File.Exists(screenPath))
+            {
+                _memuHelper.ScreenShot(device, screenPath);
+            }
 
             var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
             File.Delete(screenPath);

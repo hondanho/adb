@@ -13,15 +13,15 @@ namespace AutoTool.AutoCommons
         }
         public TResult Until<TResult>(Func<TResult> condition)
         {
-            if (condition == null)
-            {
-                throw new ArgumentNullException("condition", "condition cannot be null");
-            }
+            //if (condition == null)
+            //{
+            //    throw new ArgumentNullException("condition", "condition cannot be null");
+            //}
             Type typeFromHandle = typeof(TResult);
-            if ((typeFromHandle.IsValueType && typeFromHandle != typeof(bool)) || !typeof(object).IsAssignableFrom(typeFromHandle))
-            {
-                throw new ArgumentException("Can only wait on an object or boolean response, tried to use type: " + typeFromHandle.ToString(), "condition");
-            }
+            //if ((typeFromHandle.IsValueType && typeFromHandle != typeof(bool)) || !typeof(object).IsAssignableFrom(typeFromHandle))
+            //{
+            //    throw new ArgumentException("Can only wait on an object or boolean response, tried to use type: " + typeFromHandle.ToString(), "condition");
+            //}
 
             TResult result = default;
             Task runCondition = new Task(() =>

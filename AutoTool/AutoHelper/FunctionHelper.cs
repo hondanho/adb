@@ -216,8 +216,6 @@ namespace AutoTool
             var x = xx * bw;
             var y = yy * bh;
 
-
-
             ChromeOptions chromeOptions = new ChromeOptions();
             var service = ChromeDriverService.CreateDefaultService();
             service.SuppressInitialDiagnosticInformation = true;

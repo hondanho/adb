@@ -16,6 +16,7 @@ namespace AutoTool
         public const string inputTen = "\\source\\facebook-lite\\input-ten.png";
         public const string linkRegMail = "\\source\\facebook-lite\\link-reg-mail.png";
         public const string labelMail = "\\source\\facebook-lite\\label-email.png";
+        public const string inputMailInValid = "\\source\\facebook-lite\\input-mail-invalid.png";
         public const string labelCodeMail = "\\source\\facebook-lite\\label-require-code-mail.png";
         public const string labelCheckpoint = "\\source\\facebook-lite\\checkpoint.png";
         public const string controlPoint = "\\source\\facebook-lite\\control-point.png";
@@ -43,8 +44,9 @@ namespace AutoTool
 
         // app 1111
         public const string icon1111 = "\\source\\1111\\icon-1111.png";
-        public const string iconTurnOn1111 = "\\source\\1111\\btn-turnon.png";
-        public const string iconTurned1111 = "\\source\\1111\\turned1111.png";
+        public const string btnNotOpen1111 = "\\source\\1111\\btn-not-open.png";
+        public const string btnOpened1111 = "\\source\\1111\\btn-opened.png";
+        public const string labelOkOff1111 = "\\source\\1111\\label-ok-off-1111.png";
 
         // app hma
         public const string iconHma = "\\source\\hma\\icon-hma.png";

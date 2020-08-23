@@ -21,6 +21,7 @@ namespace AutoTool.Constants
         public static string LIST_DEVICES = "memuc listvms";
         public static string CLONE_MEMU_BY_NAME = "memuc clone -i {0}";
         public static string START_MEMU = "memuc -i {0} start";
+        public static string STATUS_MEMU = "memuc -i {0} adb get-status";
         public static string MEMU_STARTAPP_NAME = "memuc -i {0} startapp {1}";
         public static string MEMU_STOPAPP_NAME = "memuc -i {0} stopapp {1}";
         public static string RESTORE_MEMU = "memuc import \"{0}\"";
