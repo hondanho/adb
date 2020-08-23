@@ -111,6 +111,16 @@ namespace AutoTool.AutoMethods
         public bool StartDevice(EmulatorInfo device)
         {
             RunCMD(string.Format(MEmuConsts.START_MEMU, device.Id));
+
+            while (true)
+            {
+                var isSuccess = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
+                if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
+                {
+                    break;
+                }
+                Thread.Sleep(1000);
+            }
             return true;
         }
 
