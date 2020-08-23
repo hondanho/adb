@@ -12,6 +12,7 @@ using AutoTool.AutoMethods;
 using AutoTool.Models;
 using AutoTool.Properties;
 using log4net;
+using AutoTool.AutoCommons;
 
 namespace AutoTool
 {
@@ -19,6 +20,8 @@ namespace AutoTool
     {
         private ILog _log;
         private string _pathAccountSuccess = "accountSuccess.txt";
+        private string _pathFileFirstName = Environment.CurrentDirectory + "\\source\\data\\firstName.txt";
+        private string _pathFileLastName = Environment.CurrentDirectory + "\\source\\data\\lastName.txt";
         private string _pathAccountFailer = "accountFailer.txt";
         private StreamWriter _fileAccountSuccess;
         private StreamWriter _fileAccountFailer;
@@ -44,6 +47,12 @@ namespace AutoTool
         public Main()
         {
             InitializeComponent();
+
+            GlobalVar.ListFirstName = FunctionHelper.ReadAllTextFromFile(_pathFileFirstName);
+            GlobalVar.ListLastName = FunctionHelper.ReadAllTextFromFile(_pathFileLastName);
+            this.lbFirstName.Items.AddRange(GlobalVar.ListFirstName);
+            this.lbLastName.Items.AddRange(GlobalVar.ListLastName);
+
             InitSetting();
 
             this.lblStatus.Text = "Stopped";
@@ -122,7 +131,9 @@ namespace AutoTool
         {
             this.btnStart.Enabled = false;
             this.btnStop.Enabled = true;
-            this.nupNoMEmuDevices.Enabled = false;
+            this.nudThreadNo.Enabled = false;
+            this.cbMinimizeChrome.Enabled = false;
+            this.cbHideChrome.Enabled = false;
             this.cbTurn2faOn.Enabled = false;
             this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
 
@@ -152,7 +163,9 @@ namespace AutoTool
             }
             this.btnStart.Enabled = true;
             this.btnStop.Enabled = false;
-            this.nupNoMEmuDevices.Enabled = true;
+            this.nudThreadNo.Enabled = true;
+            this.cbMinimizeChrome.Enabled = true;
+            this.cbHideChrome.Enabled = true;
             this.cbTurn2faOn.Enabled = true;
             this.lblStatus.Text = "Stopped";
         }
@@ -169,7 +182,10 @@ namespace AutoTool
 
         private void RegisterAccountFacebook(EmulatorInfo device)
         {
-            var regClone = new RegFb(device);
+            var userSetting = new UserSetting();
+            userSetting.HideChrome = this.cbHideChrome.Checked;
+            userSetting.Minimize = this.cbMinimizeChrome.Checked;
+            var regClone = new RegFb(device, userSetting);
             try
             {
                 var create = regClone.RegisterFacebook();
@@ -307,7 +323,7 @@ namespace AutoTool
                 {
                     _memuHelper.RenameDevice(baseDevice, "REG_FB_CLONE_0");
                     // Clone from Base (with id = 0)
-                    var noMemu = this.nupNoMEmuDevices.Value;
+                    var noMemu = this.nudNoMEmuDevices.Value;
                     var cloneDeviceTasks = new List<Task>();
                     decimal count = 0;
                     while (count++ < noMemu - 1)
@@ -423,13 +439,16 @@ namespace AutoTool
 
         #endregion
 
+        #region Setting
         private void InitSetting()
         {
             // setting
             this.nudThreadNo.Value = (decimal)Settings.Default["ThreadNos"];
             this.cbTurn2faOn.Checked = (bool)Settings.Default["TurnOn2fa"];
-            this.nupNoMEmuDevices.Value = (decimal)Settings.Default["MEmuDeviceNos"];
+            this.nudNoMEmuDevices.Value = (decimal)Settings.Default["MEmuDeviceNos"];
             this.txtMEmuRootPath.Text = Settings.Default["MEmuCommanderRootPath"].ToString();
+            this.cbHideChrome.Checked = (bool)Settings.Default["HideChrome"];
+            this.cbMinimizeChrome.Checked = (bool)Settings.Default["MinimizeChrome"];
             SettingInitialized = true;
         }
 
@@ -437,8 +456,10 @@ namespace AutoTool
         {
             Settings.Default["ThreadNos"] = this.nudThreadNo.Value;
             Settings.Default["TurnOn2fa"] = this.cbTurn2faOn.Checked;
-            Settings.Default["MEmuDeviceNos"] = this.nupNoMEmuDevices.Value;
+            Settings.Default["MEmuDeviceNos"] = this.nudNoMEmuDevices.Value;
             Settings.Default["MEmuCommanderRootPath"] = this.txtMEmuRootPath.Text;
+            Settings.Default["HideChrome"] = this.cbHideChrome.Checked;
+            Settings.Default["MinimizeChrome"] = this.cbMinimizeChrome.Checked;
             Settings.Default.Save();
         }
 
@@ -470,6 +491,67 @@ namespace AutoTool
             {
                 SettingChanged = true;
                 btnSaveSetting.Enabled = true;
+            }
+        }
+
+        #endregion
+
+        private void btnAddFirstName_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.txtFirstName.Text))
+            {
+                if (!this.lbFirstName.Items.Contains(this.txtFirstName.Text))
+                {
+                    this.lbFirstName.Items.Insert(0, this.txtFirstName.Text);
+                    GlobalVar.ListFirstName = lbFirstName.ToStringArray();
+                    File.WriteAllLines(_pathFileFirstName, GlobalVar.ListFirstName);
+                }
+                else
+                {
+                    Warning("\"" + this.txtFirstName.Text + "\" đã tồn tại");
+                }
+                this.txtFirstName.Text = string.Empty;
+                this.txtFirstName.Focus();
+            }
+        }
+
+        private void btnRemoveFirstName_Click(object sender, EventArgs e)
+        {
+            if(this.lbFirstName.SelectedItem != null)
+            {
+                this.lbFirstName.Items.Remove(this.lbFirstName.SelectedItem);
+                GlobalVar.ListFirstName = lbFirstName.ToStringArray();
+                File.WriteAllLines(_pathFileFirstName, GlobalVar.ListFirstName);
+            }
+        }
+
+        private void btnAddLastName_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.txtLastName.Text))
+            {
+                if (!this.lbLastName.Items.Contains(this.txtLastName.Text))
+                {
+                    this.lbLastName.Items.Insert(0, this.txtLastName.Text);
+
+                    GlobalVar.ListLastName = lbLastName.ToStringArray();
+                    File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
+                }
+                else
+                {
+                    Warning("\"" + this.txtLastName.Text + "\" đã tồn tại");
+                }
+                this.txtLastName.Text = string.Empty;
+                this.txtLastName.Focus();
+            }
+        }
+
+        private void btnRemoveLastName_Click(object sender, EventArgs e)
+        {
+            if (this.lbLastName.SelectedItem != null)
+            {
+                this.lbLastName.Items.Remove(this.lbLastName.SelectedItem);
+                GlobalVar.ListLastName = lbLastName.ToStringArray();
+                File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
             }
         }
     }

@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoCommons\Extensions.cs" />
     <Compile Include="AutoHelper\AdbHelper.cs" />
     <Compile Include="AutoCommons\AdbKeyEvent.cs" />
     <Compile Include="AutoCommons\GetTextFromImage.cs" />
@@ -84,6 +85,7 @@
     </Compile>
     <Compile Include="Models\FbRegStatus.cs" />
     <Compile Include="Models\GlobalVar.cs" />
+    <Compile Include="Models\UserSetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">

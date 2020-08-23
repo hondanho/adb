@@ -44,9 +44,12 @@ namespace AutoTool
 
         // app 1111
         public const string icon1111 = "\\source\\1111\\icon-1111.png";
+        public const string getStarted1111 = "\\source\\1111\\get-started.png";
+        public const string done1111 = "\\source\\1111\\done.png";
+        public const string accept1111 = "\\source\\1111\\accept.png";
         public const string btnNotOpen1111 = "\\source\\1111\\btn-not-open.png";
         public const string btnOpened1111 = "\\source\\1111\\btn-opened.png";
-        public const string labelOkOff1111 = "\\source\\1111\\label-ok-off-1111.png";
+        public const string connected1111 = "\\source\\1111\\connected.png";
 
         // app hma
         public const string iconHma = "\\source\\hma\\icon-hma.png";

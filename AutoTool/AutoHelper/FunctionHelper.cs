@@ -1,4 +1,5 @@
 ﻿using AutoTool.AutoHelper;
+using AutoTool.Models;
 using log4net;
 using OpenQA.Selenium.Chrome;
 using OtpNet;
@@ -8,6 +9,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -77,111 +79,23 @@ namespace AutoTool
                 "Khanh"
             };
             var randomNumber = new Random();
-            return listHo[randomNumber.Next(0, listHo.Count - 1)];
+            return GlobalVar.ListLastName[randomNumber.Next(0, GlobalVar.ListLastName.Length - 1)];
         }
 
         public static string getLastNameRandom()
         {
-            var listTen = new List<string>() {
-                "Quynh",
-                "Thanh",
-                "Cong",
-                "Duong",
-                "Hai",
-                "Luan",
-                "Tien",
-                "Manh",
-                "Luc",
-                "Phi",
-                "Toan",
-                "Kien",
-                "Mai",
-                "Hao",
-                "Giang",
-                "Huy",
-                "Duy",
-                "May",
-                "Quyet",
-                "Khanh",
-                "Linh",
-                "Thao",
-                "Diep",
-                "Long",
-                "Hung",
-                "Manh",
-                "Hai",
-                "Tung",
-                "Quang",
-                "Linh",
-                "Trang",
-                "Van",
-                "Kien",
-                "Tuan",
-                "Anh",
-                "Ha",
-                "Hoc",
-                "Nam",
-                "Tam",
-                "Bac",
-                "Xuan",
-                "Kinh",
-                "Hoang",
-                "Hau",
-                "Tap",
-                "Thu",
-                "Hoan",
-                "Hanh",
-                "Tam",
-                "Hien",
-                "Kha",
-                "Phong",
-                "Phuoc",
-                "Cong",
-                "Man",
-                "Duc",
-                "Nguyen",
-                "Nhat",
-                "Nhut",
-                "Hoang",
-                "Diep",
-                "Ngoc",
-                "Minh",
-                "Thieu",
-                "Khai",
-                "Dat",
-                "Quynh",
-                "Thanh",
-                "Giang",
-                "Thao",
-                "Diep",
-                "Yen",
-                "Trang",
-                "Huyen",
-                "Nga",
-                "Huong",
-                "Lan",
-                "My",
-                "Hau",
-                "Loan",
-                "Hien",
-                "Diep",
-                "Minh",
-                "Oanh",
-                "Đức",
-                "Mai",
-                "Loan",
-                "Linh",
-                "Minh",
-                "Ninh",
-                "Khanh"
-            };
             var randomNumber = new Random();
-            return listTen[randomNumber.Next(0, listTen.Count - 1)];
+            return GlobalVar.ListFirstName[randomNumber.Next(0, GlobalVar.ListFirstName.Length - 1)];
         }
 
         public static string Get2faFromQR(string stringQr)
         {
             return Regex.Match(stringQr, @"(?<=secret=)([^\&]+)(?=\&?)").Value;
+        }
+
+        public static string[] ReadAllTextFromFile(string pathFile)
+        {
+            return File.ReadAllLines(pathFile);
         }
 
         public static string GetUserNameFromQR(string stringQr)
@@ -201,7 +115,7 @@ namespace AutoTool
             return totp.ComputeTotp();
         }
 
-        public static ChromeDriver InitWebDriver(int idx = 1)
+        public static ChromeDriver InitWebDriver(UserSetting userSetting, int idx = 1)
         {
             var workingArea = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
             var width = workingArea.Width;
@@ -220,6 +134,16 @@ namespace AutoTool
             var service = ChromeDriverService.CreateDefaultService();
             service.SuppressInitialDiagnosticInformation = true;
             service.HideCommandPromptWindow = true;
+
+            if (userSetting.HideChrome)
+            {
+                chromeOptions.AddArguments("headless");
+            }
+            if (userSetting.HideChrome)
+            {
+                chromeOptions.AddArguments("start-maximized");
+            }
+
             chromeOptions.AddArguments($"--window-size={bw},{bh}");
             chromeOptions.AddArguments($"--window-position={x},{y}");
             chromeOptions.AddArguments("--disable-notifications");
@@ -229,7 +153,12 @@ namespace AutoTool
             chromeOptions.AddAdditionalCapability("useAutomationExtension", false);
             chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
             chromeOptions.AddUserProfilePreference("credentials_enable_service", true);
-            return new ChromeDriver(service, chromeOptions);
+            var chromDriver = new ChromeDriver(service, chromeOptions);
+            if (userSetting.Minimize)
+            {
+                chromDriver.Manage().Window.Minimize();
+            }
+            return chromDriver;
         }
 
         public static string GetRandomMonth()

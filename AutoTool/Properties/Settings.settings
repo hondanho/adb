@@ -14,5 +14,11 @@
     <Setting Name="MEmuCommanderRootPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Program Files\Microvirt\MEmu</Value>
     </Setting>
+    <Setting Name="HideChrome" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MinimizeChrome" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
