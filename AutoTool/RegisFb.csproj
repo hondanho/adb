@@ -7,7 +7,7 @@
     <ProjectGuid>{6A898D5F-4DFB-496E-B300-4EFA22E208B9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>AutoTool</RootNamespace>
-    <AssemblyName>AutoTool</AssemblyName>
+    <AssemblyName>RegisFb</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>icons8-github-64.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -43,6 +46,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -131,7 +135,9 @@
       <Version>0.16.5</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="icons8-github-64.ico" />
+  </ItemGroup>
   <Target Name="AfterBuild">
     <Copy SourceFiles="@(SomeDir)" DestinationFiles="@(MySourceFiles->'E:\project\autoandroid\bin\Debug\')" />
   </Target>
