@@ -150,7 +150,7 @@ namespace AutoTool.AutoHelper
                 }
 
                 // Input firstname, lastname
-                _TapImg(_device, _defaultPathExec + Constant.inputHo, new ImagePoint(0, 30));
+                _TapImg(_device, _defaultPathExec + Constant.inputHo, new Point(0, 30));
                 _memuHelper.Input(_device, FbAcc.FirstName);
                 _TapImg(_device, _defaultPathExec + Constant.inputTen);
                 _memuHelper.Input(_device, FbAcc.LastName);
@@ -163,17 +163,8 @@ namespace AutoTool.AutoHelper
 
                 // Lấy địa chỉ Email ở trang temp-mail.org
                 // Sử dụng Chrome Driver
-
-                var pointInputMail = _IsExistImg(_device, _defaultPathExec + Constant.labelMail);
-                if (pointInputMail == null) {
-                    result.Status = FbRegStatus.FAIL;
-                    result.Message = "Bước điền email bi lỗi.";
-                    this._log.Error(result.Message);
-                    return result;
-                }
-
-                _memuHelper.Tap(_device, new Point(pointInputMail.X, pointInputMail.Y + 30));
-                _memuHelper.SwipeLong(_device, new Point(20, pointInputMail.Y), new Point(500, pointInputMail.Y), 1500);
+                var inputMail = _TapImg(_device, _defaultPathExec + Constant.labelMail, new Point(0, 30));
+                _memuHelper.SwipeLong(_device, new Point(20, inputMail.Value.Y), new Point(500, inputMail.Value.Y), 1500);
                 _memuHelper.SendKey(_device, AdbKeyEvent.KEYCODE_DEL);
 
                 _chromeDriver.Navigate().GoToUrl(_urlTemplateMail);
@@ -280,15 +271,15 @@ namespace AutoTool.AutoHelper
             
             var isConnectedPoint = new WaitHelper(TimeSpan.FromSeconds(50)).Until(() =>
             {
-                var connected = _IsExistImg(_device, _defaultPathExec + Constant.btnOpened1111) != null;
-                if (!connected)
+                var connected = _IsExistImg(_device, _defaultPathExec + Constant.btnOpened1111);
+                if (connected == null)
                 {
                     _TapImg(_device, _defaultPathExec + Constant.btnNotOpen1111);
                 }
                 return connected;
             });
 
-            return isConnectedPoint;
+            return isConnectedPoint != null;
         }
 
         private void OpenHma()
@@ -594,29 +585,21 @@ namespace AutoTool.AutoHelper
                 if (pointFound == null)
                 {
                     var pointLabelLanguageVn = _IsExistImg(_device, _defaultPathExec + Constant.labelLanguageVn);
-                    if (pointLabelLanguageVn == null)
-                    {
-                        return null;
-                    } 
-                    else
-                    {
-                        _memuHelper.Tap(_device, pointLabelLanguageVn.Point);
-                        Thread.Sleep(100);
-                    }
+                    if (!pointLabelLanguageVn.HasValue) return null;
+                    _memuHelper.Tap(_device, pointLabelLanguageVn.Value);
+                    Thread.Sleep(100);
                 }
                 return pointFound;
             });
 
-            if (pointVtnRegVn == null)
+            if (!pointVtnRegVn.HasValue)
             {
                 this._log.Error("Không tìm thấy Button \"Tạo mới tài khoản\"");
                 return false;
             }
 
-            _memuHelper.Tap(_device, pointVtnRegVn.Point);
-            Thread.Sleep(500);
+            _memuHelper.Tap(_device, pointVtnRegVn.Value);
             _TapImg(_device, _defaultPathExec + Constant.btnTiep);
-
             return true;
         }
 
@@ -718,7 +701,30 @@ namespace AutoTool.AutoHelper
             _InputNumber(device, numberDir, number.ToString());
         }
 
-        private ImagePoint _TapImg(EmulatorInfo device, string path, ImagePoint pointAdd)
+        public bool IsImgValid(string path)
+        {
+            try
+            {
+                if(File.Exists(path))
+                {
+                    using (var fs = new FileStream(path, FileMode.Open))
+                    {
+                        if (fs.CanRead && (Bitmap)Image.FromStream(fs) != null)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        private Point? _TapImg(EmulatorInfo device, string path, Point? pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
 
@@ -739,90 +745,43 @@ namespace AutoTool.AutoHelper
             {
                 if (pointAdd != null)
                 {
-                    point = new ImagePoint(point.X + pointAdd.X, point.Y + pointAdd.Y);
+                    point = new ImagePoint(point.X + pointAdd.Value.X, point.Y + pointAdd.Value.Y);
                 }
                 _memuHelper.Tap(device, point.Point);
             }
 
             File.Delete(screenPath);
-            return point;
+            return point.Point;
         }
 
-        private bool _TapImg(EmulatorInfo device, string path)
+        private void _TapImgs(EmulatorInfo device, List<string> lstPath, Point? pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-
-            return new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
-            {
-                try
-                {
-                    _memuHelper.ScreenShot(device, screenPath);
-                    var point = ImageScanOpenCV.FindOutPoint(screenPath, path);
-                    if (point != null)
-                    {
-                        _memuHelper.Tap(device, point.Point);
-                        File.Delete(screenPath);
-                        return true;
-                    }
-                    
-                    return false;
-                }
-                catch
-                {
-                    return false;
-                }
-            });
-        }
-
-        private ImagePoint NumberBasePoint(string path, int number)
-        {
-            Bitmap numPadImg = ImageScanOpenCV.GetImage(path);
-            var width = numPadImg.Width;
-            var height = numPadImg.Height;
-            var ww = 3;
-            var hh = 4;
-            var bh = height / hh;
-            var bw = width / ww;
-            if (number > 9 || number <= 0) number = 11;
-            var xx = number % ww == 0 ? ww - 1 : (number % ww) - 1;
-            var yy = number % ww > 0 ? number / ww : (number / ww) - 1;
-            var x = xx * bw + bw / 2;
-            var y = yy * bh + bh / 2;
-
-            return new ImagePoint(x, y);
-        }
-
-        private void _TapImgs(EmulatorInfo device, List<string> lstPath, ImagePoint pointAdd = null)
-        {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            var isHasImg = false;
 
             foreach (var path in lstPath)
             {
-                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+                var point = new WaitHelper(TimeSpan.FromSeconds(20)).Until(() =>
                 {
                     try
                     {
                         _memuHelper.ScreenShot(device, screenPath);
-                        var point = ImageScanOpenCV.FindOutPoint(screenPath, path);
-                        if (point != null)
-                        {
-                            if (pointAdd != null)
-                            {
-                                point = new ImagePoint(point.X + pointAdd.X, point.Y + pointAdd.Y);
-                            }
-
-                            _memuHelper.Tap(device, point.Point);
-                            return true;
-                        }
-
-                        return false;
+                        return ImageScanOpenCV.FindOutPoint(screenPath, path);
                     }
                     catch
                     {
-                        return false;
+                        return null;
                     }
                 });
+
+                if (point != null)
+                {
+                    if (pointAdd != null)
+                    {
+                        point = new ImagePoint(point.X + pointAdd.Value.X, point.Y + pointAdd.Value.Y);
+                    }
+
+                    _memuHelper.Tap(device, point.Point);
+                }
             }
 
             File.Delete(screenPath);
@@ -836,7 +795,7 @@ namespace AutoTool.AutoHelper
             return QRCode.DecodeQR(screenPath);
         }
 
-        private ImagePoint _IsExistImg(EmulatorInfo device, string subPath)
+        private Point? _IsExistImg(EmulatorInfo device, string subPath)
         {
             try
             {
@@ -845,7 +804,7 @@ namespace AutoTool.AutoHelper
 
                 var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
                 File.Delete(screenPath);
-                return point;
+                return point.Point;
             }
             catch
             {

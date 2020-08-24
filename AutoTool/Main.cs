@@ -413,14 +413,13 @@ namespace AutoTool
         {
             GlobalVar.WorkingDirectory = @"E:\ChangZhi\LDPlayer";
             this.txtSuccess.Text = CmdFunc.RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
-            IEmulatorFunc emu = new LdPlayerFunc();
+            IEmulatorFunc emu = new LDPlayerFunc();
             EmulatorInfo device = new EmulatorInfo("0", "LDPlayer", DeviceStatus.RUNNING);
             //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
             var ret = emu.ScreenShot(device, @"E:\screennnn.png");
             Console.WriteLine(this.txtSuccess.Text);
-            EmulatorInfo device = new EmulatorInfo("0", "dd");
             var m = new MEmuFunc();
-            m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
+            //m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
             //AbortRegisFbThreads();
         }
 
