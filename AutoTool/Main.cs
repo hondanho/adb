@@ -28,7 +28,6 @@ namespace AutoTool
         private string _pathAccountFailer = "accountFailer.txt";
         private StreamWriter _fileAccountSuccess;
         private StreamWriter _fileAccountFailer;
-        private IEmulatorFunc _memuHelper;
         public delegate void ShowLog(string message);
         public delegate void LogInfo(string info);
         private bool _regFbIsRunning = false;
@@ -59,8 +58,8 @@ namespace AutoTool
             InitSetting();
 
             this.lblStatus.Text = "Stopped";
-            GlobalVar.WorkingDirectory = this.txtMEmuRootPath.Text;
-            _memuHelper = new MEmuFunc();
+            GlobalVar.MEmuWorkingDirectory = this.txtMEmuRootPath.Text;
+            GlobalVar.LDPlayerWorkingDirectory = this.txtLDPlayerRootPath.Text;
             this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
             this._fileAccountFailer = File.AppendText(_pathAccountFailer);
             this._log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -70,9 +69,15 @@ namespace AutoTool
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            IEmulatorFunc emulatorFunc;
+            if (this.rbUseMEmu.Checked)
+                emulatorFunc = new MEmuFunc();
+            else
+                emulatorFunc = new LDPlayerFunc();
+            //if ()
             try
             {
-                var devices = _memuHelper.GetDevices();
+                var devices = emulatorFunc.GetDevices();
                 //var devices = new List<EmulatorInfo>
                 //{
                 //    new EmulatorInfo("1", "1111"),
@@ -188,7 +193,7 @@ namespace AutoTool
             var userSetting = new UserSetting();
             userSetting.HideChrome = this.cbHideChrome.Checked;
             userSetting.Minimize = this.cbMinimizeChrome.Checked;
-            var regClone = new RegFb(device, userSetting);
+            var regClone = new RegFb(device, userSetting, RegFbType.REG_WITH_LDPLAYER);
             try
             {
                 var create = regClone.RegisterFacebook();
@@ -246,7 +251,7 @@ namespace AutoTool
                     this.btnStart.Enabled = false;
                     this.btnSetupMEmu.Text = "Setting..";
                 });
-                var success = SetupMenu();
+                var success = SetupMEmu();
                 if (success)
                 {
                     this.Invoke((ShowLog)Info, "Cấu hình MEmu thành công.");
@@ -272,7 +277,7 @@ namespace AutoTool
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    GlobalVar.WorkingDirectory = this.txtMEmuRootPath.Text = fbd.SelectedPath;
+                    GlobalVar.MEmuWorkingDirectory = this.txtMEmuRootPath.Text = fbd.SelectedPath;
                 }
             }
         }
@@ -293,15 +298,16 @@ namespace AutoTool
             }
         }
 
-        private bool SetupMenu()
+        private bool SetupMEmu()
         {
+            var memuFunc = new MEmuFunc();
             bool isSuccess = false;
             try
             {
-                var devices = _memuHelper.GetDevices();
+                var devices = memuFunc.GetDevices();
 
                 // Stop all devices
-                _memuHelper.StopDevice(null);
+                memuFunc.StopDevice(null);
 
                 // Remove all devices
                 var removeDeviceTasks = new List<Task>();
@@ -309,7 +315,7 @@ namespace AutoTool
                 {
                     var removeDeviceTask = new Task(() =>
                     {
-                        _memuHelper.RemoveDevice(device);
+                        memuFunc.RemoveDevice(device);
                     });
                     removeDeviceTask.Start();
                     removeDeviceTasks.Add(removeDeviceTask);
@@ -320,11 +326,11 @@ namespace AutoTool
                 var ovaPath = this.txtMEmuZipBase.Text;
                 _RestoreFromMemuFile(ovaPath, this.txtMEmuRootPath.Text + @"\MemuHypervVMs_FB_CLONE");
                 // Get base device
-                var baseDevice = _memuHelper.GetDevices().LastOrDefault();
+                var baseDevice = memuFunc.GetDevices().LastOrDefault();
 
                 if (baseDevice != null)
                 {
-                    _memuHelper.RenameDevice(baseDevice, "REG_FB_CLONE_0");
+                    memuFunc.RenameDevice(baseDevice, "REG_FB_CLONE_0");
                     // Clone from Base (with id = 0)
                     var noMemu = this.nudNoMEmuDevices.Value;
                     var cloneDeviceTasks = new List<Task>();
@@ -333,7 +339,7 @@ namespace AutoTool
                     {
                         var cloneDeviceTask = new Task((c) =>
                         {
-                            _memuHelper.CloneDevice(baseDevice, string.Format("REG_FB_CLONE_{0}", c));
+                            memuFunc.CloneDevice(baseDevice, string.Format("REG_FB_CLONE_{0}", c));
                         }, count);
                         cloneDeviceTask.Start();
                         cloneDeviceTasks.Add(cloneDeviceTask);
@@ -351,6 +357,7 @@ namespace AutoTool
 
         private void _RestoreFromMemuFile(string zipPath, string hypervPath)
         {
+            var memuFunc = new MEmuFunc();
             if (!Directory.Exists(hypervPath))
             {
                 Directory.CreateDirectory(hypervPath);
@@ -362,7 +369,7 @@ namespace AutoTool
             }
             ZipFile.ExtractToDirectory(zipPath, hypervPath);
             var path = Path.Combine(hypervPath, @"MEmu\MEmu.memu");
-            _memuHelper.RestoreDevice(path);
+            memuFunc.RestoreDevice(path);
         }
 
         #endregion
@@ -411,8 +418,8 @@ namespace AutoTool
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GlobalVar.WorkingDirectory = @"E:\ChangZhi\LDPlayer";
-            this.txtSuccess.Text = CmdFunc.RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
+            GlobalVar.MEmuWorkingDirectory = @"E:\ChangZhi\LDPlayer";
+            this.txtSuccess.Text = new CmdFunc(GlobalVar.LDPlayerWorkingDirectory).RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
             IEmulatorFunc emu = new LDPlayerFunc();
             EmulatorInfo device = new EmulatorInfo("0", "LDPlayer", DeviceStatus.RUNNING);
             //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
@@ -458,9 +465,13 @@ namespace AutoTool
             this.nudThreadNo.Value = (decimal)Settings.Default["ThreadNos"];
             this.cbTurn2faOn.Checked = (bool)Settings.Default["TurnOn2fa"];
             this.nudNoMEmuDevices.Value = (decimal)Settings.Default["MEmuDeviceNos"];
+            this.nudNoLDPlayerDevices.Value = (decimal)Settings.Default["LDPlayerDeviceNos"];
             this.txtMEmuRootPath.Text = Settings.Default["MEmuCommanderRootPath"].ToString();
+            this.txtLDPlayerRootPath.Text = Settings.Default["LDPlayerCommanderRootPath"].ToString();
             this.cbHideChrome.Checked = (bool)Settings.Default["HideChrome"];
             this.cbMinimizeChrome.Checked = (bool)Settings.Default["MinimizeChrome"];
+            this.rbUseLDPLayer.Checked = (int)Settings.Default["RegType"] == 0;
+            this.rbUseMEmu.Checked = (int)Settings.Default["RegType"] == 1;
             SettingInitialized = true;
         }
 
@@ -469,9 +480,12 @@ namespace AutoTool
             Settings.Default["ThreadNos"] = this.nudThreadNo.Value;
             Settings.Default["TurnOn2fa"] = this.cbTurn2faOn.Checked;
             Settings.Default["MEmuDeviceNos"] = this.nudNoMEmuDevices.Value;
+            Settings.Default["LDPlayerDeviceNos"] = this.nudNoLDPlayerDevices.Value;
             Settings.Default["MEmuCommanderRootPath"] = this.txtMEmuRootPath.Text;
+            Settings.Default["LDPlayerCommanderRootPath"] = this.txtLDPlayerRootPath.Text;
             Settings.Default["HideChrome"] = this.cbHideChrome.Checked;
             Settings.Default["MinimizeChrome"] = this.cbMinimizeChrome.Checked;
+            Settings.Default["RegType"] = this.rbUseLDPLayer.Checked ? 0 : 1;
             Settings.Default.Save();
         }
 
@@ -564,6 +578,19 @@ namespace AutoTool
                 this.lbLastName.Items.Remove(this.lbLastName.SelectedItem);
                 GlobalVar.ListLastName = lbLastName.ToStringArray();
                 File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
+            }
+        }
+
+        private void txtLDPlayerRootPath_DoubleClick(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    GlobalVar.LDPlayerWorkingDirectory = this.txtLDPlayerRootPath.Text = fbd.SelectedPath;
+                }
             }
         }
     }

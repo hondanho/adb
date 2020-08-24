@@ -1,18 +1,22 @@
-﻿using AutoTool.Models;
-using log4net;
+﻿using log4net;
 using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace AutoTool.AutoMethods
 {
-    public static class CmdFunc
+    public class CmdFunc
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private string WorkingDirectory;
 
-        public static string RunCMD(string cmd, string workingDirectory)
+        public CmdFunc(string workingDirectory)
+        {
+            this.WorkingDirectory = workingDirectory;
+        }
+
+        public string RunCMD(string cmd, string workingDirectory)
         {
             string output;
             try
@@ -39,17 +43,17 @@ namespace AutoTool.AutoMethods
             return output;
         }
 
-        public static string RunCMD(string cmd)
+        public string RunCMD(string cmd)
         {
-            return RunCMD(cmd, GlobalVar.WorkingDirectory);
+            return RunCMD(cmd, this.WorkingDirectory);
         }
 
-        public static string Run(string cmdCommand)
+        public string Run(string cmdCommand)
         {
-            return Run(cmdCommand, GlobalVar.WorkingDirectory);
+            return Run(cmdCommand, this.WorkingDirectory);
         }
 
-        public static string Run(string cmdCommand, string workingDirectory)
+        public string Run(string cmdCommand, string workingDirectory)
         {
             string result;
             try
@@ -81,7 +85,7 @@ namespace AutoTool.AutoMethods
             return result;
         }
 
-        public static string RunWithTime(string cmdCommand, TimeSpan time)
+        public string RunWithTime(string cmdCommand, TimeSpan time)
         {
             string result;
             try
@@ -89,7 +93,7 @@ namespace AutoTool.AutoMethods
                 Process process = new Process();
                 process.StartInfo = new ProcessStartInfo
                 {
-                    WorkingDirectory = GlobalVar.WorkingDirectory,
+                    WorkingDirectory = this.WorkingDirectory,
                     FileName = "cmd.exe",
                     CreateNoWindow = true,
                     UseShellExecute = false,

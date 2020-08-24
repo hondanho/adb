@@ -11,10 +11,17 @@ namespace AutoTool.AutoMethods
 {
     public class LDPlayerFunc : IEmulatorFunc
     {
+        private CmdFunc _cmd;
+
+        public LDPlayerFunc()
+        {
+            _cmd = new CmdFunc(GlobalVar.LDPlayerWorkingDirectory);
+        }
+
         public List<EmulatorInfo> GetDevices()
         {
             List<EmulatorInfo> devices = new List<EmulatorInfo>();
-            string output = CmdFunc.RunCMD(LDPlayerConsts.LIST_DEVICES);
+            string output = _cmd.RunCMD(LDPlayerConsts.LIST_DEVICES);
             if (output != null)
             {
                 var matchs = Regex.Matches(output, @"^(\d+),(.+),[0-9\-]+,[0-9\-]+,(\d+),[0-9\-]+,[0-9\-]+", RegexOptions.Multiline);
@@ -37,7 +44,7 @@ namespace AutoTool.AutoMethods
 
         public string GetSerialNo(EmulatorInfo device)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.GET_SERIAL_NO, device.Id));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.GET_SERIAL_NO, device.Id));
             if (string.IsNullOrEmpty(output))
             {
                 return null;
@@ -47,13 +54,13 @@ namespace AutoTool.AutoMethods
 
         public bool ClearAppData(EmulatorInfo device, string appPackage)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.CLEAR_APP_DATA, device.Id, appPackage));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.CLEAR_APP_DATA, device.Id, appPackage));
             return output != null;
         }
 
         public bool CloneDevice(EmulatorInfo sourceDevice, string newDeviceName)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.CLONE_DEVICE, newDeviceName, sourceDevice.Id));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.CLONE_DEVICE, newDeviceName, sourceDevice.Id));
             return output != null;
         }
 
@@ -66,12 +73,12 @@ namespace AutoTool.AutoMethods
 
             if (!string.IsNullOrEmpty(serialno))
             {
-                var output = CmdFunc.RunCMD(string.Format(AdbConstants.INPUT, serialno, text));
+                var output = _cmd.RunCMD(string.Format(AdbConstants.INPUT, serialno, text));
                 return output != null;
             }
             else
             {
-                var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.INPUT, device.Id, text));
+                var output = _cmd.RunCMD(string.Format(LDPlayerConsts.INPUT, device.Id, text));
                 return output != null;
             }
         }
@@ -92,14 +99,14 @@ namespace AutoTool.AutoMethods
         public bool Input(EmulatorInfo device, char[] text)
         {
             // get serial no
-            var serialno = CmdFunc.RunCMD(string.Format(LDPlayerConsts.GET_SERIAL_NO, device.Id));
+            var serialno = _cmd.RunCMD(string.Format(LDPlayerConsts.GET_SERIAL_NO, device.Id));
 
             if (!string.IsNullOrEmpty(serialno))
             {
                 for (var i = 0; i < text.Length; i++)
                 {
                     var t = _standardizeText(text[i].ToString());
-                    CmdFunc.RunCMD(string.Format(AdbConstants.INPUT, serialno, t));
+                    _cmd.RunCMD(string.Format(AdbConstants.INPUT, serialno, t));
                 }
             }
             else
@@ -107,7 +114,7 @@ namespace AutoTool.AutoMethods
                 for (var i = 0; i < text.Length; i++)
                 {
                     var t = _standardizeText(text[i].ToString());
-                    CmdFunc.RunCMD(string.Format(LDPlayerConsts.INPUT, device.Id, t));
+                    _cmd.RunCMD(string.Format(LDPlayerConsts.INPUT, device.Id, t));
                 }
             }
             return true;
@@ -115,7 +122,7 @@ namespace AutoTool.AutoMethods
 
         public bool LongPress(EmulatorInfo device, int x, int y, int duration = 1000)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.SWIPE_LONG, device.Id, x, y, x, y, duration));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.SWIPE_LONG, device.Id, x, y, x, y, duration));
             return output != null;
         }
 
@@ -126,13 +133,13 @@ namespace AutoTool.AutoMethods
 
         public bool RemoveDevice(EmulatorInfo device)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.REMOVE_DEVICE, device.Id));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.REMOVE_DEVICE, device.Id));
             return output != null;
         }
 
         public bool RenameDevice(EmulatorInfo device, string deviceName)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.RENAME_DEVICE, device.Id, deviceName));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.RENAME_DEVICE, device.Id, deviceName));
             return output != null;
         }
 
@@ -142,7 +149,7 @@ namespace AutoTool.AutoMethods
             var newDevices = _addNewDevice();
             foreach(var device in newDevices)
             {
-                var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.RESTORE_DEVICE, device.Id, source));
+                var output = _cmd.RunCMD(string.Format(LDPlayerConsts.RESTORE_DEVICE, device.Id, source));
             }
             return true;
         }
@@ -150,7 +157,7 @@ namespace AutoTool.AutoMethods
         private List<EmulatorInfo> _addNewDevice()
         {
             var listBefore = GetDevices();
-            var outputAdd = CmdFunc.RunCMD(LDPlayerConsts.ADD_DEVICE);
+            var outputAdd = _cmd.RunCMD(LDPlayerConsts.ADD_DEVICE);
             var listAfter = GetDevices();
             return listAfter.FindAll(aemu =>
             {
@@ -161,25 +168,25 @@ namespace AutoTool.AutoMethods
         public bool ScreenShot(EmulatorInfo device, string destination)
         {
             var tempScreenshot = string.Format("/sdcard/{0}.png", DateTime.Now.Ticks);
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.SCREEN_SHOT, device.Id, tempScreenshot, destination));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.SCREEN_SHOT, device.Id, tempScreenshot, destination));
             return output != null;
         }
 
         public bool SendKey(EmulatorInfo device, AdbKeyEvent keyEvent)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.KEY_EVENT, device.Id, (int)keyEvent));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.KEY_EVENT, device.Id, (int)keyEvent));
             return output != null;
         }
 
         public bool StartApp(EmulatorInfo device, string appPackage)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.START_APP, device.Id, appPackage));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.START_APP, device.Id, appPackage));
             return output != null;
         }
 
         public bool StartDevice(EmulatorInfo device)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.START_DEVICE, device.Id));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.START_DEVICE, device.Id));
             if (output == null) return false;
 
             // check android on
@@ -192,7 +199,7 @@ namespace AutoTool.AutoMethods
 
         public bool StopApp(EmulatorInfo device, string appPackage)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.STOP_APP, device.Id, appPackage));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.STOP_APP, device.Id, appPackage));
             return output != null;
         }
 
@@ -200,12 +207,12 @@ namespace AutoTool.AutoMethods
         {
             if (device == null)
             {
-                var output = CmdFunc.RunCMD(LDPlayerConsts.STOP_ALL_DEVICES);
+                var output = _cmd.RunCMD(LDPlayerConsts.STOP_ALL_DEVICES);
                 return output != null;
             }
             else
             {
-                var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.STOP_DEVICE, device.Id));
+                var output = _cmd.RunCMD(string.Format(LDPlayerConsts.STOP_DEVICE, device.Id));
                 return output != null;
             }
         }
@@ -220,19 +227,19 @@ namespace AutoTool.AutoMethods
 
         public bool Swipe(EmulatorInfo device, Point from, Point to)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.SWIPE, device.Id, from.X, from.Y, to.X, to.Y));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.SWIPE, device.Id, from.X, from.Y, to.X, to.Y));
             return output != null;
         }
 
         public bool SwipeLong(EmulatorInfo device, Point from, Point to, int duration = 1000)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.SWIPE_LONG, device.Id, from.X, from.Y, to.X, to.Y, duration));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.SWIPE_LONG, device.Id, from.X, from.Y, to.X, to.Y, duration));
             return output != null;
         }
 
         public bool Tap(EmulatorInfo device, double x, double y)
         {
-            var output = CmdFunc.RunCMD(string.Format(LDPlayerConsts.TAP, device.Id, x, y));
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.TAP, device.Id, x, y));
             return output != null;
         }
 

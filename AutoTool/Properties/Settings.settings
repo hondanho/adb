@@ -20,5 +20,14 @@
     <Setting Name="MinimizeChrome" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="RegType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="LDPlayerCommanderRootPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E:\ChangZhi\LDPlayer</Value>
+    </Setting>
+    <Setting Name="LDPlayerDeviceNos" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

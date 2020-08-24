@@ -49,7 +49,7 @@ namespace AutoTool.AutoCommons
             return (image3 == null) ? null : image3.ToBitmap();
         }
 
-        public static Point? FindOutImagePoint(Bitmap mainBitmap, Bitmap subBitmap, double percent = 0.9)
+        public static Point? FindOutImagePoint(Bitmap mainBitmap, Bitmap subBitmap, bool getMiddle = true, double percent = 0.9)
         {
             Image<Bgr, byte> image = mainBitmap.ToImage<Bgr, byte>();
             Image<Bgr, byte> template = subBitmap.ToImage<Bgr, byte>();
@@ -67,23 +67,30 @@ namespace AutoTool.AutoCommons
                     var tmp = new Point?(array4[0]);
                     if (tmp != null)
                     {
-                        result = new Point(tmp.Value.X + template.Width / 2, tmp.Value.Y + template.Height / 2);
+                        if (getMiddle)
+                        {
+                            result = new Point(tmp.Value.X + template.Width / 2, tmp.Value.Y + template.Height / 2);
+                        } 
+                        else
+                        {
+                            result = new Point(tmp.Value.X, tmp.Value.Y);
+                        }
                     }
                 }
             }
             return result;
         }
-        public static Point? FindOutImagePoint(string mainPath, string subPath)
+        public static Point? FindOutImagePoint(string mainPath, string subPath, bool getMiddle = true)
         {
             Bitmap image = GetImage(mainPath);
             Bitmap image2 = GetImage(subPath);
-            return FindOutImagePoint(image, image2);
+            return FindOutImagePoint(image, image2, getMiddle);
         }
 
-        public static ImagePoint FindOutPoint(string mainPath, string subPath)
+        public static ImagePoint FindOutPoint(string mainPath, string subPath, bool getMiddle = true)
         {
             ImagePoint result = null;
-            Point? point = FindOutImagePoint(mainPath, subPath);
+            Point? point = FindOutImagePoint(mainPath, subPath, getMiddle);
             if (point.HasValue)
             {
                 result = new ImagePoint(point.Value);

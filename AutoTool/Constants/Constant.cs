@@ -55,5 +55,44 @@ namespace AutoTool
         public const string iconHma = "\\source\\hma\\icon-hma.png";
         public const string iconOffHma = "\\source\\hma\\icon-off.png";
         public const string iconOnHma = "\\source\\hma\\icon-on.png";
+
+        public static class TemplateFacebook
+        {
+            public const string BasePath = @"\source\facebook\";
+            public const string BtnCreateNewFacebookAccount = BasePath + "btn_create_new_facebook_account.png";
+            public const string BtnCreateAccountNext = BasePath + "btn_create_account_next.png";
+            public const string InputLastName = BasePath + "input_lastname.png";
+            public const string InputFirstName = BasePath + "input_firstname.png";
+            public const string BtnNameNext = BasePath + "btn_name_next.png";
+            public const string InputBirthdayBase = BasePath + "input_birthday_base.png";
+            public const string InputBirthdayTop = BasePath + "input_birthday_base_top.png";
+            public const string BtnBirthdayNext = BasePath + "btn_birthday_next.png";
+            public const string OptionGenderFemale = BasePath + "option_gender_female.png";
+            public const string OptionGenderMale = BasePath + "option_gender_male.png";
+            public const string OptionGenderNext = BasePath + "btn_gender_next.png";
+            public const string InputMobileNumber = BasePath + "input_mobile_number.png";
+            public const string BtnMobileNumberNext = BasePath + "btn_mobile_number_next.png";
+            public const string LblSignUpWithEmail = BasePath + "lbl_sign_up_with_email.png";
+            public const string InputEmailAddress = BasePath + "input_email_address.png";
+            public const string BtnEmailAddressNext = BasePath + "btn_email_address_next.png";
+            public const string InputPasswd = BasePath + "input_passwd.png";
+            public const string BtnPasswdNext = BasePath + "btn_passwd_next.png";
+            public const string BtnSignUp = BasePath + "btn_sign_up.png";
+            public const string LblSavePassword = BasePath + "lbl_save_passwd.png";
+            public const string LblRememberEmail = BasePath + "remember_email.png";
+            public const string BtnRememberEmailOk = BasePath + "btn_remember_email_ok.png";
+            public const string Success = BasePath + "success.png";
+            public const string Checkpoint = BasePath + "checkpoint.png";
+        }
+
+        public static class TemplateOneDotOne
+        {
+            public const string BasePath = @"\source\onedotone\";
+            public const string BtnGetStarted = BasePath + "btn_get_started.png";
+            public const string BtnIntroDone = BasePath + "btn_intro_done.png";
+            public const string BtnAccept = BasePath + "btn_accept.png";
+            public const string Disconnected = BasePath + "disconnected.png";
+            public const string Connected = BasePath + "connected.png";
+        }
     }
 }

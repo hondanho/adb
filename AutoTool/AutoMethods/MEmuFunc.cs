@@ -2,60 +2,47 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using log4net;
 using System.Text.RegularExpressions;
-using System.Reflection;
 using AutoTool.Constants;
 using AutoTool.AutoCommons;
 using AutoTool.Models;
-using System.Threading;
 
 namespace AutoTool.AutoMethods
 {
     public class MEmuFunc : IEmulatorFunc
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private CmdFunc _cmd;
 
-        private Point NumberBasePoint(Bitmap numPadImg, int number, ImagePoint offset)
+        public MEmuFunc()
         {
-            var width = numPadImg.Width;
-            var height = numPadImg.Height;
-            var ww = 3;
-            var hh = 4;
-            var bh = height / hh;
-            var bw = width / ww;
-            if (number > 9 || number <= 0) number = 11;
-            var xx = number % ww == 0 ? ww - 1 : (number % ww) - 1;
-            var yy = number % ww > 0 ? number / ww : (number / ww) - 1;
-            var x = xx * bw + bw / 2 + offset.X;
-            var y = yy * bh + bh / 2 + offset.Y;
-
-            return new ImagePoint(x, y).Point;
-        }
-
-        public void TapNumber(EmulatorInfo device, int[] numbers)
-        {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            ScreenShot(device, screenPath);
-
-            var point = ImageScanOpenCV.FindOutPoint(screenPath, Environment.CurrentDirectory + @"\source\facebook-lite\number\number.png");
-
-            System.Drawing.Bitmap numPadImg = ImageScanOpenCV.GetImage(Environment.CurrentDirectory + @"\source\facebook-lite\number\number.png");
-
-            point = new ImagePoint(point.X - numPadImg.Width / 2, point.Y - numPadImg.Height / 2);
-
-            for (int i = 0; i < numbers.Length; i++)
-            {
-                var poitToTap = NumberBasePoint(numPadImg, numbers[i], point);
-                Tap(device, poitToTap);
-                Thread.Sleep(100);
-            }
+            _cmd = new CmdFunc(GlobalVar.MEmuWorkingDirectory);
         }
 
         public List<EmulatorInfo> GetDevices()
         {
+            List<EmulatorInfo> devices = new List<EmulatorInfo>();
+            string output = _cmd.RunCMD(LDPlayerConsts.LIST_DEVICES);
+            if (output != null)
+            {
+                var matchs = Regex.Matches(output, @"(\d+),([^\,]+),.*", RegexOptions.Multiline);
+                int index = 1;
+                foreach (Match match in matchs)
+                {
+                    var id = match.Groups[1].ToString();
+                    var name = match.Groups[2].ToString();
+                    devices.Add(new EmulatorInfo(id, name)
+                    {
+                        Index = index++
+                    });
+                }
+            }
+            return devices;
+        }
+
+        public List<EmulatorInfo> GetDevicess()
+        {
             List<EmulatorInfo> list = new List<EmulatorInfo>();
-            string input = CmdFunc.Run(MEmuConsts.LIST_DEVICES);
+            string input = _cmd.Run(MEmuConsts.LIST_DEVICES);
             string text = Path.GetPathRoot(AppDomain.CurrentDomain.BaseDirectory);
             text = text.Replace("\\", "");
             string pattern = "(?<=" + MEmuConsts.LIST_DEVICES + ").*";
@@ -81,7 +68,7 @@ namespace AutoTool.AutoMethods
 
         public string GetSerialNo(EmulatorInfo device)
         {
-            var output = CmdFunc.RunCMD(string.Format(MEmuConsts.GET_SERIAL_NO, device.Id));
+            var output = _cmd.RunCMD(string.Format(MEmuConsts.GET_SERIAL_NO, device.Id));
             if (string.IsNullOrEmpty(output))
             {
                 return null;
@@ -91,96 +78,91 @@ namespace AutoTool.AutoMethods
 
         public bool StartDevice(EmulatorInfo device)
         {
-            var result = true;
-            var isStarted = CmdFunc.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
+            _cmd.Run(string.Format(MEmuConsts.START_DEVICE, device.Id));
 
-            if (string.IsNullOrEmpty(isStarted) || !isStarted.Contains("already connected"))
+            var isMEmuRunning = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
             {
-                CmdFunc.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
-                result = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+                var isSuccess = _cmd.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
+                if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
                 {
-                    var isSuccess = CmdFunc.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
-                    if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
-                    {
-                        return true;
-                    }
-                    return false;
-                });
-            }
-           
-            return result;
+                    return true;
+                }
+                return false;
+            });
+
+            return isMEmuRunning;
         }
 
         public bool StopDevice(EmulatorInfo device)
         {
             if (device == null)
             {
-                CmdFunc.Run(MEmuConsts.STOP_ALL_DEVICES);
+                _cmd.Run(MEmuConsts.STOP_ALL_DEVICES);
             }
             else
             {
-                CmdFunc.Run(string.Format(MEmuConsts.STOP_DEVICE, device.Id));
+                _cmd.Run(string.Format(MEmuConsts.STOP_DEVICE, device.Id));
             }
             return true;
         }
 
         public bool IsRunning(EmulatorInfo device)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.IS_DEVICE_RUNNING, device.Id));
+            _cmd.Run(string.Format(MEmuConsts.IS_DEVICE_RUNNING, device.Id));
             return true;
         }
 
         public bool RemoveDevice(EmulatorInfo device)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.REMOVE_DEVICE, device.Id));
+            _cmd.Run(string.Format(MEmuConsts.REMOVE_DEVICE, device.Id));
             return true;
         }
 
         public bool RenameDevice(EmulatorInfo device, string deviceName)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.RENAME_DEVICE, device.Id, deviceName));
+            _cmd.Run(string.Format(MEmuConsts.RENAME_DEVICE, device.Id, deviceName));
             return true;
         }
 
         public bool RestoreDevice(string source)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.RESTORE_DEVICE, source));
+            _cmd.Run(string.Format(MEmuConsts.RESTORE_DEVICE, source));
             return true;
         }
 
         public bool CloneDevice(EmulatorInfo sourceDevice, string newDeviceName)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.CLONE_DEVICE, sourceDevice.Id, newDeviceName));
+            _cmd.Run(string.Format(MEmuConsts.CLONE_DEVICE, sourceDevice.Id, newDeviceName));
             return true;
         }
 
         public bool StartApp(EmulatorInfo device, string appPackage)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.START_APP, device.Id, appPackage));
+            _cmd.Run(string.Format(MEmuConsts.START_APP, device.Id, appPackage));
             return true;
         }
 
         public bool StopApp(EmulatorInfo device, string appPackage)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.STOP_APP, device.Id, appPackage));
+            _cmd.Run(string.Format(MEmuConsts.STOP_APP, device.Id, appPackage));
             return true;
         }
 
         public bool ClearAppData(EmulatorInfo device, string appPackage)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.CLEAR_APP_DATA, device.Id, appPackage));
+            _cmd.Run(string.Format(MEmuConsts.CLEAR_APP_DATA, device.Id, appPackage));
             return true;
         }
 
         public bool SendKey(EmulatorInfo device, AdbKeyEvent keyEvent)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.KEY_EVENT, device.Id, (int)keyEvent));
+            _cmd.Run(string.Format(MEmuConsts.KEY_EVENT, device.Id, (int)keyEvent));
             return true;
         }
 
         public bool LongPress(EmulatorInfo device, int x, int y, int duration = 1000)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.SWIPE_LONG, device.Id, x, y, x, y, duration));
+            _cmd.Run(string.Format(MEmuConsts.SWIPE_LONG, device.Id, x, y, x, y, duration));
             return true;
         }
 
@@ -191,7 +173,7 @@ namespace AutoTool.AutoMethods
 
         public bool Tap(EmulatorInfo device, double x, double y)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.TAP, device.Id, x, y));
+            _cmd.Run(string.Format(MEmuConsts.TAP, device.Id, x, y));
             return true;
         }
 
@@ -202,26 +184,26 @@ namespace AutoTool.AutoMethods
 
         public bool Swipe(EmulatorInfo device, Point from, Point to)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.SWIPE, device.Id, from.X, from.Y, to.X, to.Y));
+            _cmd.Run(string.Format(MEmuConsts.SWIPE, device.Id, from.X, from.Y, to.X, to.Y));
             return true;
         }
 
         public bool SwipeLong(EmulatorInfo device, Point from, Point to, int duration = 1000)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.SWIPE_LONG, device.Id, from.X, from.Y, to.X, to.Y, duration));
+            _cmd.Run(string.Format(MEmuConsts.SWIPE_LONG, device.Id, from.X, from.Y, to.X, to.Y, duration));
             return true;
         }
 
         public bool ScreenShot(EmulatorInfo device, string destination)
         {
             var pathOnDevice = string.Format("/sdcard/{0}.png", new DateTime().Millisecond);
-            CmdFunc.Run(string.Format(MEmuConsts.SCREEN_SHOT, device.Id, pathOnDevice, destination));
+            _cmd.Run(string.Format(MEmuConsts.SCREEN_SHOT, device.Id, pathOnDevice, destination));
             return true;
         }
 
         public bool Input(EmulatorInfo device, string text)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.INPUT, device.Id, text));
+            _cmd.Run(string.Format(MEmuConsts.INPUT, device.Id, text));
             return true;
         }
 
@@ -229,7 +211,7 @@ namespace AutoTool.AutoMethods
         {
             for (int i = 0; i < text.Length; i++)
             {
-                CmdFunc.Run(string.Format(MEmuConsts.INPUT, device.Id, text[i]));
+                _cmd.Run(string.Format(MEmuConsts.INPUT, device.Id, text[i]));
             }
             return true;
         }

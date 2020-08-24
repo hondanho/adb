@@ -92,6 +92,7 @@
     <Compile Include="Models\FbRegStatus.cs" />
     <Compile Include="Models\GlobalVar.cs" />
     <Compile Include="Models\EmulatorConfig.cs" />
+    <Compile Include="Models\RegFbType.cs" />
     <Compile Include="Models\UserSetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

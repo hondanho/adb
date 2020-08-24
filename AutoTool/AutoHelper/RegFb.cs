@@ -24,8 +24,9 @@ namespace AutoTool.AutoHelper
         private ChromeDriver _chromeDriver;
         private ILog _log;
         private EmulatorInfo _device;
-        private IEmulatorFunc _memuHelper;
+        private IEmulatorFunc _EmulatorFunc;
         private UserSetting _userSetting;
+        private RegFbType _regType;
 
         private string _onedotonePck = "com.cloudflare.onedotonedotonedotone";
         private string _hmaPck = "com.hidemyass.hidemyassprovpn";
@@ -64,6 +65,9 @@ namespace AutoTool.AutoHelper
         private string _xMbasicBtnSubmitLoginApprovalCode = "//*[@id='checkpointSubmitButton-actual-button']";
         private string _xMbasicBtnContinueLogin = "//*[@id='checkpointSubmitButton-actual-button']";
 
+        private string _facebookPackageName = "com.facebook.katana";
+        private string _oneDotOnePackageName = "com.cloudflare.onedotonedotonedotone";
+
         ~RegFb()
         {
             this.Dispose();
@@ -89,10 +93,20 @@ namespace AutoTool.AutoHelper
             }
         }
 
-        public RegFb(EmulatorInfo device, UserSetting userSetting, int timeout = 1000)
+        public RegFb(EmulatorInfo device, UserSetting userSetting, RegFbType regType, int timeout = 1000)
         {
             _userSetting = userSetting;
-            _memuHelper = new MEmuFunc();
+            _regType = regType;
+            switch (_regType)
+            {
+                case RegFbType.REG_WITH_MEMU:
+                    _EmulatorFunc = new MEmuFunc();
+                    break;
+                case RegFbType.REG_WITH_LDPLAYER:
+                default:
+                    _EmulatorFunc = new LDPlayerFunc();
+                    break;
+            }
             _device = device;
             _timeout = timeout;
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -117,10 +131,108 @@ namespace AutoTool.AutoHelper
 
         public FbRegResult RegisterFacebook()
         {
+            if (_regType == RegFbType.REG_WITH_MEMU)
+            {
+                return RegisterFacebookMEmuFbLite();
+            }
+            else
+            {
+                return RegisterFacebookLDPlayerFbKatana();
+            }
+        }
+
+        private FbRegResult RegisterFacebookLDPlayerFbKatana()
+        {
+            var screenShotPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
+            var result = new FbRegResult();
+
+            try
+            {
+                // Start device to register
+                var deviceStarted = _EmulatorFunc.StartDevice(_device);
+                if (!deviceStarted)
+                {
+                    result.Status = FbRegStatus.FAIL;
+                    result.Message = "Không mở được device";
+                    _log.Error(result.Message);
+                    return result;
+                }
+
+                // Start 1.1.1.1
+                _EmulatorFunc.StartApp(_device, _oneDotOnePackageName);
+                
+                // Finding button Get started on home screen and Tap it
+                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                    _EmulatorFunc.ScreenShot(_device, screenShotPath);
+                    var point = ImageScanOpenCV.FindOutPoint(screenShotPath,
+                        _defaultPathExec + Constant.TemplateOneDotOne.BtnGetStarted);
+                    if (point == null) return false;
+
+                    return _EmulatorFunc.Tap(_device, point.Point);
+                });
+                // Finding button Done on intro screen and Tap it
+                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                    _EmulatorFunc.ScreenShot(_device, screenShotPath);
+                    var point = ImageScanOpenCV.FindOutPoint(screenShotPath,
+                        _defaultPathExec + Constant.TemplateOneDotOne.BtnIntroDone);
+                    if (point == null) return false;
+
+                    return _EmulatorFunc.Tap(_device, point.Point);
+                });
+                // Finding button Accept on Term & Privacy screen and Tap it
+                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                    _EmulatorFunc.ScreenShot(_device, screenShotPath);
+                    var point = ImageScanOpenCV.FindOutPoint(screenShotPath,
+                        _defaultPathExec + Constant.TemplateOneDotOne.BtnAccept);
+                    if (point == null) return false;
+
+                    return _EmulatorFunc.Tap(_device, point.Point);
+                });
+                // Finding button Disconnected on screen and Tap it
+                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                    _EmulatorFunc.ScreenShot(_device, screenShotPath);
+                    var pointDisconnected = ImageScanOpenCV.FindOutPoint(screenShotPath,
+                        _defaultPathExec + Constant.TemplateOneDotOne.Disconnected);
+                    var pointConnected = ImageScanOpenCV.FindOutPoint(screenShotPath,
+                        _defaultPathExec + Constant.TemplateOneDotOne.Connected);
+
+                    if (pointConnected == null
+                        && pointDisconnected == null) return false;
+
+                    if (pointDisconnected != null)
+                    {
+                        return _EmulatorFunc.Tap(_device, pointDisconnected.Point);
+                    }
+
+                    return true;
+                });
+
+                // Start app facebook
+                _EmulatorFunc.StartApp(_device, _facebookPackageName);
+
+                //  
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+                result.Status = FbRegStatus.FAIL;
+                result.Message = "Tạo tài khoản lỗi (" + ex.Message + ")";
+            }
+            finally
+            {
+                _EmulatorFunc.ClearAppData(_device, _facebookPackageName);
+                _EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
+            }
+
+            return result;
+        } 
+
+        private FbRegResult RegisterFacebookMEmuFbLite()
+        {
             var result = new FbRegResult();
             try
             {
-                var mEmuStarted = _memuHelper.StartDevice(_device);
+                var mEmuStarted = _EmulatorFunc.StartDevice(_device);
                 if (!mEmuStarted)
                 {
                     result.Status = FbRegStatus.FAIL;
@@ -141,7 +253,7 @@ namespace AutoTool.AutoHelper
                 OpenFbLite();
 
                 // Change language
-                var setLaguageSuccess = SetFbLanguageToVn();
+                var setLaguageSuccess = SetFbLanguageToVnFbLite();
                 if (!setLaguageSuccess)
                 {
                     result.Status = FbRegStatus.FAIL;
@@ -150,10 +262,10 @@ namespace AutoTool.AutoHelper
                 }
 
                 // Input firstname, lastname
-                _TapImg(_device, _defaultPathExec + Constant.inputHo, new Point(0, 30));
-                _memuHelper.Input(_device, FbAcc.FirstName);
+                _TapImg(_device, _defaultPathExec + Constant.inputHo, 30, new ImagePoint(0, 30));
+                _EmulatorFunc.Input(_device, FbAcc.FirstName);
                 _TapImg(_device, _defaultPathExec + Constant.inputTen);
-                _memuHelper.Input(_device, FbAcc.LastName);
+                _EmulatorFunc.Input(_device, FbAcc.LastName);
 
                 // Chuyển sang bước tiếp theo (Đăng ký bằng Mobile hoặc Email)
                 _TapImg(_device, _defaultPathExec + Constant.btnTiep);
@@ -163,9 +275,12 @@ namespace AutoTool.AutoHelper
 
                 // Lấy địa chỉ Email ở trang temp-mail.org
                 // Sử dụng Chrome Driver
-                var inputMail = _TapImg(_device, _defaultPathExec + Constant.labelMail, new Point(0, 30));
-                _memuHelper.SwipeLong(_device, new Point(20, inputMail.Value.Y), new Point(500, inputMail.Value.Y), 1500);
-                _memuHelper.SendKey(_device, AdbKeyEvent.KEYCODE_DEL);
+                var emailPoint = FindOutPoint(_device, _defaultPathExec + Constant.labelMail);
+                _EmulatorFunc.Tap(_device, new Point(emailPoint.X, emailPoint.Y + 30));
+                //var inputMail = _TapImg(_device, _defaultPathExec + Constant.labelMail, new ImagePoint(0, 30));
+                
+                _EmulatorFunc.SwipeLong(_device, new Point(20, emailPoint.Y), new Point(500, emailPoint.Y), 1500);
+                _EmulatorFunc.SendKey(_device, AdbKeyEvent.KEYCODE_DEL);
 
                 _chromeDriver.Navigate().GoToUrl(_urlTemplateMail);
                 Thread.Sleep(_timeout);
@@ -178,7 +293,7 @@ namespace AutoTool.AutoHelper
                 });
 
                 // Nhập địa chỉ Email
-                _memuHelper.Input(_device, FbAcc.Email);
+                _EmulatorFunc.Input(_device, FbAcc.Email);
                 Thread.Sleep(_timeout);
 
                 // Chuyển sang bước tiếp theo (Bước nhập ngày tháng năm sinh)
@@ -198,7 +313,7 @@ namespace AutoTool.AutoHelper
 
                 // Input Passwd
                 _TapImg(_device, _defaultPathExec + Constant.labelMatkhau);
-                _memuHelper.Input(_device, FbAcc.Passwd);
+                _EmulatorFunc.Input(_device, FbAcc.Passwd);
 
                 // Tap vào Đăng ký
                 _TapImg(_device, _defaultPathExec + Constant.btnDangKy);
@@ -213,8 +328,8 @@ namespace AutoTool.AutoHelper
                 byte? createStatus = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
                 {
                     byte? res = null;
-                    var isPass = _IsExistImg(_device, _defaultPathExec + Constant.btnOkReg);
-                    var isCheckpoint = _IsExistImg(_device, _defaultPathExec + Constant.labelCheckpoint);
+                    var isPass = FindOutPoint(_device, _defaultPathExec + Constant.btnOkReg);
+                    var isCheckpoint = FindOutPoint(_device, _defaultPathExec + Constant.labelCheckpoint);
 
 
                     if (isPass != null) res = 1;
@@ -242,7 +357,7 @@ namespace AutoTool.AutoHelper
                 result.Status = FbRegStatus.CREATED;
                 result.Message = "Đã tạo được tài khoản";
 
-                var veri = VerifyMail();
+                var veri = VerifyMailFbLite();
 
                 if (veri)
                 {
@@ -263,15 +378,15 @@ namespace AutoTool.AutoHelper
 
         private bool Open1111()
         {
-            _memuHelper.ClearAppData(_device, _onedotonePck);
-            _memuHelper.StartApp(_device, _onedotonePck);
+            _EmulatorFunc.ClearAppData(_device, _onedotonePck);
+            _EmulatorFunc.StartApp(_device, _onedotonePck);
             _TapImg(_device, _defaultPathExec + Constant.getStarted1111);
             _TapImg(_device, _defaultPathExec + Constant.done1111);
             _TapImg(_device, _defaultPathExec + Constant.accept1111);
             
             var isConnectedPoint = new WaitHelper(TimeSpan.FromSeconds(50)).Until(() =>
             {
-                var connected = _IsExistImg(_device, _defaultPathExec + Constant.btnOpened1111);
+                var connected = FindOutPoint(_device, _defaultPathExec + Constant.btnOpened1111);
                 if (connected == null)
                 {
                     _TapImg(_device, _defaultPathExec + Constant.btnNotOpen1111);
@@ -284,26 +399,26 @@ namespace AutoTool.AutoHelper
 
         private void OpenHma()
         {
-            _memuHelper.StartApp(_device, _hmaPck);
+            _EmulatorFunc.StartApp(_device, _hmaPck);
             Thread.Sleep(_timeout);
 
-            var iconOff = _IsExistImg(_device, _defaultPathExec + Constant.iconOffHma);
-            var iconOn = _IsExistImg(_device, _defaultPathExec + Constant.iconOnHma);
+            var iconOff = FindOutPoint(_device, _defaultPathExec + Constant.iconOffHma);
+            var iconOn = FindOutPoint(_device, _defaultPathExec + Constant.iconOnHma);
             while ((iconOff != null && iconOn == null) || (iconOff == null && iconOn == null))
             {
                 _TapImg(_device, _defaultPathExec + Constant.iconOffHma);
-                iconOff = _IsExistImg(_device, _defaultPathExec + Constant.iconOffHma);
-                iconOn = _IsExistImg(_device, _defaultPathExec + Constant.iconOnHma);
+                iconOff = FindOutPoint(_device, _defaultPathExec + Constant.iconOffHma);
+                iconOn = FindOutPoint(_device, _defaultPathExec + Constant.iconOnHma);
             }
         }
 
         private void OpenFbLite()
         {
-            _memuHelper.ClearAppData(_device, _facebookLitePck);
-            _memuHelper.StartApp(_device, _facebookLitePck);
+            _EmulatorFunc.ClearAppData(_device, _facebookLitePck);
+            _EmulatorFunc.StartApp(_device, _facebookLitePck);
         }
 
-        private bool VerifyMail()
+        private bool VerifyMailFbLite()
         {
             try
             {
@@ -334,7 +449,7 @@ namespace AutoTool.AutoHelper
                 if (string.IsNullOrEmpty(codeMail)) return false;
 
                 _TapImg(_device, _defaultPathExec + Constant.inputCodeMail);
-                _memuHelper.Input(_device, codeMail);
+                _EmulatorFunc.Input(_device, codeMail);
 
                 // go to home
                 //GoToHomeAfterVerify();
@@ -553,9 +668,9 @@ namespace AutoTool.AutoHelper
 
         private void GoToHomeAfterVerify()
         {
-            var pointBtnOk = _IsExistImg(_device, _defaultPathExec + Constant.btnOkReg);
-            var pointAskBoQua = _IsExistImg(_device, _defaultPathExec + Constant.askBoQua);
-            var pointlabelBoQua = _IsExistImg(_device, _defaultPathExec + Constant.labelBoQua);
+            var pointBtnOk = FindOutPoint(_device, _defaultPathExec + Constant.btnOkReg);
+            var pointAskBoQua = FindOutPoint(_device, _defaultPathExec + Constant.askBoQua);
+            var pointlabelBoQua = FindOutPoint(_device, _defaultPathExec + Constant.labelBoQua);
             while (pointBtnOk != null || pointAskBoQua != null || pointlabelBoQua != null)
             {
                 if (pointAskBoQua != null)
@@ -571,42 +686,42 @@ namespace AutoTool.AutoHelper
                     _TapImg(_device, _defaultPathExec + Constant.labelBoQua);
                 }
 
-                pointBtnOk = _IsExistImg(_device, _defaultPathExec + Constant.btnOkReg);
-                pointAskBoQua = _IsExistImg(_device, _defaultPathExec + Constant.askBoQua);
-                pointlabelBoQua = _IsExistImg(_device, _defaultPathExec + Constant.labelBoQua);
+                pointBtnOk = FindOutPoint(_device, _defaultPathExec + Constant.btnOkReg);
+                pointAskBoQua = FindOutPoint(_device, _defaultPathExec + Constant.askBoQua);
+                pointlabelBoQua = FindOutPoint(_device, _defaultPathExec + Constant.labelBoQua);
             }
         }
 
-        private bool SetFbLanguageToVn()
+        private bool SetFbLanguageToVnFbLite()
         {
             var pointVtnRegVn = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
             {
-                var pointFound = _IsExistImg(_device, _defaultPathExec + Constant.btnTaoMoiTaiKhoanVn);
+                var pointFound = FindOutPoint(_device, _defaultPathExec + Constant.btnTaoMoiTaiKhoanVn);
                 if (pointFound == null)
                 {
-                    var pointLabelLanguageVn = _IsExistImg(_device, _defaultPathExec + Constant.labelLanguageVn);
-                    if (!pointLabelLanguageVn.HasValue) return null;
-                    _memuHelper.Tap(_device, pointLabelLanguageVn.Value);
+                    var pointLabelLanguageVn = FindOutPoint(_device, _defaultPathExec + Constant.labelLanguageVn);
+                    if (pointLabelLanguageVn == null) return null;
+                    _EmulatorFunc.Tap(_device, pointLabelLanguageVn.Point);
                     Thread.Sleep(100);
                 }
                 return pointFound;
             });
 
-            if (!pointVtnRegVn.HasValue)
+            if (pointVtnRegVn == null)
             {
                 this._log.Error("Không tìm thấy Button \"Tạo mới tài khoản\"");
                 return false;
             }
 
-            _memuHelper.Tap(_device, pointVtnRegVn.Value);
+            _EmulatorFunc.Tap(_device, pointVtnRegVn.Point);
             _TapImg(_device, _defaultPathExec + Constant.btnTiep);
             return true;
         }
 
         private bool Turn2FaOnEmulator()
         {
-            var pointSetting1 = _IsExistImg(_device, _defaultPathExec + Constant.iconSetting);
-            var pointSetting2 = _IsExistImg(_device, _defaultPathExec + Constant.iconSetting2);
+            var pointSetting1 = FindOutPoint(_device, _defaultPathExec + Constant.iconSetting);
+            var pointSetting2 = FindOutPoint(_device, _defaultPathExec + Constant.iconSetting2);
             if (pointSetting1 != null || pointSetting2 != null)
             {
                 if (pointSetting1 != null)
@@ -624,13 +739,13 @@ namespace AutoTool.AutoHelper
             _TapImg(this._device, _defaultPathExec + Constant.xacThuc2YeuTo);
             _TapImg(this._device, _defaultPathExec + Constant.fa2UngDung);
 
-            if (_IsExistImg(_device, _defaultPathExec + Constant.nhapMatKhau) != null)
+            if (FindOutPoint(_device, _defaultPathExec + Constant.nhapMatKhau) != null)
             {
                 _TapImg(_device, _defaultPathExec + Constant.nhapMatKhau);
-                _memuHelper.Input(_device, FbAcc.Passwd);
+                _EmulatorFunc.Input(_device, FbAcc.Passwd);
                 _TapImg(_device, _defaultPathExec + Constant.btnTiepTuc);
             }
-            if (_IsExistImg(_device, _defaultPathExec + Constant.screenCode2fa) != null)
+            if (FindOutPoint(_device, _defaultPathExec + Constant.screenCode2fa) != null)
             {
                 _qrCode = _GetCurrentQRCode(_device);
                 _TapImg(_device, _defaultPathExec + Constant.btnTiepTuc);
@@ -724,16 +839,13 @@ namespace AutoTool.AutoHelper
             return false;
         }
 
-        private Point? _TapImg(EmulatorInfo device, string path, Point? pointAdd = null)
+        private bool _TapImg(EmulatorInfo device, string path, int timeOutInSecond = 30, ImagePoint offsetPoint = null)
         {
-            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-
-            var point = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+            var point = new WaitHelper(TimeSpan.FromSeconds(timeOutInSecond)).Until(() =>
             {
                 try
                 {
-                    _memuHelper.ScreenShot(device, screenPath);
-                    return ImageScanOpenCV.FindOutPoint(screenPath, path);
+                    return FindOutPoint(device, path);
                 }
                 catch
                 {
@@ -741,17 +853,13 @@ namespace AutoTool.AutoHelper
                 }
             });
 
-            if (point != null)
-            {
-                if (pointAdd != null)
-                {
-                    point = new ImagePoint(point.X + pointAdd.Value.X, point.Y + pointAdd.Value.Y);
-                }
-                _memuHelper.Tap(device, point.Point);
-            }
+            if (point == null) return false;
 
-            File.Delete(screenPath);
-            return point.Point;
+            if (offsetPoint != null)
+            {
+                point = new ImagePoint(point.X + offsetPoint.X, point.Y + offsetPoint.Y);
+            }
+            return _EmulatorFunc.Tap(device, point.Point);
         }
 
         private void _TapImgs(EmulatorInfo device, List<string> lstPath, Point? pointAdd = null)
@@ -764,7 +872,7 @@ namespace AutoTool.AutoHelper
                 {
                     try
                     {
-                        _memuHelper.ScreenShot(device, screenPath);
+                        _EmulatorFunc.ScreenShot(device, screenPath);
                         return ImageScanOpenCV.FindOutPoint(screenPath, path);
                     }
                     catch
@@ -780,7 +888,7 @@ namespace AutoTool.AutoHelper
                         point = new ImagePoint(point.X + pointAdd.Value.X, point.Y + pointAdd.Value.Y);
                     }
 
-                    _memuHelper.Tap(device, point.Point);
+                    _EmulatorFunc.Tap(device, point.Point);
                 }
             }
 
@@ -790,21 +898,26 @@ namespace AutoTool.AutoHelper
         private string _GetCurrentQRCode(EmulatorInfo device)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-            _memuHelper.ScreenShot(device, screenPath);
+            _EmulatorFunc.ScreenShot(device, screenPath);
 
             return QRCode.DecodeQR(screenPath);
         }
 
-        private Point? _IsExistImg(EmulatorInfo device, string subPath)
+        private ImagePoint FindOutPoint(string mainPath, string subPath, bool getMiddle = true)
+        {
+            return ImageScanOpenCV.FindOutPoint(mainPath, subPath, getMiddle);
+        }
+
+        private ImagePoint FindOutPoint(EmulatorInfo device, string subPath, bool getMiddle = true)
         {
             try
             {
                 var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
-                _memuHelper.ScreenShot(device, screenPath);
+                _EmulatorFunc.ScreenShot(device, screenPath);
 
-                var point = ImageScanOpenCV.FindOutPoint(screenPath, subPath);
+                var point = FindOutPoint(screenPath, subPath, getMiddle);
                 File.Delete(screenPath);
-                return point.Point;
+                return point;
             }
             catch
             {
