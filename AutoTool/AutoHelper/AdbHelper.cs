@@ -127,7 +127,7 @@ namespace AutoTool.AutoHelper
             LongPress(deviceID, point.X, point.Y, duration);
         }
 
-        public static void Tap(string deviceId, Point point)
+        public static void Tap(string deviceId, ImagePoint point)
         {
             Tap(deviceId, point.X, point.Y);
         }
@@ -165,7 +165,7 @@ namespace AutoTool.AutoHelper
                 RunCMD(string.Format(INPUT, deviceId, text[i]));
             }
         }
-        public static Point? TapImg(string deviceId, string path, Point? pointAdd = null)
+        public static ImagePoint TapImg(string deviceId, string path, ImagePoint pointAdd = null)
         {
             var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
 
@@ -184,8 +184,8 @@ namespace AutoTool.AutoHelper
                 point = ImageScanOpenCV.FindOutPoint(screenPath, path);
             }
 
-            point = pointAdd == null ? point : new Point(point.Value.X + pointAdd.Value.X, point.Value.Y + pointAdd.Value.Y);
-            Tap(deviceId, point.Value);
+            point = pointAdd == null ? point : new ImagePoint(new Point(point.X + pointAdd.X, point.Y + pointAdd.Y));
+            Tap(deviceId, point);
             File.Delete(screenPath);
 
             return point;

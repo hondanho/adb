@@ -14,6 +14,7 @@ using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
+using Emgu.CV.ML;
 using System.Drawing;
 
 namespace AutoTool
@@ -417,6 +418,9 @@ namespace AutoTool
             //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
             var ret = emu.ScreenShot(device, @"E:\screennnn.png");
             Console.WriteLine(this.txtSuccess.Text);
+            EmulatorInfo device = new EmulatorInfo("0", "dd");
+            var m = new MEmuFunc();
+            m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
             //AbortRegisFbThreads();
         }
 
