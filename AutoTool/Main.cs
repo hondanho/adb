@@ -13,6 +13,7 @@ using AutoTool.Models;
 using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
+using AutoTool.Constants;
 
 namespace AutoTool
 {
@@ -408,7 +409,9 @@ namespace AutoTool
 
         private void button2_Click(object sender, EventArgs e)
         {
-            AbortRegisFbThreads();
+            GlobalVar.WorkingDirectory = @"E:\ChangZhi\LDPlayer";
+            this.txtSuccess.Text = CmdFunc.RunCMD(string.Format(LDPlayerConsts.CLONE_DEVICE, "dd", 0));
+            //AbortRegisFbThreads();
         }
 
         private void RegisFb(int idx)

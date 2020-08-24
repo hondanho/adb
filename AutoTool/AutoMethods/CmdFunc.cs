@@ -11,6 +11,24 @@ namespace AutoTool.AutoMethods
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+        public static string RunCMD(string cmd)
+        {
+            Process cmdProcess;
+            cmdProcess = new Process();
+            cmdProcess.StartInfo.WorkingDirectory = GlobalVar.WorkingDirectory;
+            cmdProcess.StartInfo.FileName = "cmd.exe";
+            cmdProcess.StartInfo.Arguments = "/c " + cmd;
+            cmdProcess.StartInfo.RedirectStandardOutput = true;
+            cmdProcess.StartInfo.UseShellExecute = false;
+            cmdProcess.StartInfo.CreateNoWindow = true;
+            cmdProcess.Start();
+            string output = cmdProcess.StandardOutput.ReadToEnd();
+            cmdProcess.WaitForExit();
+            if (String.IsNullOrEmpty(output))
+                return "";
+            return output;
+        }
+
         public static string Run(string cmdCommand)
         {
             return Run(cmdCommand, GlobalVar.WorkingDirectory);
