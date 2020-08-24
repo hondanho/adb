@@ -70,23 +70,23 @@
             this.cbHideChrome = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tpLDPlayerSetting = new System.Windows.Forms.TabPage();
-            this.tpMEmuSetting = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
             this.btnSetupLDPlayer = new System.Windows.Forms.Button();
-            this.btnChooseBaseLDPlayer = new System.Windows.Forms.Button();
-            this.txtLDPlayerRootPath = new System.Windows.Forms.TextBox();
-            this.txtLDPlayerBase = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
             this.nudNoLDPlayerDevices = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnChooseBaseLDPlayer = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtLDPlayerBase = new System.Windows.Forms.TextBox();
+            this.txtLDPlayerRootPath = new System.Windows.Forms.TextBox();
+            this.tpMEmuSetting = new System.Windows.Forms.TabPage();
             this.gbSetting = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
             this.tbRegFbSetting.SuspendLayout();
             this.tpLDPlayerSetting.SuspendLayout();
-            this.tpMEmuSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).BeginInit();
+            this.tpMEmuSetting.SuspendLayout();
             this.gbSetting.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -348,10 +348,10 @@
             // btnChooseBaseMEmu
             // 
             this.btnChooseBaseMEmu.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseBaseMEmu.Location = new System.Drawing.Point(415, 78);
+            this.btnChooseBaseMEmu.Location = new System.Drawing.Point(413, 81);
             this.btnChooseBaseMEmu.Margin = new System.Windows.Forms.Padding(4);
             this.btnChooseBaseMEmu.Name = "btnChooseBaseMEmu";
-            this.btnChooseBaseMEmu.Size = new System.Drawing.Size(63, 32);
+            this.btnChooseBaseMEmu.Size = new System.Drawing.Size(63, 24);
             this.btnChooseBaseMEmu.TabIndex = 9;
             this.btnChooseBaseMEmu.Text = "Chọn";
             this.btnChooseBaseMEmu.UseVisualStyleBackColor = true;
@@ -581,24 +581,6 @@
             this.tpLDPlayerSetting.Text = "Cài đặt LDPlayer";
             this.tpLDPlayerSetting.UseVisualStyleBackColor = true;
             // 
-            // tpMEmuSetting
-            // 
-            this.tpMEmuSetting.Controls.Add(this.label7);
-            this.tpMEmuSetting.Controls.Add(this.btnSetupMEmu);
-            this.tpMEmuSetting.Controls.Add(this.nudNoMEmuDevices);
-            this.tpMEmuSetting.Controls.Add(this.label2);
-            this.tpMEmuSetting.Controls.Add(this.label4);
-            this.tpMEmuSetting.Controls.Add(this.btnChooseBaseMEmu);
-            this.tpMEmuSetting.Controls.Add(this.txtMEmuZipBase);
-            this.tpMEmuSetting.Controls.Add(this.txtMEmuRootPath);
-            this.tpMEmuSetting.Location = new System.Drawing.Point(4, 27);
-            this.tpMEmuSetting.Name = "tpMEmuSetting";
-            this.tpMEmuSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tpMEmuSetting.Size = new System.Drawing.Size(692, 214);
-            this.tpMEmuSetting.TabIndex = 2;
-            this.tpMEmuSetting.Text = "Cài đặt MEmu";
-            this.tpMEmuSetting.UseVisualStyleBackColor = true;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -620,61 +602,6 @@
             this.btnSetupLDPlayer.TabIndex = 15;
             this.btnSetupLDPlayer.Text = "Cài đặt";
             this.btnSetupLDPlayer.UseVisualStyleBackColor = true;
-            // 
-            // btnChooseBaseLDPlayer
-            // 
-            this.btnChooseBaseLDPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseBaseLDPlayer.Location = new System.Drawing.Point(415, 78);
-            this.btnChooseBaseLDPlayer.Margin = new System.Windows.Forms.Padding(4);
-            this.btnChooseBaseLDPlayer.Name = "btnChooseBaseLDPlayer";
-            this.btnChooseBaseLDPlayer.Size = new System.Drawing.Size(63, 32);
-            this.btnChooseBaseLDPlayer.TabIndex = 17;
-            this.btnChooseBaseLDPlayer.Text = "Chọn";
-            this.btnChooseBaseLDPlayer.UseVisualStyleBackColor = true;
-            // 
-            // txtLDPlayerRootPath
-            // 
-            this.txtLDPlayerRootPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLDPlayerRootPath.Location = new System.Drawing.Point(158, 8);
-            this.txtLDPlayerRootPath.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLDPlayerRootPath.Name = "txtLDPlayerRootPath";
-            this.txtLDPlayerRootPath.Size = new System.Drawing.Size(320, 24);
-            this.txtLDPlayerRootPath.TabIndex = 12;
-            this.txtLDPlayerRootPath.Text = "E:\\ChangZhi\\LDPlayer";
-            this.txtLDPlayerRootPath.TextChanged += new System.EventHandler(this.SettingValueChanged);
-            this.txtLDPlayerRootPath.DoubleClick += new System.EventHandler(this.txtLDPlayerRootPath_DoubleClick);
-            // 
-            // txtLDPlayerBase
-            // 
-            this.txtLDPlayerBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLDPlayerBase.Location = new System.Drawing.Point(158, 82);
-            this.txtLDPlayerBase.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLDPlayerBase.Name = "txtLDPlayerBase";
-            this.txtLDPlayerBase.ReadOnly = true;
-            this.txtLDPlayerBase.Size = new System.Drawing.Size(248, 24);
-            this.txtLDPlayerBase.TabIndex = 16;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(7, 49);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(150, 18);
-            this.label12.TabIndex = 13;
-            this.label12.Text = "No. LDPlayer devices";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(7, 13);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(99, 18);
-            this.label13.TabIndex = 11;
-            this.label13.Text = "LDPlayer root";
             // 
             // nudNoLDPlayerDevices
             // 
@@ -700,6 +627,79 @@
             0,
             0});
             this.nudNoLDPlayerDevices.ValueChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(7, 13);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(99, 18);
+            this.label13.TabIndex = 11;
+            this.label13.Text = "LDPlayer root";
+            // 
+            // btnChooseBaseLDPlayer
+            // 
+            this.btnChooseBaseLDPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChooseBaseLDPlayer.Location = new System.Drawing.Point(413, 81);
+            this.btnChooseBaseLDPlayer.Margin = new System.Windows.Forms.Padding(4);
+            this.btnChooseBaseLDPlayer.Name = "btnChooseBaseLDPlayer";
+            this.btnChooseBaseLDPlayer.Size = new System.Drawing.Size(63, 24);
+            this.btnChooseBaseLDPlayer.TabIndex = 17;
+            this.btnChooseBaseLDPlayer.Text = "Chọn";
+            this.btnChooseBaseLDPlayer.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(7, 49);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(150, 18);
+            this.label12.TabIndex = 13;
+            this.label12.Text = "No. LDPlayer devices";
+            // 
+            // txtLDPlayerBase
+            // 
+            this.txtLDPlayerBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLDPlayerBase.Location = new System.Drawing.Point(158, 82);
+            this.txtLDPlayerBase.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLDPlayerBase.Name = "txtLDPlayerBase";
+            this.txtLDPlayerBase.ReadOnly = true;
+            this.txtLDPlayerBase.Size = new System.Drawing.Size(248, 24);
+            this.txtLDPlayerBase.TabIndex = 16;
+            // 
+            // txtLDPlayerRootPath
+            // 
+            this.txtLDPlayerRootPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLDPlayerRootPath.Location = new System.Drawing.Point(158, 8);
+            this.txtLDPlayerRootPath.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLDPlayerRootPath.Name = "txtLDPlayerRootPath";
+            this.txtLDPlayerRootPath.Size = new System.Drawing.Size(320, 24);
+            this.txtLDPlayerRootPath.TabIndex = 12;
+            this.txtLDPlayerRootPath.Text = "E:\\ChangZhi\\LDPlayer";
+            this.txtLDPlayerRootPath.TextChanged += new System.EventHandler(this.SettingValueChanged);
+            this.txtLDPlayerRootPath.DoubleClick += new System.EventHandler(this.txtLDPlayerRootPath_DoubleClick);
+            // 
+            // tpMEmuSetting
+            // 
+            this.tpMEmuSetting.Controls.Add(this.label7);
+            this.tpMEmuSetting.Controls.Add(this.btnSetupMEmu);
+            this.tpMEmuSetting.Controls.Add(this.nudNoMEmuDevices);
+            this.tpMEmuSetting.Controls.Add(this.label2);
+            this.tpMEmuSetting.Controls.Add(this.label4);
+            this.tpMEmuSetting.Controls.Add(this.btnChooseBaseMEmu);
+            this.tpMEmuSetting.Controls.Add(this.txtMEmuZipBase);
+            this.tpMEmuSetting.Controls.Add(this.txtMEmuRootPath);
+            this.tpMEmuSetting.Location = new System.Drawing.Point(4, 27);
+            this.tpMEmuSetting.Name = "tpMEmuSetting";
+            this.tpMEmuSetting.Padding = new System.Windows.Forms.Padding(3);
+            this.tpMEmuSetting.Size = new System.Drawing.Size(692, 214);
+            this.tpMEmuSetting.TabIndex = 2;
+            this.tpMEmuSetting.Text = "Cài đặt MEmu";
+            this.tpMEmuSetting.UseVisualStyleBackColor = true;
             // 
             // gbSetting
             // 
@@ -745,9 +745,9 @@
             this.tbRegFbSetting.PerformLayout();
             this.tpLDPlayerSetting.ResumeLayout(false);
             this.tpLDPlayerSetting.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).EndInit();
             this.tpMEmuSetting.ResumeLayout(false);
             this.tpMEmuSetting.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).EndInit();
             this.gbSetting.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
