@@ -21,7 +21,7 @@
         public const string REMOVE_DEVICE = "memuc remove -i {0}";
         public const string RENAME_DEVICE = "memuc rename -i {0} {1}";
         public const string IS_DEVICE_RUNNING = "memuc isvmrunning -i {0}";
-        public const string STATUS_DEVICE = "memuc -i {0} adb get-status";
+        public const string STATUS_DEVICE = "memuc -i {0} adb wait-for-device";
         public const string START_APP = "memuc -i {0} startapp {1}";
         public const string STOP_APP = "memuc -i {0} stopapp {1}";
     }

@@ -8,78 +8,13 @@ using System.Reflection;
 using AutoTool.Constants;
 using AutoTool.AutoCommons;
 using AutoTool.Models;
+using System.Threading;
 
 namespace AutoTool.AutoMethods
 {
     public class MEmuFunc : IEmulatorFunc
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public string RunCMD(string cmdCommand)
-        {
-            string result;
-            try
-            {
-                Process process = new Process();
-                process.StartInfo = new ProcessStartInfo
-                {
-                    WorkingDirectory = GlobalVar.CommanderRootPath,
-                    FileName = "cmd.exe",
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true
-                };
-                process.Start();
-                process.StandardInput.WriteLine(cmdCommand);
-                process.StandardInput.Flush();
-                process.StandardInput.Close();
-                process.WaitForExit();
-                string text = process.StandardOutput.ReadToEnd();
-                result = text;
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex.Message);
-                result = null;
-            }
-            return result;
-        }
-
-        public string RunCMDWithTime(string cmdCommand, TimeSpan time)
-        {
-            string result;
-            try
-            {
-                Process process = new Process();
-                process.StartInfo = new ProcessStartInfo
-                {
-                    WorkingDirectory = GlobalVar.CommanderRootPath,
-                    FileName = "cmd.exe",
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true
-                };
-                process.Start();
-                process.StandardInput.WriteLine(cmdCommand);
-                process.StandardInput.Flush();
-                process.StandardInput.Close();
-                Thread.Sleep(time);
-                process.Kill();
-                result = string.Empty;
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex.Message);
-                result = null;
-            }
-            return result;
-        }
-
-
 
         private Point NumberBasePoint(Bitmap numPadImg, int number, ImagePoint offset)
         {
@@ -147,14 +82,14 @@ namespace AutoTool.AutoMethods
         public bool StartDevice(EmulatorInfo device)
         {
             var result = true;
-            var isStarted = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
+            var isStarted = CmdFunc.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
 
             if (string.IsNullOrEmpty(isStarted) || !isStarted.Contains("already connected"))
             {
-                RunCMD(string.Format(MEmuConsts.START_MEMU, device.Id));
+                CmdFunc.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
                 result = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
                 {
-                    var isSuccess = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
+                    var isSuccess = CmdFunc.Run(string.Format(MEmuConsts.STATUS_DEVICE, device.Id));
                     if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
                     {
                         return true;
