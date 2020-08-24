@@ -49,7 +49,7 @@ namespace AutoTool.AutoCommons
             return (image3 == null) ? null : image3.ToBitmap();
         }
 
-        public static Point? FindOutPoint(Bitmap mainBitmap, Bitmap subBitmap, double percent = 0.9)
+        public static Point? FindOutImagePoint(Bitmap mainBitmap, Bitmap subBitmap, double percent = 0.9)
         {
             Image<Bgr, byte> image = mainBitmap.ToImage<Bgr, byte>();
             Image<Bgr, byte> template = subBitmap.ToImage<Bgr, byte>();
@@ -73,11 +73,22 @@ namespace AutoTool.AutoCommons
             }
             return result;
         }
-        public static Point? FindOutPoint(string mainPath, string subPath)
+        public static Point? FindOutImagePoint(string mainPath, string subPath)
         {
             Bitmap image = GetImage(mainPath);
             Bitmap image2 = GetImage(subPath);
-            return FindOutPoint(image, image2);
+            return FindOutImagePoint(image, image2);
+        }
+
+        public static ImagePoint FindOutPoint(string mainPath, string subPath)
+        {
+            ImagePoint result = null;
+            Point? point = FindOutImagePoint(mainPath, subPath);
+            if (point.HasValue)
+            {
+                result = new ImagePoint(point.Value);
+            }
+            return result;
         }
     }
 }

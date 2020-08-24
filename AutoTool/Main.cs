@@ -13,6 +13,8 @@ using AutoTool.Models;
 using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
+using Emgu.CV.ML;
+using System.Drawing;
 
 namespace AutoTool
 {
@@ -408,7 +410,10 @@ namespace AutoTool
 
         private void button2_Click(object sender, EventArgs e)
         {
-            AbortRegisFbThreads();
+            EmulatorInfo device = new EmulatorInfo("0", "dd");
+            var m = new MEmuFunc();
+            m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
+            //AbortRegisFbThreads();
         }
 
         private void RegisFb(int idx)

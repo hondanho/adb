@@ -82,6 +82,44 @@ namespace AutoTool.AutoMethods
             return result;
         }
 
+
+
+        private Point NumberBasePoint(Bitmap numPadImg, int number, ImagePoint offset)
+        {
+            var width = numPadImg.Width;
+            var height = numPadImg.Height;
+            var ww = 3;
+            var hh = 4;
+            var bh = height / hh;
+            var bw = width / ww;
+            if (number > 9 || number <= 0) number = 11;
+            var xx = number % ww == 0 ? ww - 1 : (number % ww) - 1;
+            var yy = number % ww > 0 ? number / ww : (number / ww) - 1;
+            var x = xx * bw + bw / 2 + offset.X;
+            var y = yy * bh + bh / 2 + offset.Y;
+
+            return new ImagePoint(x, y).Point;
+        }
+
+        public void TapNumber(EmulatorInfo device, int[] numbers)
+        {
+            var screenPath = string.Format("{0}\\data\\{1}.png", Environment.CurrentDirectory, DateTime.Now.Ticks);
+            ScreenShot(device, screenPath);
+
+            var point = ImageScanOpenCV.FindOutPoint(screenPath, Environment.CurrentDirectory + @"\source\facebook-lite\number\number.png");
+
+            System.Drawing.Bitmap numPadImg = ImageScanOpenCV.GetImage(Environment.CurrentDirectory + @"\source\facebook-lite\number\number.png");
+
+            point = new ImagePoint(point.X - numPadImg.Width / 2, point.Y - numPadImg.Height / 2);
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                var poitToTap = NumberBasePoint(numPadImg, numbers[i], point);
+                Tap(device, poitToTap);
+                Thread.Sleep(100);
+            }
+        }
+
         public List<EmulatorInfo> GetDevices()
         {
             List<EmulatorInfo> list = new List<EmulatorInfo>();
@@ -111,19 +149,24 @@ namespace AutoTool.AutoMethods
 
         public bool StartDevice(EmulatorInfo device)
         {
-            RunCMD(string.Format(MEmuConsts.START_MEMU, device.Id));
+            var result = true;
+            var isStarted = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
 
-            var isMEmuRunning = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+            if (string.IsNullOrEmpty(isStarted) || !isStarted.Contains("already connected"))
             {
-                var isSuccess = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
-                if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
+                RunCMD(string.Format(MEmuConsts.START_MEMU, device.Id));
+                result = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
                 {
-                    return true;
-                }
-                return false;
-            });
-
-            return isMEmuRunning;
+                    var isSuccess = RunCMD(string.Format(MEmuConsts.STATUS_MEMU, device.Id));
+                    if (!string.IsNullOrEmpty(isSuccess) && isSuccess.Contains("already connected"))
+                    {
+                        return true;
+                    }
+                    return false;
+                });
+            }
+           
+            return result;
         }
 
         public bool StopDevice(EmulatorInfo device)
