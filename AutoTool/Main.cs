@@ -14,6 +14,7 @@ using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
+using System.Drawing;
 
 namespace AutoTool
 {
@@ -410,7 +411,12 @@ namespace AutoTool
         private void button2_Click(object sender, EventArgs e)
         {
             GlobalVar.WorkingDirectory = @"E:\ChangZhi\LDPlayer";
-            this.txtSuccess.Text = CmdFunc.RunCMD(string.Format(LDPlayerConsts.CLONE_DEVICE, "dd", 0));
+            this.txtSuccess.Text = CmdFunc.RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
+            IEmulatorFunc emu = new LdPlayerFunc();
+            EmulatorInfo device = new EmulatorInfo("0", "LDPlayer", DeviceStatus.RUNNING);
+            //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
+            var ret = emu.ScreenShot(device, @"E:\screennnn.png");
+            Console.WriteLine(this.txtSuccess.Text);
             //AbortRegisFbThreads();
         }
 

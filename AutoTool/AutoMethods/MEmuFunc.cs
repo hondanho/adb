@@ -42,6 +42,16 @@ namespace AutoTool.AutoMethods
             return list;
         }
 
+        public string GetSerialNo(EmulatorInfo device)
+        {
+            var output = CmdFunc.RunCMD(string.Format(MEmuConsts.GET_SERIAL_NO, device.Id));
+            if (string.IsNullOrEmpty(output))
+            {
+                return null;
+            }
+            return output.Trim();
+        }
+
         public bool StartDevice(EmulatorInfo device)
         {
             CmdFunc.Run(string.Format(MEmuConsts.START_DEVICE, device.Id));
@@ -116,7 +126,7 @@ namespace AutoTool.AutoMethods
 
         public bool ClearAppData(EmulatorInfo device, string appPackage)
         {
-            CmdFunc.Run(string.Format(MEmuConsts.CLEAR_APP, device.Id, appPackage));
+            CmdFunc.Run(string.Format(MEmuConsts.CLEAR_APP_DATA, device.Id, appPackage));
             return true;
         }
 

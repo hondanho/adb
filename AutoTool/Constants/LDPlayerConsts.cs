@@ -10,11 +10,13 @@
         public const string SWIPE_LONG = "ldconsole adb --index {0} --command \"shell input swipe {1} {2} {3} {4} {5}\"";
         public const string INPUT = "ldconsole adb --index {0} --command \"shell input text \"{1}\"\"";
         public const string KEY_EVENT = "ldconsole adb --index {0} --command \"shell input keyevent {1}\"";
-        public const string CLEAR_APP = "ldconsole adb --index {0} --command \"shell pm clear {1}\"";
+        public const string CLEAR_APP_DATA = "ldconsole adb --index {0} --command \"shell pm clear {1}\"";
 
         public const string LIST_DEVICES = "ldconsole list2";
-        public const string ADD_DEVICE = "ldconsole add --name \"{0}\"";
+        public const string ADD_DEVICE = "ldconsole add";
+        public const string ADD_DEVICE_WITH_NAME = "ldconsole add --name \"{0}\"";
         public const string RESTORE_DEVICE = "ldconsole restore --index {0} --file \"{1}\"";
+        public const string RESTORE_DEVICE_WITH_NAME = "ldconsole restore --name {0} --file \"{1}\"";
         public const string CLONE_DEVICE = "ldconsole copy --name \"{0}\" --from {1}";
         public const string START_DEVICE = "ldconsole launch --index {0}";
         public const string STOP_DEVICE = "ldconsole quit --index {0}";
@@ -25,5 +27,7 @@
         // public const string STATUS_DEVICE = "ldconsole -i {0} adb get-status";
         public const string START_APP = "ldconsole runapp --index {0} --packagename \"{1}\"";
         public const string STOP_APP = "ldconsole killapp --index {0} --packagename \"{1}\"";
+
+        public const string GET_SERIAL_NO = "ldconsole adb --index {0} --command \"get-serialno\"";
     }
 }

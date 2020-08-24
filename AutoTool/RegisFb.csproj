@@ -72,7 +72,9 @@
     <Compile Include="AutoMethods\IEmulatorFunc.cs" />
     <Compile Include="AutoMethods\LDPlayerFunc.cs" />
     <Compile Include="AutoMethods\MEmuFunc.cs" />
+    <Compile Include="Constants\AdbConstants.cs" />
     <Compile Include="Constants\LDPlayerConsts.cs" />
+    <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\FbGender.cs" />
     <Compile Include="Models\FbRegResult.cs" />
     <Compile Include="Constants\Constant.cs" />

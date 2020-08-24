@@ -10,7 +10,7 @@
         public const string SWIPE_LONG = "memuc -i {0} adb shell input swipe {1} {2} {3} {4} {5}";
         public const string INPUT = "memuc -i {0} input \"{1}\"";
         public const string KEY_EVENT = "memuc -i {0} adb shell input keyevent {1}";
-        public const string CLEAR_APP = "memuc -i {0} adb shell pm clear {1}";
+        public const string CLEAR_APP_DATA = "memuc -i {0} adb shell pm clear {1}";
 
         public const string LIST_DEVICES = "memuc listvms";
         public const string RESTORE_DEVICE = "memuc import \"{0}\"";
@@ -24,5 +24,7 @@
         public const string STATUS_DEVICE = "memuc -i {0} adb get-status";
         public const string START_APP = "memuc -i {0} startapp {1}";
         public const string STOP_APP = "memuc -i {0} stopapp {1}";
+
+        public const string GET_SERIAL_NO = "memuc -i {0} abd get-serialno";
     }
 }

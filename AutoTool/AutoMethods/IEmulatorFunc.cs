@@ -8,6 +8,7 @@ namespace AutoTool.AutoMethods
     public interface IEmulatorFunc
     {
         List<EmulatorInfo> GetDevices();
+        string GetSerialNo(EmulatorInfo device);
         bool StartDevice(EmulatorInfo device);
         bool StopDevice(EmulatorInfo device);
         bool IsRunning(EmulatorInfo device);
