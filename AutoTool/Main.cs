@@ -13,6 +13,7 @@ using AutoTool.Models;
 using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
+using AutoTool.Constants;
 using Emgu.CV.ML;
 using System.Drawing;
 
@@ -58,7 +59,7 @@ namespace AutoTool
             InitSetting();
 
             this.lblStatus.Text = "Stopped";
-            GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text;
+            GlobalVar.WorkingDirectory = this.txtMEmuRootPath.Text;
             _memuHelper = new MEmuFunc();
             this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
             this._fileAccountFailer = File.AppendText(_pathAccountFailer);
@@ -271,7 +272,7 @@ namespace AutoTool
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    GlobalVar.CommanderRootPath = this.txtMEmuRootPath.Text = fbd.SelectedPath;
+                    GlobalVar.WorkingDirectory = this.txtMEmuRootPath.Text = fbd.SelectedPath;
                 }
             }
         }

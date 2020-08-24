@@ -10,6 +10,7 @@ namespace AutoTool.AutoMethods
         List<EmulatorInfo> GetDevices();
         bool StartDevice(EmulatorInfo device);
         bool StopDevice(EmulatorInfo device);
+        bool IsRunning(EmulatorInfo device);
         bool RemoveDevice(EmulatorInfo device);
         bool RenameDevice(EmulatorInfo device, string deviceName);
         bool RestoreDevice(string source);
