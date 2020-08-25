@@ -80,6 +80,9 @@
             this.txtLDPlayerRootPath = new System.Windows.Forms.TextBox();
             this.tpMEmuSetting = new System.Windows.Forms.TabPage();
             this.gbSetting = new System.Windows.Forms.GroupBox();
+            this.tbLogs = new System.Windows.Forms.TabPage();
+            this.txtRegisterLogs = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
@@ -88,6 +91,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).BeginInit();
             this.tpMEmuSetting.SuspendLayout();
             this.gbSetting.SuspendLayout();
+            this.tbLogs.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -395,6 +399,7 @@
             this.tabSetting.Controls.Add(this.tbRegFbSetting);
             this.tabSetting.Controls.Add(this.tpLDPlayerSetting);
             this.tabSetting.Controls.Add(this.tpMEmuSetting);
+            this.tabSetting.Controls.Add(this.tbLogs);
             this.tabSetting.Location = new System.Drawing.Point(7, 23);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.SelectedIndex = 0;
@@ -602,6 +607,7 @@
             this.btnSetupLDPlayer.TabIndex = 15;
             this.btnSetupLDPlayer.Text = "Cài đặt";
             this.btnSetupLDPlayer.UseVisualStyleBackColor = true;
+            this.btnSetupLDPlayer.Click += new System.EventHandler(this.btnSetupLDPlayer_Click);
             // 
             // nudNoLDPlayerDevices
             // 
@@ -649,6 +655,7 @@
             this.btnChooseBaseLDPlayer.TabIndex = 17;
             this.btnChooseBaseLDPlayer.Text = "Chọn";
             this.btnChooseBaseLDPlayer.UseVisualStyleBackColor = true;
+            this.btnChooseBaseLDPlayer.Click += new System.EventHandler(this.btnChooseBaseLDPlayer_Click);
             // 
             // label12
             // 
@@ -715,6 +722,43 @@
             this.gbSetting.TabStop = false;
             this.gbSetting.Text = "Cặt đặt";
             // 
+            // tbLogs
+            // 
+            this.tbLogs.Controls.Add(this.label14);
+            this.tbLogs.Controls.Add(this.txtRegisterLogs);
+            this.tbLogs.Location = new System.Drawing.Point(4, 27);
+            this.tbLogs.Name = "tbLogs";
+            this.tbLogs.Padding = new System.Windows.Forms.Padding(3);
+            this.tbLogs.Size = new System.Drawing.Size(692, 214);
+            this.tbLogs.TabIndex = 3;
+            this.tbLogs.Text = "Logs";
+            this.tbLogs.UseVisualStyleBackColor = true;
+            // 
+            // txtRegisterLogs
+            // 
+            this.txtRegisterLogs.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtRegisterLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRegisterLogs.Location = new System.Drawing.Point(4, 27);
+            this.txtRegisterLogs.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRegisterLogs.Multiline = true;
+            this.txtRegisterLogs.Name = "txtRegisterLogs";
+            this.txtRegisterLogs.ReadOnly = true;
+            this.txtRegisterLogs.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtRegisterLogs.Size = new System.Drawing.Size(681, 180);
+            this.txtRegisterLogs.TabIndex = 17;
+            this.txtRegisterLogs.WordWrap = false;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(4, 5);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(95, 18);
+            this.label14.TabIndex = 17;
+            this.label14.Text = "Register logs";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -749,6 +793,8 @@
             this.tpMEmuSetting.ResumeLayout(false);
             this.tpMEmuSetting.PerformLayout();
             this.gbSetting.ResumeLayout(false);
+            this.tbLogs.ResumeLayout(false);
+            this.tbLogs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -806,5 +852,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.NumericUpDown nudNoLDPlayerDevices;
+        private System.Windows.Forms.TabPage tbLogs;
+        private System.Windows.Forms.TextBox txtRegisterLogs;
+        private System.Windows.Forms.Label label14;
     }
 }

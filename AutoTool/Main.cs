@@ -16,6 +16,7 @@ using AutoTool.AutoCommons;
 using AutoTool.Constants;
 using Emgu.CV.ML;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace AutoTool
 {
@@ -35,6 +36,19 @@ namespace AutoTool
         private List<Thread> _RegisFbThreads = new List<Thread>();
         private bool SettingInitialized = false;
         private bool SettingChanged = false;
+
+        public void LogTrace(string message)
+        {
+            if (this.txtRegisterLogs.InvokeRequired)
+            {
+                RegFb.LogTrace d = new RegFb.LogTrace(LogTrace);
+                this.Invoke(d, new object[] { message });
+            }
+            else
+            {
+                this.txtRegisterLogs.AppendText(message + "\r\n");
+            }
+        }
 
         static public void Info(string s)
         {
@@ -193,9 +207,10 @@ namespace AutoTool
             var userSetting = new UserSetting();
             userSetting.HideChrome = this.cbHideChrome.Checked;
             userSetting.Minimize = this.cbMinimizeChrome.Checked;
-            var regClone = new RegFb(device, userSetting, RegFbType.REG_WITH_LDPLAYER);
+            var regClone = new RegFb(device, new RegFb.LogTrace(LogTrace), userSetting, RegFbType.REG_WITH_LDPLAYER);
             try
             {
+                regClone.LogStepTrace("Start register");
                 var create = regClone.RegisterFacebook();
 
                 if (create.Status == FbRegStatus.SUCCESS_WITH_VERI)
@@ -213,6 +228,7 @@ namespace AutoTool
                 }
                 else
                 {
+                    regClone.LogStepTrace("Register error");
                     this.Invoke((LogInfo)((logInfo) =>
                     {
                         _fileAccountFailer.WriteLine(logInfo);
@@ -592,6 +608,118 @@ namespace AutoTool
                     GlobalVar.LDPlayerWorkingDirectory = this.txtLDPlayerRootPath.Text = fbd.SelectedPath;
                 }
             }
+        }
+
+        private void btnChooseBaseLDPlayer_Click(object sender, EventArgs e)
+        {
+            using (var fd = new OpenFileDialog())
+            {
+                fd.Filter = "LDPlayer backup files (*.ldbk)|*.ldbk";
+                fd.FilterIndex = 0;
+                fd.RestoreDirectory = true;
+                DialogResult result = fd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fd.FileName))
+                {
+                    this.txtLDPlayerBase.Text = fd.FileName;
+                }
+            }
+        }
+
+        private void btnSetupLDPlayer_Click(object sender, EventArgs e)
+        {
+            if (_regFbIsRunning)
+            {
+                Warning("Stop reg facebook trước khi cài đặt lại MEmu");
+                return;
+            }
+            if (string.IsNullOrEmpty(this.txtLDPlayerBase.Text))
+            {
+                Warning("Vui lòng chọn file LDPlayer backup");
+                return;
+            }
+            new Thread(() =>
+            {
+                this.Invoke((MethodInvoker)delegate ()
+                {
+                    this.btnSetupLDPlayer.Enabled = false;
+                    this.btnStart.Enabled = false;
+                    this.btnSetupLDPlayer.Text = "Setting..";
+                });
+                var success = SetupLDPlayer();
+                if (success)
+                {
+                    this.Invoke((ShowLog)Info, "Cấu hình LDPlayer thành công.");
+                }
+                else
+                {
+                    this.Invoke((ShowLog)Warning, "Cấu hình LDPlayer lỗi.");
+                }
+                this.Invoke((MethodInvoker)delegate ()
+                {
+                    this.btnSetupLDPlayer.Enabled = true;
+                    this.btnStart.Enabled = true;
+                    this.btnSetupLDPlayer.Text = "Cài đặt";
+                });
+            }).Start();
+        }
+
+        private bool SetupLDPlayer()
+        {
+            var ldplayerFunc = new LDPlayerFunc();
+            bool isSuccess = false;
+            try
+            {
+                var devices = ldplayerFunc.GetDevices();
+
+                // Stop all devices
+                ldplayerFunc.StopDevice(null);
+
+                // Remove all devices
+                var removeDeviceTasks = new List<Task>();
+                foreach (var device in devices)
+                {
+                    var removeDeviceTask = new Task(() =>
+                    {
+                        ldplayerFunc.RemoveDevice(device);
+                    });
+                    removeDeviceTask.Start();
+                    removeDeviceTasks.Add(removeDeviceTask);
+                }
+                Task.WhenAll(removeDeviceTasks.ToArray()).Wait();
+
+                // Restore base device
+                var ldbkFile = this.txtLDPlayerBase.Text;
+                ldplayerFunc.RestoreDevice(ldbkFile);
+
+                // Get base device
+                var baseDevice = ldplayerFunc.GetDevices().LastOrDefault();
+
+                if (baseDevice != null)
+                {
+                    ldplayerFunc.RenameDevice(baseDevice, "REG_FB_CLONE_0");
+                    // Clone from Base (with id = 0)
+                    var noMemu = this.nudNoMEmuDevices.Value;
+                    var cloneDeviceTasks = new List<Task>();
+                    decimal count = 0;
+                    while (count++ < noMemu - 1)
+                    {
+                        var cloneDeviceTask = new Task((c) =>
+                        {
+                            ldplayerFunc.CloneDevice(baseDevice, string.Format("REG_FB_CLONE_{0}", c));
+                        }, count);
+                        cloneDeviceTask.Start();
+                        cloneDeviceTasks.Add(cloneDeviceTask);
+                    }
+                    Task.WaitAll(cloneDeviceTasks.ToArray());
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                this._log.Error(ex.Message);
+            }
+            return isSuccess;
         }
     }
 }

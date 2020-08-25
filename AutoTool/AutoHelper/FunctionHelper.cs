@@ -79,13 +79,13 @@ namespace AutoTool
                 "Khanh"
             };
             var randomNumber = new Random();
-            return GlobalVar.ListLastName[randomNumber.Next(0, GlobalVar.ListLastName.Length - 1)];
+            return GlobalVar.ListFirstName[randomNumber.Next(0, GlobalVar.ListFirstName.Length - 1)];
         }
 
         public static string getLastNameRandom()
         {
             var randomNumber = new Random();
-            return GlobalVar.ListFirstName[randomNumber.Next(0, GlobalVar.ListFirstName.Length - 1)];
+            return GlobalVar.ListLastName[randomNumber.Next(0, GlobalVar.ListLastName.Length - 1)];
         }
 
         public static string Get2faFromQR(string stringQr)
@@ -198,5 +198,26 @@ namespace AutoTool
             if (day < 10) return ("0" + day);
             return day.ToString();
         }
+
+        public static string GetMonthAsText(int month)
+        {
+            return MonthEng[month];
+        }
+
+        public static string[] MonthEng = new string[] {
+            "",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        };
     }
 }

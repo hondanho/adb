@@ -94,6 +94,7 @@
     <Compile Include="Models\EmulatorConfig.cs" />
     <Compile Include="Models\RegFbType.cs" />
     <Compile Include="Models\UserSetting.cs" />
+    <Compile Include="Models\WaitingData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">

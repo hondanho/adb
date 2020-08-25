@@ -63,13 +63,14 @@ namespace AutoTool
             public const string BtnCreateAccountNext = BasePath + "btn_create_account_next.png";
             public const string InputLastName = BasePath + "input_lastname.png";
             public const string InputFirstName = BasePath + "input_firstname.png";
+            public const string InputFirstNameClicked = BasePath + "input_firstname_clicked.png";
             public const string BtnNameNext = BasePath + "btn_name_next.png";
             public const string InputBirthdayBase = BasePath + "input_birthday_base.png";
             public const string InputBirthdayTop = BasePath + "input_birthday_base_top.png";
             public const string BtnBirthdayNext = BasePath + "btn_birthday_next.png";
             public const string OptionGenderFemale = BasePath + "option_gender_female.png";
             public const string OptionGenderMale = BasePath + "option_gender_male.png";
-            public const string OptionGenderNext = BasePath + "btn_gender_next.png";
+            public const string BtnGenderNext = BasePath + "btn_gender_next.png";
             public const string InputMobileNumber = BasePath + "input_mobile_number.png";
             public const string BtnMobileNumberNext = BasePath + "btn_mobile_number_next.png";
             public const string LblSignUpWithEmail = BasePath + "lbl_sign_up_with_email.png";
@@ -83,6 +84,8 @@ namespace AutoTool
             public const string BtnRememberEmailOk = BasePath + "btn_remember_email_ok.png";
             public const string Success = BasePath + "success.png";
             public const string Checkpoint = BasePath + "checkpoint.png";
+            public const string InputConfirmCode = BasePath + "input_confirm_code.png";
+            public const string BtnConfirm = BasePath + "btn_confirm.png";
         }
 
         public static class TemplateOneDotOne
