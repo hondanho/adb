@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace AutoTool.Models
 {
@@ -8,5 +9,7 @@ namespace AutoTool.Models
         public static string MEmuWorkingDirectory { get; set; }
         public static string[] ListLastName { get; set; }
         public static string[] ListFirstName { get; set; }
+        public static List<string> ListUsedEmail { get; set; }
+        public static string OutputDirectory { get; set; }
     }
 }

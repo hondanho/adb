@@ -64,6 +64,8 @@
     <Compile Include="AutoHelper\AdbHelper.cs" />
     <Compile Include="AutoCommons\AdbKeyEvent.cs" />
     <Compile Include="AutoCommons\GetTextFromImage.cs" />
+    <Compile Include="AutoHelper\EmailHelper\BaseEmailHelper.cs" />
+    <Compile Include="AutoHelper\EmailHelper\SmailPro.cs" />
     <Compile Include="AutoHelper\MemuHelper.cs" />
     <Compile Include="AutoCommons\QRCode.cs" />
     <Compile Include="AutoCommons\ImageScanOpenCV.cs" />

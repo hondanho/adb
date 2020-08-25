@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using AutoTool.AutoCommons;
+using AutoTool.AutoHelper.EmailHelper;
 using AutoTool.AutoMethods;
 using AutoTool.Models;
 using log4net;
@@ -28,6 +29,7 @@ namespace AutoTool.AutoHelper
         private IEmulatorFunc _EmulatorFunc;
         private UserSetting _userSetting;
         private RegFbType _regType;
+        private BaseEmailHelper _emailHelper;
 
         private string _onedotonePck = "com.cloudflare.onedotonedotonedotone";
         private string _hmaPck = "com.hidemyass.hidemyassprovpn";
@@ -94,6 +96,12 @@ namespace AutoTool.AutoHelper
                     GC.SuppressFinalize(this);
                 }
             }
+            if (_EmulatorFunc != null)
+            {
+                _EmulatorFunc.ClearAppData(_device, _facebookPackageName);
+                _EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
+                _EmulatorFunc.StopDevice(_device);
+            }
         }
 
         public RegFb(EmulatorInfo device, LogTrace logTrace, UserSetting userSetting, RegFbType regType, int timeout = 1000)
@@ -119,6 +127,7 @@ namespace AutoTool.AutoHelper
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             _chromeDriver = FunctionHelper.InitWebDriver(_userSetting, device.Index);
 
+            _emailHelper = new SmailPro(_chromeDriver);
             // Init Facebook info
             var random = new Random();
             FbAcc = new FacebookAccountInfo();
@@ -296,17 +305,21 @@ namespace AutoTool.AutoHelper
                 Thread.Sleep(120);
 
                 // Get Email
-                LogStepTrace("Go to " + _urlTemplateMail + " on chrome");
-                _chromeDriver.Navigate().GoToUrl(_urlTemplateMail);
-                Thread.Sleep(_timeout);
+                //LogStepTrace("Go to " + _urlTemplateMail + " on chrome");
+                //_chromeDriver.Navigate().GoToUrl(_urlTemplateMail);
+                //Thread.Sleep(_timeout);
 
-                LogStepTrace("Getting email address from chrome");
-                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
-                {
-                    var webElement = _chromeDriver.FindElement(By.XPath(_xpathEmail));
-                    FbAcc.Email = webElement.GetAttribute("value");
-                    return !string.IsNullOrEmpty(FbAcc.Email) && FbAcc.Email.Contains("@");
-                });
+                //LogStepTrace("Getting email address from chrome");
+                //new WaitHelper(TimeSpan.FromSeconds(30)).Until(() =>
+                //{
+                //    var webElement = _chromeDriver.FindElement(By.XPath(_xpathEmail));
+                //    FbAcc.Email = webElement.GetAttribute("value");
+                //    return !string.IsNullOrEmpty(FbAcc.Email) && FbAcc.Email.Contains("@");
+                //});
+
+                // Get email
+                LogStepTrace("Getting Email address");
+                FbAcc.Email = _emailHelper.EmailAddress();
 
                 // Input email address
                 LogStepTrace("Tap input Email address");
@@ -414,6 +427,12 @@ namespace AutoTool.AutoHelper
                     result.Message = "Đã tạo được tài khoản veri";
                 }
 
+                Thread.Sleep(5000);
+
+                _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateFacebook.LblSuccessSkip);
+
+                Thread.Sleep(5000);
+
                 return result;
             }
             catch (Exception ex)
@@ -424,8 +443,14 @@ namespace AutoTool.AutoHelper
             }
             finally
             {
-                _EmulatorFunc.ClearAppData(_device, _facebookPackageName);
-                _EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
+                if (!string.IsNullOrEmpty(FbAcc.Email))
+                {
+                    GlobalVar.ListUsedEmail.Add(FbAcc.Email);
+                    File.WriteAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath, GlobalVar.ListUsedEmail);
+                }
+                //_EmulatorFunc.ClearAppData(_device, _facebookPackageName);
+                //_EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
+                //_EmulatorFunc.StopDevice(_device);
             }
 
             return result;
@@ -436,25 +461,27 @@ namespace AutoTool.AutoHelper
             {
                 // get code mail
                 LogStepTrace(".. Waiting for confirm code ..");
-                string codeMail = new WebDriverWait(_chromeDriver, TimeSpan.FromSeconds(30)).Until(x =>
-                {
-                    string resultCodeMail = null;
-                    try
-                    {
-                        var webElement = x.FindElement(By.XPath(_xpathCodeEmail));
-                        if (webElement != null && !string.IsNullOrEmpty(webElement.Text))
-                        {
-                            var code = Regex.Match(webElement.Text, @"\d+").Value;
-                            if (!string.IsNullOrEmpty(code)) resultCodeMail = code;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Error(ex.Message);
-                    }
+                //string codeMail = new WebDriverWait(_chromeDriver, TimeSpan.FromSeconds(30)).Until(x =>
+                //{
+                //    string resultCodeMail = null;
+                //    try
+                //    {
+                //        var webElement = x.FindElement(By.XPath(_xpathCodeEmail));
+                //        if (webElement != null && !string.IsNullOrEmpty(webElement.Text))
+                //        {
+                //            var code = Regex.Match(webElement.Text, @"\d+").Value;
+                //            if (!string.IsNullOrEmpty(code)) resultCodeMail = code;
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        _log.Error(ex.Message);
+                //    }
 
-                    return resultCodeMail;
-                });
+                //    return resultCodeMail;
+                //});
+
+                string codeMail = _emailHelper.GetFacebookConfirmationCode();
 
                 if (string.IsNullOrEmpty(codeMail)) return false;
 
@@ -718,6 +745,7 @@ namespace AutoTool.AutoHelper
         {
             try
             {
+                LogStepTrace("Get uid");
                 // Check cookie
                 _chromeDriver.Navigate().GoToUrl(_linkMbasic);
                 Thread.Sleep(3000);
@@ -758,8 +786,15 @@ namespace AutoTool.AutoHelper
                 }
 
                 cookie = _chromeDriver.Manage().Cookies.GetCookieNamed("c_user");
-                FbAcc.Uid = cookie.Value;
 
+                if (cookie == null)
+                {
+                    LogStepTrace($"Uid <null>");
+                    return false;
+                }
+
+                FbAcc.Uid = cookie?.Value;
+                LogStepTrace($"Uid <" + FbAcc.Uid + ">");
                 return true;
             }
             catch (Exception ex)
@@ -773,13 +808,15 @@ namespace AutoTool.AutoHelper
         {
             try
             {
+                var username = string.IsNullOrEmpty(FbAcc.Uid) ? FbAcc.Email : FbAcc.Uid;
+                LogStepTrace("Turning 2FA on");
                 if (!string.IsNullOrEmpty(FbAcc.TwoFacAuth)) return true;
 
                 _chromeDriver.Manage().Cookies.DeleteAllCookies();
                 _chromeDriver.Navigate().GoToUrl(_linkMbasic);
                 Thread.Sleep(_timeout);
                 var elementUsername = _chromeDriver.FindElement(By.XPath(_xMbasicLoginUsername));
-                elementUsername.SendKeys(FbAcc.Email);
+                elementUsername.SendKeys(username);
                 Thread.Sleep(1000);
                 var elementPassword = _chromeDriver.FindElement(By.XPath(_xMbasicLoginPassword));
                 elementPassword.SendKeys(FbAcc.Passwd);
@@ -903,6 +940,7 @@ namespace AutoTool.AutoHelper
                 if (hasRemove2fa)
                 {
                     FbAcc.TwoFacAuth = secret2fa;
+                    LogStepTrace("Done turn 2fa on");
                     return true;
                 }
                 else

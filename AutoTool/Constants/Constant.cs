@@ -56,6 +56,10 @@ namespace AutoTool
         public const string iconOffHma = "\\source\\hma\\icon-off.png";
         public const string iconOnHma = "\\source\\hma\\icon-on.png";
 
+        public const string ListUsedEmailPath = @"\used_emails.txt";
+        public const string ListSuccessAccountPath = @"\success_accounts.txt";
+        public const string ListFailAccountPath = @"\fail_accounts.txt";
+
         public static class TemplateFacebook
         {
             public const string BasePath = @"\source\facebook\";
@@ -83,6 +87,7 @@ namespace AutoTool
             public const string LblRememberEmail = BasePath + "remember_email.png";
             public const string BtnRememberEmailOk = BasePath + "btn_remember_email_ok.png";
             public const string Success = BasePath + "success.png";
+            public const string LblSuccessSkip = BasePath + "lbl_success_skip.png";
             public const string Checkpoint = BasePath + "checkpoint.png";
             public const string InputConfirmCode = BasePath + "input_confirm_code.png";
             public const string BtnConfirm = BasePath + "btn_confirm.png";

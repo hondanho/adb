@@ -79,10 +79,12 @@
             this.txtLDPlayerBase = new System.Windows.Forms.TextBox();
             this.txtLDPlayerRootPath = new System.Windows.Forms.TextBox();
             this.tpMEmuSetting = new System.Windows.Forms.TabPage();
-            this.gbSetting = new System.Windows.Forms.GroupBox();
             this.tbLogs = new System.Windows.Forms.TabPage();
-            this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
+            this.txtRegisterLogs = new System.Windows.Forms.TextBox();
+            this.gbSetting = new System.Windows.Forms.GroupBox();
+            this.txtOutputDirectory = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
@@ -90,8 +92,8 @@
             this.tpLDPlayerSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).BeginInit();
             this.tpMEmuSetting.SuspendLayout();
-            this.gbSetting.SuspendLayout();
             this.tbLogs.SuspendLayout();
+            this.gbSetting.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -408,6 +410,8 @@
             // 
             // tbRegFbSetting
             // 
+            this.tbRegFbSetting.Controls.Add(this.label15);
+            this.tbRegFbSetting.Controls.Add(this.txtOutputDirectory);
             this.tbRegFbSetting.Controls.Add(this.rbUseMEmu);
             this.tbRegFbSetting.Controls.Add(this.rbUseLDPLayer);
             this.tbRegFbSetting.Controls.Add(this.btnRemoveLastName);
@@ -437,7 +441,7 @@
             // rbUseMEmu
             // 
             this.rbUseMEmu.AutoSize = true;
-            this.rbUseMEmu.Location = new System.Drawing.Point(132, 140);
+            this.rbUseMEmu.Location = new System.Drawing.Point(129, 124);
             this.rbUseMEmu.Name = "rbUseMEmu";
             this.rbUseMEmu.Size = new System.Drawing.Size(101, 22);
             this.rbUseMEmu.TabIndex = 27;
@@ -449,7 +453,7 @@
             // 
             this.rbUseLDPLayer.AutoSize = true;
             this.rbUseLDPLayer.Checked = true;
-            this.rbUseLDPLayer.Location = new System.Drawing.Point(10, 140);
+            this.rbUseLDPLayer.Location = new System.Drawing.Point(7, 124);
             this.rbUseLDPLayer.Name = "rbUseLDPLayer";
             this.rbUseLDPLayer.Size = new System.Drawing.Size(89, 22);
             this.rbUseLDPLayer.TabIndex = 26;
@@ -708,20 +712,6 @@
             this.tpMEmuSetting.Text = "Cài đặt MEmu";
             this.tpMEmuSetting.UseVisualStyleBackColor = true;
             // 
-            // gbSetting
-            // 
-            this.gbSetting.Controls.Add(this.tabSetting);
-            this.gbSetting.Controls.Add(this.btnResetSetting);
-            this.gbSetting.Controls.Add(this.btnSaveSetting);
-            this.gbSetting.Controls.Add(this.button1);
-            this.gbSetting.Controls.Add(this.button2);
-            this.gbSetting.Location = new System.Drawing.Point(10, 7);
-            this.gbSetting.Name = "gbSetting";
-            this.gbSetting.Size = new System.Drawing.Size(712, 317);
-            this.gbSetting.TabIndex = 16;
-            this.gbSetting.TabStop = false;
-            this.gbSetting.Text = "Cặt đặt";
-            // 
             // tbLogs
             // 
             this.tbLogs.Controls.Add(this.label14);
@@ -733,6 +723,17 @@
             this.tbLogs.TabIndex = 3;
             this.tbLogs.Text = "Logs";
             this.tbLogs.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(4, 5);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(95, 18);
+            this.label14.TabIndex = 17;
+            this.label14.Text = "Register logs";
             // 
             // txtRegisterLogs
             // 
@@ -748,16 +749,41 @@
             this.txtRegisterLogs.TabIndex = 17;
             this.txtRegisterLogs.WordWrap = false;
             // 
-            // label14
+            // gbSetting
             // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(4, 5);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(95, 18);
-            this.label14.TabIndex = 17;
-            this.label14.Text = "Register logs";
+            this.gbSetting.Controls.Add(this.tabSetting);
+            this.gbSetting.Controls.Add(this.btnResetSetting);
+            this.gbSetting.Controls.Add(this.btnSaveSetting);
+            this.gbSetting.Controls.Add(this.button1);
+            this.gbSetting.Controls.Add(this.button2);
+            this.gbSetting.Location = new System.Drawing.Point(10, 7);
+            this.gbSetting.Name = "gbSetting";
+            this.gbSetting.Size = new System.Drawing.Size(712, 317);
+            this.gbSetting.TabIndex = 16;
+            this.gbSetting.TabStop = false;
+            this.gbSetting.Text = "Cặt đặt";
+            // 
+            // txtOutputDirectory
+            // 
+            this.txtOutputDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutputDirectory.Location = new System.Drawing.Point(64, 156);
+            this.txtOutputDirectory.Margin = new System.Windows.Forms.Padding(4);
+            this.txtOutputDirectory.Name = "txtOutputDirectory";
+            this.txtOutputDirectory.ReadOnly = true;
+            this.txtOutputDirectory.Size = new System.Drawing.Size(261, 24);
+            this.txtOutputDirectory.TabIndex = 28;
+            this.txtOutputDirectory.Text = "D:\\rcfb";
+            this.txtOutputDirectory.TextChanged += new System.EventHandler(this.SettingValueChanged);
+            this.txtOutputDirectory.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtOutputDirectory_MouseDoubleClick);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(5, 159);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(52, 18);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "Output";
             // 
             // Main
             // 
@@ -792,9 +818,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).EndInit();
             this.tpMEmuSetting.ResumeLayout(false);
             this.tpMEmuSetting.PerformLayout();
-            this.gbSetting.ResumeLayout(false);
             this.tbLogs.ResumeLayout(false);
             this.tbLogs.PerformLayout();
+            this.gbSetting.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -855,5 +881,7 @@
         private System.Windows.Forms.TabPage tbLogs;
         private System.Windows.Forms.TextBox txtRegisterLogs;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox txtOutputDirectory;
+        private System.Windows.Forms.Label label15;
     }
 }

@@ -14,19 +14,14 @@ using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
-using Emgu.CV.ML;
-using System.Drawing;
-using System.Runtime.CompilerServices;
 
 namespace AutoTool
 {
     public partial class Main : Form, IDisposable
     {
         private ILog _log;
-        private string _pathAccountSuccess = "accountSuccess.txt";
         private string _pathFileFirstName = Environment.CurrentDirectory + "\\source\\data\\firstName.txt";
         private string _pathFileLastName = Environment.CurrentDirectory + "\\source\\data\\lastName.txt";
-        private string _pathAccountFailer = "accountFailer.txt";
         private StreamWriter _fileAccountSuccess;
         private StreamWriter _fileAccountFailer;
         public delegate void ShowLog(string message);
@@ -74,9 +69,22 @@ namespace AutoTool
             this.lblStatus.Text = "Stopped";
             GlobalVar.MEmuWorkingDirectory = this.txtMEmuRootPath.Text;
             GlobalVar.LDPlayerWorkingDirectory = this.txtLDPlayerRootPath.Text;
-            this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
-            this._fileAccountFailer = File.AppendText(_pathAccountFailer);
+            GlobalVar.OutputDirectory = this.txtOutputDirectory.Text;
+
+            if (!Directory.Exists(GlobalVar.OutputDirectory))
+            {
+                Directory.CreateDirectory(GlobalVar.OutputDirectory);
+            }
+            this._fileAccountSuccess = File.AppendText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
+            this._fileAccountFailer = File.AppendText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
             this._log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath))
+            {
+                File.Create(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath);
+            }
+
+            GlobalVar.ListUsedEmail = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath).ToList();
         }
 
         #region Register Facebook Clone
@@ -161,11 +169,11 @@ namespace AutoTool
 
             if (this._fileAccountSuccess == null)
             {
-                this._fileAccountSuccess = File.AppendText(_pathAccountSuccess);
+                this._fileAccountSuccess = File.AppendText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
             }
             if (this._fileAccountFailer == null)
             {
-                this._fileAccountFailer = File.AppendText(_pathAccountFailer);
+                this._fileAccountFailer = File.AppendText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
             }
         }
 
@@ -488,6 +496,7 @@ namespace AutoTool
             this.cbMinimizeChrome.Checked = (bool)Settings.Default["MinimizeChrome"];
             this.rbUseLDPLayer.Checked = (int)Settings.Default["RegType"] == 0;
             this.rbUseMEmu.Checked = (int)Settings.Default["RegType"] == 1;
+            this.txtOutputDirectory.Text = Settings.Default["OutputDirectory"].ToString();
             SettingInitialized = true;
         }
 
@@ -502,6 +511,7 @@ namespace AutoTool
             Settings.Default["HideChrome"] = this.cbHideChrome.Checked;
             Settings.Default["MinimizeChrome"] = this.cbMinimizeChrome.Checked;
             Settings.Default["RegType"] = this.rbUseLDPLayer.Checked ? 0 : 1;
+            Settings.Default["OutputDirectory"] = this.txtOutputDirectory.Text;
             Settings.Default.Save();
         }
 
@@ -720,6 +730,27 @@ namespace AutoTool
                 this._log.Error(ex.Message);
             }
             return isSuccess;
+        }
+
+        private void txtOutputDirectory_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    GlobalVar.OutputDirectory = this.txtOutputDirectory.Text = fbd.SelectedPath;
+                    if (this._fileAccountSuccess != null)
+                    {
+                        this._fileAccountSuccess = File.AppendText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
+                    }
+                    if (this._fileAccountFailer != null)
+                    {
+                        this._fileAccountFailer = File.AppendText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
+                    }
+                }
+            }
         }
     }
 }

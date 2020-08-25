@@ -29,5 +29,8 @@
     <Setting Name="LDPlayerDeviceNos" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
+    <Setting Name="OutputDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\rcfb</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
