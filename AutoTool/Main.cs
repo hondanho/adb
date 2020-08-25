@@ -14,6 +14,7 @@ using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
+using Emgu.CV.Shape;
 
 namespace AutoTool
 {
@@ -89,7 +90,7 @@ namespace AutoTool
 
         #region Register Facebook Clone
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs e)     
         {
             IEmulatorFunc emulatorFunc;
             if (this.rbUseMEmu.Checked)
@@ -165,6 +166,9 @@ namespace AutoTool
             this.cbMinimizeChrome.Enabled = false;
             this.cbHideChrome.Enabled = false;
             this.cbTurn2faOn.Enabled = false;
+            this.rbUseLDPLayer.Enabled = false;
+            this.rbUseMEmu.Enabled = false;
+            this.txtOutputDirectory.Enabled = false;
             this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
 
             if (this._fileAccountSuccess == null)
@@ -182,12 +186,14 @@ namespace AutoTool
             if (this._fileAccountFailer != null)
             {
                 this._fileAccountFailer.Flush();
+                this._fileAccountFailer.Close();
                 this._fileAccountFailer.Dispose();
                 this._fileAccountFailer = null;
             }
             if (this._fileAccountSuccess != null)
             {
                 this._fileAccountSuccess.Flush();
+                this._fileAccountSuccess.Close();
                 this._fileAccountSuccess.Dispose();
                 this._fileAccountSuccess = null;
             }
@@ -197,6 +203,9 @@ namespace AutoTool
             this.cbMinimizeChrome.Enabled = true;
             this.cbHideChrome.Enabled = true;
             this.cbTurn2faOn.Enabled = true;
+            this.rbUseLDPLayer.Enabled = true;
+            this.rbUseMEmu.Enabled = true;
+            this.txtOutputDirectory.Enabled = true;
             this.lblStatus.Text = "Stopped";
         }
 
@@ -248,6 +257,150 @@ namespace AutoTool
             catch (ThreadAbortException)
             {
                 regClone.Dispose();
+            }
+        }
+
+        #endregion
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (SettingChanged)
+            {
+                var confirm = MessageBox.Show(this, "Bạn có muốn lưu lại cài đặt không?", "Xác nhận", MessageBoxButtons.YesNo);
+
+                if (confirm == DialogResult.Yes)
+                {
+                    SaveSetting();
+                }
+            }
+
+            AbortRegisFbThreads();
+        }
+
+        #region Setting
+        private void InitSetting()
+        {
+            // setting
+            this.nudThreadNo.Value = (decimal)Settings.Default["ThreadNos"];
+            this.cbTurn2faOn.Checked = (bool)Settings.Default["TurnOn2fa"];
+            this.nudNoMEmuDevices.Value = (decimal)Settings.Default["MEmuDeviceNos"];
+            this.nudNoLDPlayerDevices.Value = (decimal)Settings.Default["LDPlayerDeviceNos"];
+            this.txtMEmuRootPath.Text = Settings.Default["MEmuCommanderRootPath"].ToString();
+            this.txtLDPlayerRootPath.Text = Settings.Default["LDPlayerCommanderRootPath"].ToString();
+            this.cbHideChrome.Checked = (bool)Settings.Default["HideChrome"];
+            this.cbMinimizeChrome.Checked = (bool)Settings.Default["MinimizeChrome"];
+            this.rbUseLDPLayer.Checked = (int)Settings.Default["RegType"] == 0;
+            this.rbUseMEmu.Checked = (int)Settings.Default["RegType"] == 1;
+            this.txtOutputDirectory.Text = Settings.Default["OutputDirectory"].ToString();
+            SettingInitialized = true;
+        }
+
+        private void SaveSetting()
+        {
+            Settings.Default["ThreadNos"] = this.nudThreadNo.Value;
+            Settings.Default["TurnOn2fa"] = this.cbTurn2faOn.Checked;
+            Settings.Default["MEmuDeviceNos"] = this.nudNoMEmuDevices.Value;
+            Settings.Default["LDPlayerDeviceNos"] = this.nudNoLDPlayerDevices.Value;
+            Settings.Default["MEmuCommanderRootPath"] = this.txtMEmuRootPath.Text;
+            Settings.Default["LDPlayerCommanderRootPath"] = this.txtLDPlayerRootPath.Text;
+            Settings.Default["HideChrome"] = this.cbHideChrome.Checked;
+            Settings.Default["MinimizeChrome"] = this.cbMinimizeChrome.Checked;
+            Settings.Default["RegType"] = this.rbUseLDPLayer.Checked ? 0 : 1;
+            Settings.Default["OutputDirectory"] = this.txtOutputDirectory.Text;
+            Settings.Default.Save();
+        }
+
+        private void btnSaveSetting_Click(object sender, EventArgs e)
+        {
+            SaveSetting();
+            SettingChanged = false;
+            btnSaveSetting.Enabled = false;
+            Info("Lưu cài đặt thành công");
+        }
+
+        private void btnResetSetting_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show(this, "Bạn có muốn Đặt cài đặt mặc định không?", "Xác nhận", MessageBoxButtons.YesNo);
+
+            if (confirm == DialogResult.Yes)
+            {
+                Settings.Default.Reset();
+                InitSetting();
+                SettingChanged = false;
+                btnSaveSetting.Enabled = false;
+                Info("Đặt cài đặt mặc định thành công");
+            }
+        }
+
+        private void SettingValueChanged(object sender, EventArgs e)
+        {
+            if (SettingInitialized)
+            {
+                SettingChanged = true;
+                btnSaveSetting.Enabled = true;
+            }
+        }
+
+        #endregion
+
+        #region Firstname, Lastname
+
+        private void btnAddFirstName_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.txtFirstName.Text))
+            {
+                if (!this.lbFirstName.Items.Contains(this.txtFirstName.Text))
+                {
+                    this.lbFirstName.Items.Insert(0, this.txtFirstName.Text);
+                    GlobalVar.ListFirstName = lbFirstName.ToStringArray();
+                    File.WriteAllLines(_pathFileFirstName, GlobalVar.ListFirstName);
+                }
+                else
+                {
+                    Warning("\"" + this.txtFirstName.Text + "\" đã tồn tại");
+                }
+                this.txtFirstName.Text = string.Empty;
+                this.txtFirstName.Focus();
+            }
+        }
+
+        private void btnRemoveFirstName_Click(object sender, EventArgs e)
+        {
+            if(this.lbFirstName.SelectedItem != null)
+            {
+                this.lbFirstName.Items.Remove(this.lbFirstName.SelectedItem);
+                GlobalVar.ListFirstName = lbFirstName.ToStringArray();
+                File.WriteAllLines(_pathFileFirstName, GlobalVar.ListFirstName);
+            }
+        }
+
+        private void btnAddLastName_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.txtLastName.Text))
+            {
+                if (!this.lbLastName.Items.Contains(this.txtLastName.Text))
+                {
+                    this.lbLastName.Items.Insert(0, this.txtLastName.Text);
+
+                    GlobalVar.ListLastName = lbLastName.ToStringArray();
+                    File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
+                }
+                else
+                {
+                    Warning("\"" + this.txtLastName.Text + "\" đã tồn tại");
+                }
+                this.txtLastName.Text = string.Empty;
+                this.txtLastName.Focus();
+            }
+        }
+
+        private void btnRemoveLastName_Click(object sender, EventArgs e)
+        {
+            if (this.lbLastName.SelectedItem != null)
+            {
+                this.lbLastName.Items.Remove(this.lbLastName.SelectedItem);
+                GlobalVar.ListLastName = lbLastName.ToStringArray();
+                File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
             }
         }
 
@@ -398,214 +551,7 @@ namespace AutoTool
 
         #endregion
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (SettingChanged)
-            {
-                var confirm = MessageBox.Show(this, "Bạn có muốn lưu lại cài đặt không?", "Xác nhận", MessageBoxButtons.YesNo);
-
-                if (confirm == DialogResult.Yes)
-                {
-                    SaveSetting();
-                }
-            }
-
-            AbortRegisFbThreads();
-            if (this._fileAccountFailer != null) this._fileAccountFailer.Dispose();
-            if (this._fileAccountSuccess != null) this._fileAccountSuccess.Dispose();
-        }
-
-        #region For testing
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //var fb = new FacebookAccountInfo();
-            //fb.Email = "ficeboh599@synevde.com";
-            //fb.Passwd = "quocThang12321";
-            //fb.TwoFacAuth = "";
-            //var regFb = new RegFb(fb);
-            ////regFb.TurnOn2Fa();
-            ////regFb.GetUid();
-
-            for (var i = 0; i < 8; i++)
-            {
-                var t = new Thread((obj) => {
-                    for (; ; )
-                    {
-                        RegisFb((int)obj);
-                    }
-                });
-                _RegisFbThreads.Add(t);
-                t.Start(i + 1);
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            GlobalVar.MEmuWorkingDirectory = @"E:\ChangZhi\LDPlayer";
-            this.txtSuccess.Text = new CmdFunc(GlobalVar.LDPlayerWorkingDirectory).RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
-            IEmulatorFunc emu = new LDPlayerFunc();
-            EmulatorInfo device = new EmulatorInfo("0", "LDPlayer", DeviceStatus.RUNNING);
-            //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
-            var ret = emu.ScreenShot(device, @"E:\screennnn.png");
-            Console.WriteLine(this.txtSuccess.Text);
-            var m = new MEmuFunc();
-            //m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
-            //AbortRegisFbThreads();
-        }
-
-        private void RegisFb(int idx)
-        {
-            var fb = new FacebookAccountInfo();
-            fb.Email = "ficeboh599@synevde.com";
-            fb.Passwd = "quocThang12321";
-            var regFb = new RegFb(fb, idx);
-            try
-            {
-                regFb.TurnOn2Fa();
-                this.Invoke((ShowLog)printResult, "name_" + idx);
-            }
-            catch(Exception ex)
-            {
-                _log.Error(ex);
-            }
-            finally
-            {
-                regFb.Dispose();
-            }
-        }
-
-        private void printResult(string result)
-        {
-            this.txtSuccess.AppendText(result);
-        }
-
-        #endregion
-
-        #region Setting
-        private void InitSetting()
-        {
-            // setting
-            this.nudThreadNo.Value = (decimal)Settings.Default["ThreadNos"];
-            this.cbTurn2faOn.Checked = (bool)Settings.Default["TurnOn2fa"];
-            this.nudNoMEmuDevices.Value = (decimal)Settings.Default["MEmuDeviceNos"];
-            this.nudNoLDPlayerDevices.Value = (decimal)Settings.Default["LDPlayerDeviceNos"];
-            this.txtMEmuRootPath.Text = Settings.Default["MEmuCommanderRootPath"].ToString();
-            this.txtLDPlayerRootPath.Text = Settings.Default["LDPlayerCommanderRootPath"].ToString();
-            this.cbHideChrome.Checked = (bool)Settings.Default["HideChrome"];
-            this.cbMinimizeChrome.Checked = (bool)Settings.Default["MinimizeChrome"];
-            this.rbUseLDPLayer.Checked = (int)Settings.Default["RegType"] == 0;
-            this.rbUseMEmu.Checked = (int)Settings.Default["RegType"] == 1;
-            this.txtOutputDirectory.Text = Settings.Default["OutputDirectory"].ToString();
-            SettingInitialized = true;
-        }
-
-        private void SaveSetting()
-        {
-            Settings.Default["ThreadNos"] = this.nudThreadNo.Value;
-            Settings.Default["TurnOn2fa"] = this.cbTurn2faOn.Checked;
-            Settings.Default["MEmuDeviceNos"] = this.nudNoMEmuDevices.Value;
-            Settings.Default["LDPlayerDeviceNos"] = this.nudNoLDPlayerDevices.Value;
-            Settings.Default["MEmuCommanderRootPath"] = this.txtMEmuRootPath.Text;
-            Settings.Default["LDPlayerCommanderRootPath"] = this.txtLDPlayerRootPath.Text;
-            Settings.Default["HideChrome"] = this.cbHideChrome.Checked;
-            Settings.Default["MinimizeChrome"] = this.cbMinimizeChrome.Checked;
-            Settings.Default["RegType"] = this.rbUseLDPLayer.Checked ? 0 : 1;
-            Settings.Default["OutputDirectory"] = this.txtOutputDirectory.Text;
-            Settings.Default.Save();
-        }
-
-        private void btnSaveSetting_Click(object sender, EventArgs e)
-        {
-            SaveSetting();
-            SettingChanged = false;
-            btnSaveSetting.Enabled = false;
-            Info("Lưu cài đặt thành công");
-        }
-
-        private void btnResetSetting_Click(object sender, EventArgs e)
-        {
-            var confirm = MessageBox.Show(this, "Bạn có muốn Đặt cài đặt mặc định không?", "Xác nhận", MessageBoxButtons.YesNo);
-
-            if (confirm == DialogResult.Yes)
-            {
-                Settings.Default.Reset();
-                InitSetting();
-                SettingChanged = false;
-                btnSaveSetting.Enabled = false;
-                Info("Đặt cài đặt mặc định thành công");
-            }
-        }
-
-        private void SettingValueChanged(object sender, EventArgs e)
-        {
-            if (SettingInitialized)
-            {
-                SettingChanged = true;
-                btnSaveSetting.Enabled = true;
-            }
-        }
-
-        #endregion
-
-        private void btnAddFirstName_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(this.txtFirstName.Text))
-            {
-                if (!this.lbFirstName.Items.Contains(this.txtFirstName.Text))
-                {
-                    this.lbFirstName.Items.Insert(0, this.txtFirstName.Text);
-                    GlobalVar.ListFirstName = lbFirstName.ToStringArray();
-                    File.WriteAllLines(_pathFileFirstName, GlobalVar.ListFirstName);
-                }
-                else
-                {
-                    Warning("\"" + this.txtFirstName.Text + "\" đã tồn tại");
-                }
-                this.txtFirstName.Text = string.Empty;
-                this.txtFirstName.Focus();
-            }
-        }
-
-        private void btnRemoveFirstName_Click(object sender, EventArgs e)
-        {
-            if(this.lbFirstName.SelectedItem != null)
-            {
-                this.lbFirstName.Items.Remove(this.lbFirstName.SelectedItem);
-                GlobalVar.ListFirstName = lbFirstName.ToStringArray();
-                File.WriteAllLines(_pathFileFirstName, GlobalVar.ListFirstName);
-            }
-        }
-
-        private void btnAddLastName_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(this.txtLastName.Text))
-            {
-                if (!this.lbLastName.Items.Contains(this.txtLastName.Text))
-                {
-                    this.lbLastName.Items.Insert(0, this.txtLastName.Text);
-
-                    GlobalVar.ListLastName = lbLastName.ToStringArray();
-                    File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
-                }
-                else
-                {
-                    Warning("\"" + this.txtLastName.Text + "\" đã tồn tại");
-                }
-                this.txtLastName.Text = string.Empty;
-                this.txtLastName.Focus();
-            }
-        }
-
-        private void btnRemoveLastName_Click(object sender, EventArgs e)
-        {
-            if (this.lbLastName.SelectedItem != null)
-            {
-                this.lbLastName.Items.Remove(this.lbLastName.SelectedItem);
-                GlobalVar.ListLastName = lbLastName.ToStringArray();
-                File.WriteAllLines(_pathFileLastName, GlobalVar.ListLastName);
-            }
-        }
+        #region LDPlayer settings
 
         private void txtLDPlayerRootPath_DoubleClick(object sender, EventArgs e)
         {
@@ -732,6 +678,75 @@ namespace AutoTool
             return isSuccess;
         }
 
+        #endregion
+
+        #region For testing
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //var fb = new FacebookAccountInfo();
+            //fb.Email = "ficeboh599@synevde.com";
+            //fb.Passwd = "quocThang12321";
+            //fb.TwoFacAuth = "";
+            //var regFb = new RegFb(fb);
+            ////regFb.TurnOn2Fa();
+            ////regFb.GetUid();
+
+            for (var i = 0; i < 8; i++)
+            {
+                var t = new Thread((obj) => {
+                    for (; ; )
+                    {
+                        RegisFb((int)obj);
+                    }
+                });
+                _RegisFbThreads.Add(t);
+                t.Start(i + 1);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            GlobalVar.MEmuWorkingDirectory = @"E:\ChangZhi\LDPlayer";
+            this.txtSuccess.Text = new CmdFunc(GlobalVar.LDPlayerWorkingDirectory).RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
+            IEmulatorFunc emu = new LDPlayerFunc();
+            EmulatorInfo device = new EmulatorInfo("0", "LDPlayer", DeviceStatus.RUNNING);
+            //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
+            var ret = emu.ScreenShot(device, @"E:\screennnn.png");
+            Console.WriteLine(this.txtSuccess.Text);
+            var m = new MEmuFunc();
+            //m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
+            //AbortRegisFbThreads();
+        }
+
+        private void RegisFb(int idx)
+        {
+            var fb = new FacebookAccountInfo();
+            fb.Email = "ficeboh599@synevde.com";
+            fb.Passwd = "quocThang12321";
+            var regFb = new RegFb(fb, idx);
+            try
+            {
+                regFb.TurnOn2Fa();
+                this.Invoke((ShowLog)printResult, "name_" + idx);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+            }
+            finally
+            {
+                regFb.Dispose();
+            }
+        }
+
+        private void printResult(string result)
+        {
+            this.txtSuccess.AppendText(result);
+        }
+
+        #endregion
+
         private void txtOutputDirectory_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             using (var fbd = new FolderBrowserDialog())
@@ -741,14 +756,6 @@ namespace AutoTool
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     GlobalVar.OutputDirectory = this.txtOutputDirectory.Text = fbd.SelectedPath;
-                    if (this._fileAccountSuccess != null)
-                    {
-                        this._fileAccountSuccess = File.AppendText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
-                    }
-                    if (this._fileAccountFailer != null)
-                    {
-                        this._fileAccountFailer = File.AppendText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
-                    }
                 }
             }
         }

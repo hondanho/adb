@@ -126,14 +126,27 @@ namespace AutoTool.AutoHelper.EmailHelper
         public override string GetFacebookConfirmationCode()
         {
             string code = new WaitHelper(TimeSpan.FromSeconds(60)).Until(() => {
-                var btnRefresh = Driver.FindElement(By.XPath(ButtonRefreshXpath));
-                btnRefresh.Click();
+                // Click Refresh
+                new WaitHelper(TimeSpan.FromSeconds(10)).Until(() => {
+                    try
+                    {
+                        var btnRefresh = Driver.FindElement(By.XPath(ButtonRefreshXpath));
+                        if (btnRefresh == null) return false;
+                        btnRefresh.Click();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                });
+
                 Thread.Sleep(120);
 
                 new WaitHelper(TimeSpan.FromSeconds(10)).Until(() => {
                     try
                     {
-                        btnRefresh = Driver.FindElement(By.XPath(ButtonRefreshXpath));
+                        var btnRefresh = Driver.FindElement(By.XPath(ButtonRefreshXpath));
                         if (btnRefresh == null) return false;
                         if (btnRefresh.Text.Equals("Refresh"))
                             return true;
