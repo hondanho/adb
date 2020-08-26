@@ -66,7 +66,14 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.tabSetting = new System.Windows.Forms.TabControl();
             this.tbRegFbSetting = new System.Windows.Forms.TabPage();
+            this.btnChooseAll = new System.Windows.Forms.Button();
+            this.btnReloadDevices = new System.Windows.Forms.Button();
             this.dgvListDevices = new System.Windows.Forms.DataGridView();
+            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label15 = new System.Windows.Forms.Label();
             this.txtOutputDirectory = new System.Windows.Forms.TextBox();
             this.rbUseMEmu = new System.Windows.Forms.RadioButton();
@@ -97,24 +104,19 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.gbSetting = new System.Windows.Forms.GroupBox();
-            this.btnReloadDevices = new System.Windows.Forms.Button();
-            this.btnChooseAll = new System.Windows.Forms.Button();
-            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cbLdRmDevices = new System.Windows.Forms.CheckBox();
+            this.cbMmRmDevices = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
             this.tbRegFbSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.tpLDPlayerSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).BeginInit();
             this.tpMEmuSetting.SuspendLayout();
             this.tbLogs.SuspendLayout();
             this.gbSetting.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
@@ -437,6 +439,7 @@
             this.tabSetting.SelectedIndex = 0;
             this.tabSetting.Size = new System.Drawing.Size(896, 245);
             this.tabSetting.TabIndex = 11;
+            this.tabSetting.SelectedIndexChanged += new System.EventHandler(this.tabSetting_SelectedIndexChanged);
             // 
             // tbRegFbSetting
             // 
@@ -471,6 +474,28 @@
             this.tbRegFbSetting.Text = "Cài đặt Reg Facebook";
             this.tbRegFbSetting.UseVisualStyleBackColor = true;
             // 
+            // btnChooseAll
+            // 
+            this.btnChooseAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnChooseAll.Location = new System.Drawing.Point(403, 2);
+            this.btnChooseAll.Name = "btnChooseAll";
+            this.btnChooseAll.Size = new System.Drawing.Size(117, 23);
+            this.btnChooseAll.TabIndex = 32;
+            this.btnChooseAll.Text = "Dùng tất cả";
+            this.btnChooseAll.UseVisualStyleBackColor = true;
+            this.btnChooseAll.Click += new System.EventHandler(this.btnChooseAll_Click);
+            // 
+            // btnReloadDevices
+            // 
+            this.btnReloadDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReloadDevices.Location = new System.Drawing.Point(280, 2);
+            this.btnReloadDevices.Name = "btnReloadDevices";
+            this.btnReloadDevices.Size = new System.Drawing.Size(117, 23);
+            this.btnReloadDevices.TabIndex = 31;
+            this.btnReloadDevices.Text = "Reload devices";
+            this.btnReloadDevices.UseVisualStyleBackColor = true;
+            this.btnReloadDevices.Click += new System.EventHandler(this.btnReloadDevices_Click);
+            // 
             // dgvListDevices
             // 
             this.dgvListDevices.AllowUserToDeleteRows = false;
@@ -491,6 +516,44 @@
             this.dgvListDevices.ShowEditingIcon = false;
             this.dgvListDevices.Size = new System.Drawing.Size(240, 184);
             this.dgvListDevices.TabIndex = 30;
+            // 
+            // indexDataGridViewTextBoxColumn
+            // 
+            this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.indexDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.indexDataGridViewTextBoxColumn.HeaderText = "STT";
+            this.indexDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
+            this.indexDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // chooseDataGridViewCheckBoxColumn
+            // 
+            this.chooseDataGridViewCheckBoxColumn.DataPropertyName = "Choose";
+            this.chooseDataGridViewCheckBoxColumn.HeaderText = "Chọn";
+            this.chooseDataGridViewCheckBoxColumn.MinimumWidth = 6;
+            this.chooseDataGridViewCheckBoxColumn.Name = "chooseDataGridViewCheckBoxColumn";
+            this.chooseDataGridViewCheckBoxColumn.Width = 50;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "id";
+            this.idDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Tên máy ảo";
+            this.nameDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // emulatorInfoBindingSource
+            // 
+            this.emulatorInfoBindingSource.DataSource = typeof(AutoTool.Models.EmulatorInfo);
             // 
             // label15
             // 
@@ -658,6 +721,7 @@
             // 
             // tpLDPlayerSetting
             // 
+            this.tpLDPlayerSetting.Controls.Add(this.cbLdRmDevices);
             this.tpLDPlayerSetting.Controls.Add(this.label11);
             this.tpLDPlayerSetting.Controls.Add(this.btnSetupLDPlayer);
             this.tpLDPlayerSetting.Controls.Add(this.nudNoLDPlayerDevices);
@@ -780,6 +844,7 @@
             // 
             // tpMEmuSetting
             // 
+            this.tpMEmuSetting.Controls.Add(this.cbMmRmDevices);
             this.tpMEmuSetting.Controls.Add(this.label7);
             this.tpMEmuSetting.Controls.Add(this.btnSetupMEmu);
             this.tpMEmuSetting.Controls.Add(this.nudNoMEmuDevices);
@@ -851,65 +916,31 @@
             this.gbSetting.TabStop = false;
             this.gbSetting.Text = "Cặt đặt";
             // 
-            // btnReloadDevices
+            // cbLdRmDevices
             // 
-            this.btnReloadDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReloadDevices.Location = new System.Drawing.Point(280, 2);
-            this.btnReloadDevices.Name = "btnReloadDevices";
-            this.btnReloadDevices.Size = new System.Drawing.Size(117, 23);
-            this.btnReloadDevices.TabIndex = 31;
-            this.btnReloadDevices.Text = "Reload devices";
-            this.btnReloadDevices.UseVisualStyleBackColor = true;
-            this.btnReloadDevices.Click += new System.EventHandler(this.btnReloadDevices_Click);
+            this.cbLdRmDevices.AutoSize = true;
+            this.cbLdRmDevices.Checked = true;
+            this.cbLdRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbLdRmDevices.Location = new System.Drawing.Point(137, 181);
+            this.cbLdRmDevices.Name = "cbLdRmDevices";
+            this.cbLdRmDevices.Size = new System.Drawing.Size(189, 22);
+            this.cbLdRmDevices.TabIndex = 19;
+            this.cbLdRmDevices.Text = "Xóa hết trước khi cài đặt";
+            this.cbLdRmDevices.UseVisualStyleBackColor = true;
+            this.cbLdRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
             // 
-            // btnChooseAll
+            // cbMmRmDevices
             // 
-            this.btnChooseAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChooseAll.Location = new System.Drawing.Point(403, 2);
-            this.btnChooseAll.Name = "btnChooseAll";
-            this.btnChooseAll.Size = new System.Drawing.Size(117, 23);
-            this.btnChooseAll.TabIndex = 32;
-            this.btnChooseAll.Text = "Dùng tất cả";
-            this.btnChooseAll.UseVisualStyleBackColor = true;
-            this.btnChooseAll.Click += new System.EventHandler(this.btnChooseAll_Click);
-            // 
-            // indexDataGridViewTextBoxColumn
-            // 
-            this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.indexDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.indexDataGridViewTextBoxColumn.HeaderText = "STT";
-            this.indexDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
-            this.indexDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // chooseDataGridViewCheckBoxColumn
-            // 
-            this.chooseDataGridViewCheckBoxColumn.DataPropertyName = "Choose";
-            this.chooseDataGridViewCheckBoxColumn.HeaderText = "Chọn";
-            this.chooseDataGridViewCheckBoxColumn.MinimumWidth = 6;
-            this.chooseDataGridViewCheckBoxColumn.Name = "chooseDataGridViewCheckBoxColumn";
-            this.chooseDataGridViewCheckBoxColumn.Width = 50;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "id";
-            this.idDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Tên máy ảo";
-            this.nameDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.Width = 125;
-            // 
-            // emulatorInfoBindingSource
-            // 
-            this.emulatorInfoBindingSource.DataSource = typeof(AutoTool.Models.EmulatorInfo);
+            this.cbMmRmDevices.AutoSize = true;
+            this.cbMmRmDevices.Checked = true;
+            this.cbMmRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbMmRmDevices.Location = new System.Drawing.Point(137, 181);
+            this.cbMmRmDevices.Name = "cbMmRmDevices";
+            this.cbMmRmDevices.Size = new System.Drawing.Size(189, 22);
+            this.cbMmRmDevices.TabIndex = 11;
+            this.cbMmRmDevices.Text = "Xóa hết trước khi cài đặt";
+            this.cbMmRmDevices.UseVisualStyleBackColor = true;
+            this.cbMmRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
             // 
             // Main
             // 
@@ -938,6 +969,7 @@
             this.tbRegFbSetting.ResumeLayout(false);
             this.tbRegFbSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.tpLDPlayerSetting.ResumeLayout(false);
             this.tpLDPlayerSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).EndInit();
@@ -946,7 +978,6 @@
             this.tbLogs.ResumeLayout(false);
             this.tbLogs.PerformLayout();
             this.gbSetting.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1017,5 +1048,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button btnChooseAll;
+        private System.Windows.Forms.CheckBox cbLdRmDevices;
+        private System.Windows.Forms.CheckBox cbMmRmDevices;
     }
 }

@@ -142,5 +142,29 @@ namespace AutoTool.Properties {
                 this["OutputDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LdRmAllDevicesWhenRestore {
+            get {
+                return ((bool)(this["LdRmAllDevicesWhenRestore"]));
+            }
+            set {
+                this["LdRmAllDevicesWhenRestore"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MmRmAllDevicesWhenRestore {
+            get {
+                return ((bool)(this["MmRmAllDevicesWhenRestore"]));
+            }
+            set {
+                this["MmRmAllDevicesWhenRestore"] = value;
+            }
+        }
     }
 }

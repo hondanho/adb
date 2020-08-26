@@ -334,6 +334,8 @@ namespace AutoTool
             this.rbUseLDPLayer.Checked = (int)Settings.Default["RegType"] == 0;
             this.rbUseMEmu.Checked = (int)Settings.Default["RegType"] == 1;
             this.txtOutputDirectory.Text = Settings.Default["OutputDirectory"].ToString();
+            this.cbLdRmDevices.Checked = (bool)Settings.Default["LdRmAllDevicesWhenRestore"];
+            this.cbMmRmDevices.Checked = (bool)Settings.Default["MmRmAllDevicesWhenRestore"];
             SettingInitialized = true;
         }
 
@@ -349,6 +351,8 @@ namespace AutoTool
             Settings.Default["MinimizeChrome"] = this.cbMinimizeChrome.Checked;
             Settings.Default["RegType"] = this.rbUseLDPLayer.Checked ? 0 : 1;
             Settings.Default["OutputDirectory"] = this.txtOutputDirectory.Text;
+            Settings.Default["LdRmAllDevicesWhenRestore"] = this.cbLdRmDevices.Checked;
+            Settings.Default["MmRmAllDevicesWhenRestore"] = this.cbMmRmDevices.Checked;
             Settings.Default.Save();
         }
 
@@ -528,18 +532,21 @@ namespace AutoTool
                 // Stop all devices
                 memuFunc.StopDevice(null);
 
-                // Remove all devices
-                var removeDeviceTasks = new List<Task>();
-                foreach (var device in devices)
+                if (cbMmRmDevices.Checked)
                 {
-                    var removeDeviceTask = new Task(() =>
+                    // Remove all devices
+                    var removeDeviceTasks = new List<Task>();
+                    foreach (var device in devices)
                     {
-                        memuFunc.RemoveDevice(device);
-                    });
-                    removeDeviceTask.Start();
-                    removeDeviceTasks.Add(removeDeviceTask);
+                        var removeDeviceTask = new Task(() =>
+                        {
+                            memuFunc.RemoveDevice(device);
+                        });
+                        removeDeviceTask.Start();
+                        removeDeviceTasks.Add(removeDeviceTask);
+                    }
+                    Task.WhenAll(removeDeviceTasks.ToArray()).Wait();
                 }
-                Task.WhenAll(removeDeviceTasks.ToArray()).Wait();
 
                 // Restore base device
                 var ovaPath = this.txtMEmuZipBase.Text;
@@ -674,17 +681,20 @@ namespace AutoTool
                 ldplayerFunc.StopDevice(null);
 
                 // Remove all devices
-                var removeDeviceTasks = new List<Task>();
-                foreach (var device in devices)
+                if (cbLdRmDevices.Checked)
                 {
-                    var removeDeviceTask = new Task(() =>
+                    var removeDeviceTasks = new List<Task>();
+                    foreach (var device in devices)
                     {
-                        ldplayerFunc.RemoveDevice(device);
-                    });
-                    removeDeviceTask.Start();
-                    removeDeviceTasks.Add(removeDeviceTask);
+                        var removeDeviceTask = new Task(() =>
+                        {
+                            ldplayerFunc.RemoveDevice(device);
+                        });
+                        removeDeviceTask.Start();
+                        removeDeviceTasks.Add(removeDeviceTask);
+                    }
+                    Task.WhenAll(removeDeviceTasks.ToArray()).Wait();
                 }
-                Task.WhenAll(removeDeviceTasks.ToArray()).Wait();
 
                 // Restore base device
                 var ldbkFile = this.txtLDPlayerBase.Text;
@@ -817,6 +827,11 @@ namespace AutoTool
             }
 
             this.dgvListDevices.Refresh();
+        }
+
+        private void tabSetting_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
