@@ -2,6 +2,7 @@
 {
     public class EmulatorInfo
     {
+        public bool Choose { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
         public int Index { get; set; }

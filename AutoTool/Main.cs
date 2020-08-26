@@ -15,6 +15,8 @@ using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
 using Emgu.CV.Shape;
+using AutoTool.Network;
+using System.Data;
 
 namespace AutoTool
 {
@@ -32,6 +34,7 @@ namespace AutoTool
         private List<Thread> _RegisFbThreads = new List<Thread>();
         private bool SettingInitialized = false;
         private bool SettingChanged = false;
+        private List<EmulatorInfo> devices = new List<EmulatorInfo>();
 
         public void LogTrace(string message)
         {
@@ -86,21 +89,42 @@ namespace AutoTool
             }
 
             GlobalVar.ListUsedEmail = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath).ToList();
+
+            this.rbUseLDPLayer.CheckedChanged += new EventHandler(this.ListRbCheckedChange);
+            // list devices
+            LoadDevices();
         }
 
-        #region Register Facebook Clone
+        private void LoadDevices()
+        {
+            IEmulatorFunc emulatorFunc = GetEmulatorFunc();
+            devices = emulatorFunc.GetDevices();
+            this.dgvListDevices.DataSource = devices;
+        }
 
-        private void btnStart_Click(object sender, EventArgs e)     
+        private IEmulatorFunc GetEmulatorFunc()
         {
             IEmulatorFunc emulatorFunc;
             if (this.rbUseMEmu.Checked)
                 emulatorFunc = new MEmuFunc();
             else
                 emulatorFunc = new LDPlayerFunc();
+            return emulatorFunc;
+        }
+
+        private void ListRbCheckedChange(object sender, EventArgs e)
+        {
+            LoadDevices();
+        }
+
+        #region Register Facebook Clone
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            IEmulatorFunc emulatorFunc = GetEmulatorFunc();
             //if ()
             try
             {
-                var devices = emulatorFunc.GetDevices();
                 //var devices = new List<EmulatorInfo>
                 //{
                 //    new EmulatorInfo("1", "1111"),
@@ -110,8 +134,17 @@ namespace AutoTool
                 //    new EmulatorInfo("5", "5555"),
                 //    new EmulatorInfo("6", "6666")
                 //};
+
+                // get choosed devices
+                var choosedDevices = devices.Where(d => d.Choose).ToList();
+
+                if (choosedDevices == null || choosedDevices.Count <= 0)
+                {
+                    Warning("Vui lòng chọn máy ảo để thực hiện.");
+                }
+
                 // Caculate number of threads
-                _numberOfThread = Math.Min(this.nudThreadNo.Value, devices.Count);
+                _numberOfThread = Math.Min(this.nudThreadNo.Value, choosedDevices.Count);
 
                 if (_numberOfThread > 0)
                 {
@@ -120,7 +153,7 @@ namespace AutoTool
                     
                     for (var i = 0; i < _numberOfThread; i++)
                     {
-                        var device = devices[i];
+                        var device = choosedDevices[i];
                         device.Index = i + 1;
                         var t = new Thread((d) =>
                         {
@@ -221,6 +254,15 @@ namespace AutoTool
 
         private void RegisterAccountFacebook(EmulatorInfo device)
         {
+            // Dcom Changer
+            string ipAddress = string.Empty;
+            //while (true)
+            //{
+            //    if (DcomChanger.ChangeIP("Mobifone", out ipAddress))
+            //    {
+            //        break;
+            //    }
+            //}
             var userSetting = new UserSetting();
             userSetting.HideChrome = this.cbHideChrome.Checked;
             userSetting.Minimize = this.cbMinimizeChrome.Checked;
@@ -684,6 +726,8 @@ namespace AutoTool
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Info(devices[1].Choose.ToString());
+            return;
             //var fb = new FacebookAccountInfo();
             //fb.Email = "ficeboh599@synevde.com";
             //fb.Passwd = "quocThang12321";
@@ -758,6 +802,21 @@ namespace AutoTool
                     GlobalVar.OutputDirectory = this.txtOutputDirectory.Text = fbd.SelectedPath;
                 }
             }
+        }
+
+        private void btnReloadDevices_Click(object sender, EventArgs e)
+        {
+            LoadDevices();
+        }
+
+        private void btnChooseAll_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < devices.Count; i++)
+            {
+                devices[i].Choose = true;
+            }
+
+            this.dgvListDevices.Refresh();
         }
     }
 }

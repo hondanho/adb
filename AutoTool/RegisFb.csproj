@@ -97,6 +97,7 @@
     <Compile Include="Models\RegFbType.cs" />
     <Compile Include="Models\UserSetting.cs" />
     <Compile Include="Models\WaitingData.cs" />
+    <Compile Include="Network\DcomChanger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">
@@ -112,6 +113,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Properties\DataSources\AutoTool.Models.EmulatorInfo.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
