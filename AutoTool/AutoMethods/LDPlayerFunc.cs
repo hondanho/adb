@@ -247,5 +247,101 @@ namespace AutoTool.AutoMethods
         {
             return Tap(device, point.X, point.Y);
         }
+
+        public bool SetConfig(EmulatorInfo device, string key, string value)
+        {
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.SET_CONFIG, device.Id, key, value));
+            return output != null;
+        }
+
+        public string GetConfig(EmulatorInfo device, string key)
+        {
+            // With LDPlayer, can get only when device is running
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.GET_PROP, device.Id, key));
+
+            if (output.Contains("error: device not found")) return null;
+
+            return output.Trim();
+        }
+
+        public EmulatorConfig GetConfig(EmulatorInfo device)
+        {
+            // With LDPlayer, can get only when device is running
+            var isRunning = IsRunning(device);
+
+            if (!isRunning) return null;
+
+            var manufacturer = GetConfig(device, "ro.product.manufacturer");
+            var model = GetConfig(device, "ro.product.model");
+            var pnumber = GetConfig(device, "phone.number");
+            var imei = GetConfig(device, "phone.imei");
+            var imsi = GetConfig(device, "phone.imsi");
+            var simserial = GetConfig(device, "phone.simserial");
+            var androidid = GetConfig(device, "phone.androidid");
+            //var mac = GetConfig(device, "mac");
+
+            return new EmulatorConfig {
+                Manufacturer = manufacturer,
+                Model = model,
+                PhoneNumber = pnumber,
+                Imei = imei,
+                Imsi = imsi,
+                SimSerial = simserial,
+                AndroidId = androidid
+            };
+        }
+
+        public bool SetConfig(EmulatorInfo device)
+        {
+            var config = device.Config;
+
+            if (!string.IsNullOrEmpty(config.Manufacturer))
+            {
+                SetConfig(device, "manufacturer", config.Manufacturer);
+            }
+
+            if (!string.IsNullOrEmpty(config.Model))
+            {
+                SetConfig(device, "model", config.Model);
+            }
+
+            if (!string.IsNullOrEmpty(config.PhoneNumber))
+            {
+                SetConfig(device, "pnumber", config.PhoneNumber);
+            }
+
+            if (!string.IsNullOrEmpty(config.Imei))
+            {
+                SetConfig(device, "imei", config.Imei);
+            }
+
+            if (!string.IsNullOrEmpty(config.Imsi))
+            {
+                SetConfig(device, "imsi", config.Imsi);
+            }
+
+            if (!string.IsNullOrEmpty(config.SimSerial))
+            {
+                SetConfig(device, "simserial", config.SimSerial);
+            }
+
+            if (!string.IsNullOrEmpty(config.AndroidId))
+            {
+                SetConfig(device, "androidid", config.AndroidId);
+            }
+
+            if (!string.IsNullOrEmpty(config.Mac))
+            {
+                SetConfig(device, "mac", config.Mac);
+            }
+
+            return true;
+        }
+
+        public bool SetProxy(EmulatorInfo device, string proxy)
+        {
+            var output = _cmd.RunCMD(string.Format(LDPlayerConsts.SET_PROXY, device.Id, proxy));
+            return output != null;
+        }
     }
 }

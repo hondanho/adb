@@ -26,5 +26,8 @@
         public const string STOP_APP = "memuc -i {0} stopapp {1}";
 
         public const string GET_SERIAL_NO = "memuc -i {0} abd get-serialno";
+
+
+        public const string SET_PROXY = "memuc -i {0} adb shell settings put global http_proxy {1} && memuc -i {0} adb shell settings put global https_proxy {1}";
     }
 }

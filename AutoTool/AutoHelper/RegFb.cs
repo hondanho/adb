@@ -68,6 +68,8 @@ namespace AutoTool.AutoHelper
         private string _xMbasicBtnSubmitLoginApprovalCode = "//*[@id='checkpointSubmitButton-actual-button']";
         private string _xMbasicBtnContinueLogin = "//*[@id='checkpointSubmitButton-actual-button']";
 
+        private string ButtonRequestReviewXpath = "//*[@id='checkpointBottomBar']/input";
+
         private string _facebookPackageName = "com.facebook.katana";
         private string _oneDotOnePackageName = "com.cloudflare.onedotonedotonedotone";
 
@@ -100,6 +102,7 @@ namespace AutoTool.AutoHelper
             {
                 _EmulatorFunc.ClearAppData(_device, _facebookPackageName);
                 _EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
+                _EmulatorFunc.SetProxy(_device, ":0");
                 _EmulatorFunc.StopDevice(_device);
             }
         }
@@ -125,7 +128,12 @@ namespace AutoTool.AutoHelper
             }
             _timeout = timeout;
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            _chromeDriver = FunctionHelper.InitWebDriver(_userSetting, device.Index);
+            string proxy = null;
+            if (GlobalVar.UseProxy)
+            {
+                proxy = device.Proxy;
+            }
+            _chromeDriver = FunctionHelper.InitWebDriver(_userSetting, device.Index, proxy);
 
             _emailHelper = new SmailPro(_chromeDriver);
             // Init Facebook info
@@ -135,7 +143,7 @@ namespace AutoTool.AutoHelper
             FbAcc.LastName = FunctionHelper.getLastNameRandom();
             FbAcc.Passwd = FunctionHelper.GetPasswordRandom();
             FbAcc.BirthDay = new DateTime(random.Next(1980, 2002), random.Next(1, 12), random.Next(1, 28));
-            FbAcc.Gender = (FbGender)random.Next(0, 1);
+            FbAcc.Gender = (FbGender)random.Next(0, 2);
         }
 
         public RegFb(FacebookAccountInfo fb, int idx)
@@ -169,6 +177,18 @@ namespace AutoTool.AutoHelper
 
             try
             {
+                // Random config
+                LogStepTrace("Set random config");
+                _device.Config = new EmulatorConfig
+                {
+                    Imei = "auto",
+                    Imsi = "auto",
+                    PhoneNumber = FunctionHelper.RandPhoneNumber(),
+                    SimSerial = "auto",
+                    Mac = "auto"
+                };
+                _EmulatorFunc.SetConfig(_device);
+
                 // Start device to register
                 LogStepTrace("Start device");
                 var deviceStarted = _EmulatorFunc.StartDevice(_device);
@@ -185,43 +205,53 @@ namespace AutoTool.AutoHelper
                 _EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
                 Thread.Sleep(1000);
 
-                // Start 1.1.1.1
-                LogStepTrace("Start 1.1.1.1");
-                _EmulatorFunc.StartApp(_device, _oneDotOnePackageName);
-                Thread.Sleep(120);
+                if (GlobalVar.UseProxy)
+                {
+                    // Set proxy
+                    LogStepTrace("Set proxy");
+                    _EmulatorFunc.SetProxy(_device, _device.Proxy);
+                    Thread.Sleep(120);
+                }
+                else
+                {
+                    // Start 1.1.1.1
+                    LogStepTrace("Start 1.1.1.1");
+                    _EmulatorFunc.StartApp(_device, _oneDotOnePackageName);
+                    Thread.Sleep(120);
 
-                // Finding button Get started on home screen and Tap it
-                LogStepTrace("Tap button \"Get started\"");
-                _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnGetStarted);
-                Thread.Sleep(120);
-                LogStepTrace("Tap button \"Done\"");
-                // Finding button Done on intro screen and Tap it
-                _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnIntroDone);
-                Thread.Sleep(120);
-                LogStepTrace("Tap button \"Accept\"");
-                // Finding button Accept on Term & Privacy screen and Tap it
-                _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnAccept);
-                Thread.Sleep(120);
-                LogStepTrace("Finding button Disconnected or Connected");
-                // Finding button Disconnected on screen and Tap it
-                new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
-                    var pointDisconnected = _EmulatorFunc.FindOutPoint(_device,
-                        _defaultPathExec + Constant.TemplateOneDotOne.Disconnected);
-                    var pointConnected = _EmulatorFunc.FindOutPoint(_device,
-                        _defaultPathExec + Constant.TemplateOneDotOne.Connected);
+                    // Finding button Get started on home screen and Tap it
+                    LogStepTrace("Tap button \"Get started\"");
+                    _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnGetStarted);
+                    Thread.Sleep(120);
+                    LogStepTrace("Tap button \"Done\"");
+                    // Finding button Done on intro screen and Tap it
+                    _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnIntroDone);
+                    Thread.Sleep(120);
+                    LogStepTrace("Tap button \"Accept\"");
+                    // Finding button Accept on Term & Privacy screen and Tap it
+                    _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnAccept);
+                    Thread.Sleep(120);
+                    LogStepTrace("Finding button Disconnected or Connected");
+                    // Finding button Disconnected on screen and Tap it
+                    new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                        var pointDisconnected = _EmulatorFunc.FindOutPoint(_device,
+                            _defaultPathExec + Constant.TemplateOneDotOne.Disconnected);
+                        var pointConnected = _EmulatorFunc.FindOutPoint(_device,
+                            _defaultPathExec + Constant.TemplateOneDotOne.Connected);
 
-                    if (pointConnected == null
-                        && pointDisconnected == null) return false;
+                        if (pointConnected == null
+                            && pointDisconnected == null) return false;
 
-                    if (pointDisconnected != null)
-                    {
-                        LogStepTrace(">>>> Tap button Disconnected");
-                        _EmulatorFunc.Tap(_device, pointDisconnected.Point);
-                        return false;
-                    }
+                        if (pointDisconnected != null)
+                        {
+                            LogStepTrace(">>>> Tap button Disconnected");
+                            _EmulatorFunc.Tap(_device, pointDisconnected.Point);
+                            return false;
+                        }
 
-                    return true;
-                });
+                        return true;
+                    });
+                }
 
                 // Start app facebook
                 LogStepTrace("Start Facebook");
@@ -235,7 +265,7 @@ namespace AutoTool.AutoHelper
                 _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateFacebook.BtnCreateAccountNext, 30);
                 Thread.Sleep(120);
                 // Tap First Name input and Send text
-                LogStepTrace("Tap input \"Fisrt name\"");
+                LogStepTrace("Tap input \"First name\"");
                 _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateFacebook.InputFirstNameClicked);
                 Thread.Sleep(120);
                 LogStepTrace("Input First name <" + FbAcc.FirstName + ">");
@@ -748,7 +778,7 @@ namespace AutoTool.AutoHelper
                 LogStepTrace("Get uid");
                 // Check cookie
                 _chromeDriver.Navigate().GoToUrl(_linkMbasic);
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
                 var cookie = _chromeDriver.Manage().Cookies.GetCookieNamed("c_user");
 
                 if (cookie != null)
@@ -760,29 +790,29 @@ namespace AutoTool.AutoHelper
                 // Nếu chưa đăng nhập
                 _chromeDriver.Manage().Cookies.DeleteAllCookies();
                 _chromeDriver.Navigate().GoToUrl(_linkMbasic);
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 var elementUsername = _chromeDriver.FindElement(By.XPath(_xMbasicLoginUsername));
                 elementUsername.SendKeys(FbAcc.Email);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 var elementPassword = _chromeDriver.FindElement(By.XPath(_xMbasicLoginPassword));
                 elementPassword.SendKeys(FbAcc.Passwd);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 var elementBtnLogin = _chromeDriver.FindElement(By.XPath(_xMbasicBtnLogin));
                 elementBtnLogin.Click();
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 if (!string.IsNullOrEmpty(FbAcc.TwoFacAuth))
                 {
                     var inputLoginApprovalCode = _chromeDriver.FindElement(By.XPath(_xMbasicInputLoginApprovalCode));
                     inputLoginApprovalCode.SendKeys(FunctionHelper.GetTotp(FbAcc.TwoFacAuth));
-                    Thread.Sleep(3000);
+                    Thread.Sleep(500);
                     var btnSubmitApprovalLoginCode = _chromeDriver.FindElement(By.XPath(_xMbasicBtnSubmitLoginApprovalCode));
                     btnSubmitApprovalLoginCode.Click();
-                    Thread.Sleep(3000);
+                    Thread.Sleep(500);
                     var btnContinueLogin = _chromeDriver.FindElement(By.XPath(_xMbasicBtnContinueLogin));
                     btnContinueLogin.Click();
-                    Thread.Sleep(3000);
+                    Thread.Sleep(500);
                 }
 
                 cookie = _chromeDriver.Manage().Cookies.GetCookieNamed("c_user");
@@ -817,17 +847,17 @@ namespace AutoTool.AutoHelper
                 Thread.Sleep(_timeout);
                 var elementUsername = _chromeDriver.FindElement(By.XPath(_xMbasicLoginUsername));
                 elementUsername.SendKeys(username);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 var elementPassword = _chromeDriver.FindElement(By.XPath(_xMbasicLoginPassword));
                 elementPassword.SendKeys(FbAcc.Passwd);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 var elementBtnLogin = _chromeDriver.FindElement(By.XPath(_xMbasicBtnLogin));
                 elementBtnLogin.Click();
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Chuyển đến trang Bật xác minh 2 bước
                 _chromeDriver.Navigate().GoToUrl(_linkMbasic2faIntro);
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Khi có link Logout (đã đăng nhập thành công)
                 bool hasLogOutButton = new WaitHelper<ChromeDriver>(_chromeDriver, TimeSpan.FromSeconds(30)).Until((driver) =>
@@ -851,7 +881,7 @@ namespace AutoTool.AutoHelper
                 // Tìm button "Dùng ứng dụng xác thực"
                 var btnUseAuthApp = _chromeDriver.FindElement(By.XPath(_xMbasicBtnUseAuthApp));
                 btnUseAuthApp.Click();
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Check url trang QRCode
                 bool isQrCodePage = new WaitHelper<ChromeDriver>(_chromeDriver, TimeSpan.FromSeconds(30)).Until((driver) =>
@@ -877,7 +907,7 @@ namespace AutoTool.AutoHelper
                 // Click tiếp tục
                 var btnQrConfirm = _chromeDriver.FindElement(By.XPath(_xMbasicBtnQrConfirm));
                 btnQrConfirm.Click();
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Check url trang QRCode
                 bool isTypeCodePage = new WaitHelper<ChromeDriver>(_chromeDriver, TimeSpan.FromSeconds(30)).Until((driver) =>
@@ -895,12 +925,12 @@ namespace AutoTool.AutoHelper
                 // Input Totp
                 var inputTotp = _chromeDriver.FindElement(By.XPath(_xMbasicInputTotp));
                 inputTotp.SendKeys(totp);
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Click continue
                 var btnSubmitTotp = _chromeDriver.FindElement(By.XPath(_xMbasicBtnSubmitTotp));
                 btnSubmitTotp.Click();
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Check url trang 2fa Outro
                 bool is2faOutroPage = new WaitHelper<ChromeDriver>(_chromeDriver, TimeSpan.FromSeconds(30)).Until((driver) =>
@@ -922,7 +952,7 @@ namespace AutoTool.AutoHelper
 
                 // Goto 2fa setting page
                 _chromeDriver.Navigate().GoToUrl(_linkMbasic2faSetting);
-                Thread.Sleep(3000);
+                Thread.Sleep(120);
 
                 // Khi có link remove 2fa
                 bool hasRemove2fa = new WaitHelper<ChromeDriver>(_chromeDriver, TimeSpan.FromSeconds(30)).Until((driver) =>

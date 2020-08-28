@@ -49,6 +49,8 @@ namespace AutoTool.AutoHelper.EmailHelper
             var emailAddress = new WaitHelper(TimeSpan.FromSeconds(60)).Until(() => {
                 var email = GenerateEmailAddress();
                 if (string.IsNullOrEmpty(email)
+                    || email.Contains("@gmail.com")
+                    || email.Contains("@googlemail.com")
                     || GlobalVar.ListUsedEmail.Contains(email)) return null;
 
                 return email;

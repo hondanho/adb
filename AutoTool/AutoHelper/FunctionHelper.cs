@@ -12,7 +12,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace AutoTool
 {
@@ -115,7 +117,7 @@ namespace AutoTool
             return totp.ComputeTotp();
         }
 
-        public static ChromeDriver InitWebDriver(UserSetting userSetting, int idx = 1)
+        public static ChromeDriver InitWebDriver(UserSetting userSetting, int idx = 1, string proxy = null)
         {
             var workingArea = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
             var width = workingArea.Width;
@@ -143,7 +145,10 @@ namespace AutoTool
             {
                 chromeOptions.AddArguments("start-maximized");
             }
-
+            if (proxy != null)
+            {
+                chromeOptions.AddArguments($"--proxy-server={proxy}");
+            }
             chromeOptions.AddArguments($"--window-size={bw},{bh}");
             chromeOptions.AddArguments($"--window-position={x},{y}");
             chromeOptions.AddArguments("--disable-notifications");
@@ -219,5 +224,24 @@ namespace AutoTool
             "Nov",
             "Dec"
         };
+
+        public static string RandPhoneNumber()
+        {
+            Random rand = new Random();
+            StringBuilder telNo = new StringBuilder(12);
+            int number;
+            for (int i = 0; i < 3; i++)
+            {
+                number = rand.Next(0, 8); // digit between 0 (incl) and 8 (excl)
+                telNo = telNo.Append(number.ToString());
+            }
+            telNo = telNo.Append("-");
+            number = rand.Next(0, 743); // number between 0 (incl) and 743 (excl)
+            telNo = telNo.Append(String.Format("{0:D3}", number));
+            telNo = telNo.Append("-");
+            number = rand.Next(0, 10000); // number between 0 (incl) and 10000 (excl)
+            telNo = telNo.Append(String.Format("{0:D4}", number));
+            return telNo.ToString();
+        }
     }
 }

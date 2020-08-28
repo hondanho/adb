@@ -215,5 +215,30 @@ namespace AutoTool.AutoMethods
             }
             return true;
         }
+
+        public bool SetConfig(EmulatorInfo device, string key, string value)
+        {
+            return false;
+        }
+
+        public string GetConfig(EmulatorInfo device, string key)
+        {
+            return string.Empty;
+        }
+
+        public EmulatorConfig GetConfig(EmulatorInfo device)
+        {
+            return new EmulatorConfig();
+        }
+
+        public bool SetConfig(EmulatorInfo device)
+        {
+            return false;
+        }
+
+        public bool SetProxy(EmulatorInfo device, string proxy)
+        {
+            return true;
+        }
     }
 }

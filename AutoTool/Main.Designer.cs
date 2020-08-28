@@ -91,6 +91,7 @@
             this.cbHideChrome = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tpLDPlayerSetting = new System.Windows.Forms.TabPage();
+            this.cbLdRmDevices = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.btnSetupLDPlayer = new System.Windows.Forms.Button();
             this.nudNoLDPlayerDevices = new System.Windows.Forms.NumericUpDown();
@@ -100,12 +101,13 @@
             this.txtLDPlayerBase = new System.Windows.Forms.TextBox();
             this.txtLDPlayerRootPath = new System.Windows.Forms.TextBox();
             this.tpMEmuSetting = new System.Windows.Forms.TabPage();
+            this.cbMmRmDevices = new System.Windows.Forms.CheckBox();
             this.tbLogs = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
             this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.gbSetting = new System.Windows.Forms.GroupBox();
-            this.cbLdRmDevices = new System.Windows.Forms.CheckBox();
-            this.cbMmRmDevices = new System.Windows.Forms.CheckBox();
+            this.cbUseProxy = new System.Windows.Forms.CheckBox();
+            this.label16 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
@@ -443,6 +445,8 @@
             // 
             // tbRegFbSetting
             // 
+            this.tbRegFbSetting.Controls.Add(this.cbUseProxy);
+            this.tbRegFbSetting.Controls.Add(this.label16);
             this.tbRegFbSetting.Controls.Add(this.btnChooseAll);
             this.tbRegFbSetting.Controls.Add(this.btnReloadDevices);
             this.tbRegFbSetting.Controls.Add(this.dgvListDevices);
@@ -558,7 +562,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(5, 150);
+            this.label15.Location = new System.Drawing.Point(5, 177);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(52, 18);
             this.label15.TabIndex = 29;
@@ -567,7 +571,7 @@
             // txtOutputDirectory
             // 
             this.txtOutputDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputDirectory.Location = new System.Drawing.Point(64, 147);
+            this.txtOutputDirectory.Location = new System.Drawing.Point(64, 174);
             this.txtOutputDirectory.Margin = new System.Windows.Forms.Padding(4);
             this.txtOutputDirectory.Name = "txtOutputDirectory";
             this.txtOutputDirectory.ReadOnly = true;
@@ -580,7 +584,7 @@
             // rbUseMEmu
             // 
             this.rbUseMEmu.AutoSize = true;
-            this.rbUseMEmu.Location = new System.Drawing.Point(129, 120);
+            this.rbUseMEmu.Location = new System.Drawing.Point(132, 145);
             this.rbUseMEmu.Name = "rbUseMEmu";
             this.rbUseMEmu.Size = new System.Drawing.Size(101, 22);
             this.rbUseMEmu.TabIndex = 27;
@@ -592,7 +596,7 @@
             // 
             this.rbUseLDPLayer.AutoSize = true;
             this.rbUseLDPLayer.Checked = true;
-            this.rbUseLDPLayer.Location = new System.Drawing.Point(7, 120);
+            this.rbUseLDPLayer.Location = new System.Drawing.Point(10, 145);
             this.rbUseLDPLayer.Name = "rbUseLDPLayer";
             this.rbUseLDPLayer.Size = new System.Drawing.Size(89, 22);
             this.rbUseLDPLayer.TabIndex = 26;
@@ -738,6 +742,19 @@
             this.tpLDPlayerSetting.Text = "Cài đặt LDPlayer";
             this.tpLDPlayerSetting.UseVisualStyleBackColor = true;
             // 
+            // cbLdRmDevices
+            // 
+            this.cbLdRmDevices.AutoSize = true;
+            this.cbLdRmDevices.Checked = true;
+            this.cbLdRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbLdRmDevices.Location = new System.Drawing.Point(137, 181);
+            this.cbLdRmDevices.Name = "cbLdRmDevices";
+            this.cbLdRmDevices.Size = new System.Drawing.Size(189, 22);
+            this.cbLdRmDevices.TabIndex = 19;
+            this.cbLdRmDevices.Text = "Xóa hết trước khi cài đặt";
+            this.cbLdRmDevices.UseVisualStyleBackColor = true;
+            this.cbLdRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -861,6 +878,19 @@
             this.tpMEmuSetting.Text = "Cài đặt MEmu";
             this.tpMEmuSetting.UseVisualStyleBackColor = true;
             // 
+            // cbMmRmDevices
+            // 
+            this.cbMmRmDevices.AutoSize = true;
+            this.cbMmRmDevices.Checked = true;
+            this.cbMmRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbMmRmDevices.Location = new System.Drawing.Point(137, 181);
+            this.cbMmRmDevices.Name = "cbMmRmDevices";
+            this.cbMmRmDevices.Size = new System.Drawing.Size(189, 22);
+            this.cbMmRmDevices.TabIndex = 11;
+            this.cbMmRmDevices.Text = "Xóa hết trước khi cài đặt";
+            this.cbMmRmDevices.UseVisualStyleBackColor = true;
+            this.cbMmRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
             // tbLogs
             // 
             this.tbLogs.Controls.Add(this.label14);
@@ -916,31 +946,24 @@
             this.gbSetting.TabStop = false;
             this.gbSetting.Text = "Cặt đặt";
             // 
-            // cbLdRmDevices
+            // cbUseProxy
             // 
-            this.cbLdRmDevices.AutoSize = true;
-            this.cbLdRmDevices.Checked = true;
-            this.cbLdRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbLdRmDevices.Location = new System.Drawing.Point(137, 181);
-            this.cbLdRmDevices.Name = "cbLdRmDevices";
-            this.cbLdRmDevices.Size = new System.Drawing.Size(189, 22);
-            this.cbLdRmDevices.TabIndex = 19;
-            this.cbLdRmDevices.Text = "Xóa hết trước khi cài đặt";
-            this.cbLdRmDevices.UseVisualStyleBackColor = true;
-            this.cbLdRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            this.cbUseProxy.AutoSize = true;
+            this.cbUseProxy.Location = new System.Drawing.Point(132, 125);
+            this.cbUseProxy.Name = "cbUseProxy";
+            this.cbUseProxy.Size = new System.Drawing.Size(18, 17);
+            this.cbUseProxy.TabIndex = 34;
+            this.cbUseProxy.UseVisualStyleBackColor = true;
+            this.cbUseProxy.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
             // 
-            // cbMmRmDevices
+            // label16
             // 
-            this.cbMmRmDevices.AutoSize = true;
-            this.cbMmRmDevices.Checked = true;
-            this.cbMmRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbMmRmDevices.Location = new System.Drawing.Point(137, 181);
-            this.cbMmRmDevices.Name = "cbMmRmDevices";
-            this.cbMmRmDevices.Size = new System.Drawing.Size(189, 22);
-            this.cbMmRmDevices.TabIndex = 11;
-            this.cbMmRmDevices.Text = "Xóa hết trước khi cài đặt";
-            this.cbMmRmDevices.UseVisualStyleBackColor = true;
-            this.cbMmRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 124);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(46, 18);
+            this.label16.TabIndex = 33;
+            this.label16.Text = "Proxy";
             // 
             // Main
             // 
@@ -1050,5 +1073,7 @@
         private System.Windows.Forms.Button btnChooseAll;
         private System.Windows.Forms.CheckBox cbLdRmDevices;
         private System.Windows.Forms.CheckBox cbMmRmDevices;
+        private System.Windows.Forms.CheckBox cbUseProxy;
+        private System.Windows.Forms.Label label16;
     }
 }

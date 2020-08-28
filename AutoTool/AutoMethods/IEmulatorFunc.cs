@@ -29,5 +29,10 @@ namespace AutoTool.AutoMethods
         bool ScreenShot(EmulatorInfo device, string destination);
         bool Input(EmulatorInfo device, string text);
         bool Input(EmulatorInfo device, char[] text);
+        string GetConfig(EmulatorInfo device, string key);
+        bool SetConfig(EmulatorInfo device, string key, string value);
+        EmulatorConfig GetConfig(EmulatorInfo device);
+        bool SetConfig(EmulatorInfo device);
+        bool SetProxy(EmulatorInfo device, string proxy);
     }
 }

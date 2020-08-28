@@ -35,29 +35,7 @@ namespace AutoTool
         private bool SettingInitialized = false;
         private bool SettingChanged = false;
         private List<EmulatorInfo> devices = new List<EmulatorInfo>();
-
-        public void LogTrace(string message)
-        {
-            if (this.txtRegisterLogs.InvokeRequired)
-            {
-                RegFb.LogTrace d = new RegFb.LogTrace(LogTrace);
-                this.Invoke(d, new object[] { message });
-            }
-            else
-            {
-                this.txtRegisterLogs.AppendText(message + "\r\n");
-            }
-        }
-
-        static public void Info(string s)
-        {
-            MessageBox.Show(s, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        static public void Warning(string s)
-        {
-            MessageBox.Show(s, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
+        static object proxiesLock = new object();
 
         public Main()
         {
@@ -87,12 +65,63 @@ namespace AutoTool
             {
                 File.Create(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath);
             }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ProxiesPath))
+            {
+                File.Create(GlobalVar.OutputDirectory + Constant.ProxiesPath);
+            }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath))
+            {
+                //File.Create(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath);
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath, "0");
+            }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath))
+            {
+                File.Create(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
+            }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListFailAccountPath))
+            {
+                File.Create(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
+            }
 
             GlobalVar.ListUsedEmail = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath).ToList();
+
+            GlobalVar.Proxies = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ProxiesPath);
+            string proxiesCounter = File.ReadAllText(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath);
+            if (int.TryParse(proxiesCounter, out var pc))
+            {
+                GlobalVar.ProxiesCounter = pc;
+            }
+            else
+            {
+                GlobalVar.ProxiesCounter = 0;
+            }
 
             this.rbUseLDPLayer.CheckedChanged += new EventHandler(this.ListRbCheckedChange);
             // list devices
             LoadDevices();
+        }
+
+        public void LogTrace(string message)
+        {
+            if (this.txtRegisterLogs.InvokeRequired)
+            {
+                RegFb.LogTrace d = new RegFb.LogTrace(LogTrace);
+                this.Invoke(d, new object[] { message });
+            }
+            else
+            {
+                this.txtRegisterLogs.AppendText(message + "\r\n");
+            }
+        }
+
+        static public void Info(string s)
+        {
+            MessageBox.Show(s, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        static public void Warning(string s)
+        {
+            MessageBox.Show(s, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void LoadDevices()
@@ -122,6 +151,7 @@ namespace AutoTool
         private void btnStart_Click(object sender, EventArgs e)
         {
             IEmulatorFunc emulatorFunc = GetEmulatorFunc();
+            GlobalVar.UseProxy = this.cbUseProxy.Checked;
             //if ()
             try
             {
@@ -202,6 +232,7 @@ namespace AutoTool
             this.rbUseLDPLayer.Enabled = false;
             this.rbUseMEmu.Enabled = false;
             this.txtOutputDirectory.Enabled = false;
+            this.cbUseProxy.Enabled = false;
             this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
 
             if (this._fileAccountSuccess == null)
@@ -239,6 +270,7 @@ namespace AutoTool
             this.rbUseLDPLayer.Enabled = true;
             this.rbUseMEmu.Enabled = true;
             this.txtOutputDirectory.Enabled = true;
+            this.cbUseProxy.Enabled = true;
             this.lblStatus.Text = "Stopped";
         }
 
@@ -266,6 +298,20 @@ namespace AutoTool
             var userSetting = new UserSetting();
             userSetting.HideChrome = this.cbHideChrome.Checked;
             userSetting.Minimize = this.cbMinimizeChrome.Checked;
+
+            // Get proxy
+            if (GlobalVar.UseProxy)
+            {
+                string proxy = string.Empty;
+                lock (proxiesLock)
+                {
+                    if (GlobalVar.ProxiesCounter >= GlobalVar.Proxies.Length) GlobalVar.ProxiesCounter = 0;
+                    proxy = GlobalVar.Proxies[GlobalVar.ProxiesCounter++];
+                    File.WriteAllText(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath, GlobalVar.ProxiesCounter.ToString());
+                }
+                device.Proxy = proxy;
+            }
+
             var regClone = new RegFb(device, new RegFb.LogTrace(LogTrace), userSetting, RegFbType.REG_WITH_LDPLAYER);
             try
             {
@@ -336,6 +382,7 @@ namespace AutoTool
             this.txtOutputDirectory.Text = Settings.Default["OutputDirectory"].ToString();
             this.cbLdRmDevices.Checked = (bool)Settings.Default["LdRmAllDevicesWhenRestore"];
             this.cbMmRmDevices.Checked = (bool)Settings.Default["MmRmAllDevicesWhenRestore"];
+            this.cbUseProxy.Checked = (bool)Settings.Default["UseProxy"];
             SettingInitialized = true;
         }
 
@@ -353,6 +400,7 @@ namespace AutoTool
             Settings.Default["OutputDirectory"] = this.txtOutputDirectory.Text;
             Settings.Default["LdRmAllDevicesWhenRestore"] = this.cbLdRmDevices.Checked;
             Settings.Default["MmRmAllDevicesWhenRestore"] = this.cbMmRmDevices.Checked;
+            Settings.Default["UseProxy"] = this.cbUseProxy.Checked;
             Settings.Default.Save();
         }
 
@@ -734,9 +782,35 @@ namespace AutoTool
 
         #region For testing
 
+        static object linkslock = new object();
+        static int count = 0;
         private void button1_Click(object sender, EventArgs e)
         {
-            Info(devices[1].Choose.ToString());
+            var t1 = new Thread(() => {
+                while (count < 20)
+                {
+                    lock (linkslock)
+                    {
+                        count++;
+                    }
+                    Console.WriteLine("t1 " + count);
+                    Thread.Sleep(1);
+                }
+            });
+            var t2 = new Thread(() => {
+                while (count < 20)
+                {
+                    lock(linkslock)
+                    {
+                        count++;
+                    }
+                    Console.WriteLine("t2 " + count);
+                    Thread.Sleep(1);
+                }
+            });
+
+            t1.Start();
+            t2.Start();
             return;
             //var fb = new FacebookAccountInfo();
             //fb.Email = "ficeboh599@synevde.com";

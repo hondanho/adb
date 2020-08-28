@@ -29,5 +29,9 @@
         public const string STOP_APP = "ldconsole killapp --index {0} --packagename \"{1}\"";
 
         public const string GET_SERIAL_NO = "ldconsole adb --index {0} --command \"get-serialno\"";
+
+        public const string SET_CONFIG = "ldconsole modify --index {0} --{1} {2}";
+        public const string GET_PROP = "ldconsole getprop --index {0} --key \"{1}\"";
+        public const string SET_PROXY = "ldconsole adb --index {0} --command \"shell settings put global http_proxy {1}\" && ldconsole adb --index {0} --command \"shell settings put global https_proxy {1}\"";
     }
 }
