@@ -38,6 +38,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.btnStart = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -70,7 +71,6 @@
             this.btnChooseAll = new System.Windows.Forms.Button();
             this.btnReloadDevices = new System.Windows.Forms.Button();
             this.dgvListDevices = new System.Windows.Forms.DataGridView();
-            this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label15 = new System.Windows.Forms.Label();
             this.txtOutputDirectory = new System.Windows.Forms.TextBox();
             this.rbUseMEmu = new System.Windows.Forms.RadioButton();
@@ -103,6 +103,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.gbSetting = new System.Windows.Forms.GroupBox();
+            this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -115,12 +116,12 @@
             this.tabSetting.SuspendLayout();
             this.tbRegFbSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.tpLDPlayerSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).BeginInit();
             this.tpMEmuSetting.SuspendLayout();
             this.tbLogs.SuspendLayout();
             this.gbSetting.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
@@ -545,10 +546,6 @@
             this.dgvListDevices.Size = new System.Drawing.Size(240, 184);
             this.dgvListDevices.TabIndex = 30;
             // 
-            // emulatorInfoBindingSource
-            // 
-            this.emulatorInfoBindingSource.DataSource = typeof(AutoTool.Models.EmulatorInfo);
-            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -936,13 +933,19 @@
             this.gbSetting.TabStop = false;
             this.gbSetting.Text = "Cặt đặt";
             // 
+            // emulatorInfoBindingSource
+            // 
+            this.emulatorInfoBindingSource.DataSource = typeof(AutoTool.Models.EmulatorInfo);
+            // 
             // indexDataGridViewTextBoxColumn
             // 
             this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.indexDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.indexDataGridViewTextBoxColumn.HeaderText = "STT";
             this.indexDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
-            this.indexDataGridViewTextBoxColumn.Width = 50;
+            this.indexDataGridViewTextBoxColumn.Width = 40;
             // 
             // chooseDataGridViewCheckBoxColumn
             // 
@@ -958,7 +961,7 @@
             this.idDataGridViewTextBoxColumn.HeaderText = "Id";
             this.idDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.Width = 50;
+            this.idDataGridViewTextBoxColumn.Width = 40;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -1022,7 +1025,6 @@
             this.tbRegFbSetting.ResumeLayout(false);
             this.tbRegFbSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.tpLDPlayerSetting.ResumeLayout(false);
             this.tpLDPlayerSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).EndInit();
@@ -1031,6 +1033,7 @@
             this.tbLogs.ResumeLayout(false);
             this.tbLogs.PerformLayout();
             this.gbSetting.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
