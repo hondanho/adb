@@ -38,7 +38,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.btnStart = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -66,13 +65,11 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.tabSetting = new System.Windows.Forms.TabControl();
             this.tbRegFbSetting = new System.Windows.Forms.TabPage();
+            this.cbUseProxy = new System.Windows.Forms.CheckBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.btnChooseAll = new System.Windows.Forms.Button();
             this.btnReloadDevices = new System.Windows.Forms.Button();
             this.dgvListDevices = new System.Windows.Forms.DataGridView();
-            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label15 = new System.Windows.Forms.Label();
             this.txtOutputDirectory = new System.Windows.Forms.TextBox();
@@ -106,8 +103,13 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.gbSetting = new System.Windows.Forms.GroupBox();
-            this.cbUseProxy = new System.Windows.Forms.CheckBox();
-            this.label16 = new System.Windows.Forms.Label();
+            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.configDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.proxyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
@@ -478,6 +480,25 @@
             this.tbRegFbSetting.Text = "Cài đặt Reg Facebook";
             this.tbRegFbSetting.UseVisualStyleBackColor = true;
             // 
+            // cbUseProxy
+            // 
+            this.cbUseProxy.AutoSize = true;
+            this.cbUseProxy.Location = new System.Drawing.Point(132, 125);
+            this.cbUseProxy.Name = "cbUseProxy";
+            this.cbUseProxy.Size = new System.Drawing.Size(18, 17);
+            this.cbUseProxy.TabIndex = 34;
+            this.cbUseProxy.UseVisualStyleBackColor = true;
+            this.cbUseProxy.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 124);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(46, 18);
+            this.label16.TabIndex = 33;
+            this.label16.Text = "Proxy";
+            // 
             // btnChooseAll
             // 
             this.btnChooseAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -510,7 +531,10 @@
             this.indexDataGridViewTextBoxColumn,
             this.chooseDataGridViewCheckBoxColumn,
             this.idDataGridViewTextBoxColumn,
-            this.nameDataGridViewTextBoxColumn});
+            this.nameDataGridViewTextBoxColumn,
+            this.statusDataGridViewTextBoxColumn,
+            this.configDataGridViewTextBoxColumn,
+            this.proxyDataGridViewTextBoxColumn});
             this.dgvListDevices.DataSource = this.emulatorInfoBindingSource;
             this.dgvListDevices.Location = new System.Drawing.Point(280, 27);
             this.dgvListDevices.Name = "dgvListDevices";
@@ -520,40 +544,6 @@
             this.dgvListDevices.ShowEditingIcon = false;
             this.dgvListDevices.Size = new System.Drawing.Size(240, 184);
             this.dgvListDevices.TabIndex = 30;
-            // 
-            // indexDataGridViewTextBoxColumn
-            // 
-            this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.indexDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.indexDataGridViewTextBoxColumn.HeaderText = "STT";
-            this.indexDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
-            this.indexDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // chooseDataGridViewCheckBoxColumn
-            // 
-            this.chooseDataGridViewCheckBoxColumn.DataPropertyName = "Choose";
-            this.chooseDataGridViewCheckBoxColumn.HeaderText = "Chọn";
-            this.chooseDataGridViewCheckBoxColumn.MinimumWidth = 6;
-            this.chooseDataGridViewCheckBoxColumn.Name = "chooseDataGridViewCheckBoxColumn";
-            this.chooseDataGridViewCheckBoxColumn.Width = 50;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "id";
-            this.idDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.Width = 50;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Tên máy ảo";
-            this.nameDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.Width = 125;
             // 
             // emulatorInfoBindingSource
             // 
@@ -946,24 +936,64 @@
             this.gbSetting.TabStop = false;
             this.gbSetting.Text = "Cặt đặt";
             // 
-            // cbUseProxy
+            // indexDataGridViewTextBoxColumn
             // 
-            this.cbUseProxy.AutoSize = true;
-            this.cbUseProxy.Location = new System.Drawing.Point(132, 125);
-            this.cbUseProxy.Name = "cbUseProxy";
-            this.cbUseProxy.Size = new System.Drawing.Size(18, 17);
-            this.cbUseProxy.TabIndex = 34;
-            this.cbUseProxy.UseVisualStyleBackColor = true;
-            this.cbUseProxy.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
+            this.indexDataGridViewTextBoxColumn.HeaderText = "STT";
+            this.indexDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
+            this.indexDataGridViewTextBoxColumn.Width = 50;
             // 
-            // label16
+            // chooseDataGridViewCheckBoxColumn
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 124);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(46, 18);
-            this.label16.TabIndex = 33;
-            this.label16.Text = "Proxy";
+            this.chooseDataGridViewCheckBoxColumn.DataPropertyName = "Choose";
+            this.chooseDataGridViewCheckBoxColumn.HeaderText = "Chọn";
+            this.chooseDataGridViewCheckBoxColumn.MinimumWidth = 6;
+            this.chooseDataGridViewCheckBoxColumn.Name = "chooseDataGridViewCheckBoxColumn";
+            this.chooseDataGridViewCheckBoxColumn.Width = 50;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.Width = 50;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Tên máy ảo";
+            this.nameDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            this.statusDataGridViewTextBoxColumn.Visible = false;
+            this.statusDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // configDataGridViewTextBoxColumn
+            // 
+            this.configDataGridViewTextBoxColumn.DataPropertyName = "Config";
+            this.configDataGridViewTextBoxColumn.HeaderText = "Config";
+            this.configDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.configDataGridViewTextBoxColumn.Name = "configDataGridViewTextBoxColumn";
+            this.configDataGridViewTextBoxColumn.Visible = false;
+            this.configDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // proxyDataGridViewTextBoxColumn
+            // 
+            this.proxyDataGridViewTextBoxColumn.DataPropertyName = "Proxy";
+            this.proxyDataGridViewTextBoxColumn.HeaderText = "Proxy";
+            this.proxyDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.proxyDataGridViewTextBoxColumn.Name = "proxyDataGridViewTextBoxColumn";
+            this.proxyDataGridViewTextBoxColumn.Visible = false;
+            this.proxyDataGridViewTextBoxColumn.Width = 125;
             // 
             // Main
             // 
@@ -1066,14 +1096,17 @@
         private System.Windows.Forms.DataGridView dgvListDevices;
         private System.Windows.Forms.BindingSource emulatorInfoBindingSource;
         private System.Windows.Forms.Button btnReloadDevices;
-        private System.Windows.Forms.DataGridViewTextBoxColumn indexDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn chooseDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button btnChooseAll;
         private System.Windows.Forms.CheckBox cbLdRmDevices;
         private System.Windows.Forms.CheckBox cbMmRmDevices;
         private System.Windows.Forms.CheckBox cbUseProxy;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.DataGridViewTextBoxColumn indexDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn chooseDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn configDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn proxyDataGridViewTextBoxColumn;
     }
 }

@@ -40,6 +40,8 @@ namespace AutoTool
         public Main()
         {
             InitializeComponent();
+            this.button1.Visible = false;
+            this.button2.Visible = false;
 
             GlobalVar.ListFirstName = FunctionHelper.ReadAllTextFromFile(_pathFileFirstName);
             GlobalVar.ListLastName = FunctionHelper.ReadAllTextFromFile(_pathFileLastName);
