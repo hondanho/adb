@@ -63,11 +63,11 @@ namespace AutoTool
 
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath))
             {
-                File.Create(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath);
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath, string.Empty);
             }
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ProxiesPath))
             {
-                File.Create(GlobalVar.OutputDirectory + Constant.ProxiesPath);
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ProxiesPath, string.Empty);
             }
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath))
             {
@@ -76,15 +76,23 @@ namespace AutoTool
             }
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath))
             {
-                File.Create(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath, string.Empty);
             }
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListFailAccountPath))
             {
-                File.Create(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath, string.Empty);
             }
 
             GlobalVar.ListUsedEmail = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath).ToList();
+            SettingProxies();
 
+            this.rbUseLDPLayer.CheckedChanged += new EventHandler(this.ListRbCheckedChange);
+            // list devices
+            LoadDevices();
+        }
+
+        private static void SettingProxies()
+        {
             GlobalVar.Proxies = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ProxiesPath);
             string proxiesCounter = File.ReadAllText(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath);
             if (int.TryParse(proxiesCounter, out var pc))
@@ -95,10 +103,6 @@ namespace AutoTool
             {
                 GlobalVar.ProxiesCounter = 0;
             }
-
-            this.rbUseLDPLayer.CheckedChanged += new EventHandler(this.ListRbCheckedChange);
-            // list devices
-            LoadDevices();
         }
 
         public void LogTrace(string message)
@@ -155,6 +159,15 @@ namespace AutoTool
             //if ()
             try
             {
+                if (GlobalVar.UseProxy)
+                {
+                    SettingProxies();
+                    if (GlobalVar.Proxies == null || GlobalVar.Proxies.Length <= 0)
+                    {
+                        Warning("Không có proxy nào trong danh sách");
+                        return;
+                    }
+                }
                 //var devices = new List<EmulatorInfo>
                 //{
                 //    new EmulatorInfo("1", "1111"),
@@ -171,6 +184,7 @@ namespace AutoTool
                 if (choosedDevices == null || choosedDevices.Count <= 0)
                 {
                     Warning("Vui lòng chọn máy ảo để thực hiện.");
+                    return;
                 }
 
                 // Caculate number of threads

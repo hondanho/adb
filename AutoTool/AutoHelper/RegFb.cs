@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading;
 using AutoTool.AutoCommons;
@@ -283,7 +284,17 @@ namespace AutoTool.AutoHelper
                 _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateFacebook.BtnNameNext);
                 Thread.Sleep(120);
                 // Calculate point of Birtday
-                var inputBirthdayTop = _EmulatorFunc.FindOutPoint(_device, _defaultPathExec + Constant.TemplateFacebook.InputBirthdayTop, false);
+                var inputBirthdayTop = new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                    return _EmulatorFunc.FindOutPoint(_device, _defaultPathExec + Constant.TemplateFacebook.InputBirthdayTop, false);
+                });
+                if (inputBirthdayTop == null)
+                {
+                    LogStepTrace("Không tìm thấy phần nhập Birthday");
+                    result.Status = FbRegStatus.FAIL;
+                    result.Message = "Không tìm thấy phần nhập Birthday";
+                    this._log.Error(result.Message);
+                    return result;
+                }
                 var baseBirthdayImage = ImageScanOpenCV.GetImage(_defaultPathExec + Constant.TemplateFacebook.InputBirthdayBase);
                 var baseWith = baseBirthdayImage.Width / 3;
                 var yy = inputBirthdayTop.Y + baseBirthdayImage.Height / 2;
@@ -384,7 +395,7 @@ namespace AutoTool.AutoHelper
                 // wait for success
                 // createStatus
                 // null: time out
-                LogStepTrace(".. Waitting for logining ..");
+                LogStepTrace(".. Waitting for Signing-In ..");
                 WaitingData<FbRegStatus> createStatus = new WaitHelper(TimeSpan.FromSeconds(60)).Until(() => {
                     WaitingData<FbRegStatus> waiter = null;
                     bool hasMatchSavePasswd = false;
