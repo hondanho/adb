@@ -17,15 +17,6 @@
             {
                 components.Dispose();
             }
-
-            if (this._fileAccountFailer != null)
-            {
-                this._fileAccountFailer.Dispose();
-            }
-            if (this._fileAccountSuccess != null)
-            {
-                this._fileAccountSuccess.Dispose();
-            }
             base.Dispose(disposing);
         }
 

@@ -42,7 +42,7 @@ namespace AutoTool.AutoHelper
 
         // template mail
         private string _urlTemplateMail = "https://temp-mail.org/vi";
-        private string _xpathChangeMail = "//*[@id='click-to-delete']";
+        //private string _xpathChangeMail = "//*[@id='click-to-delete']";
 
         // mbasic fb
         private string _linkMbasic = "https://mbasic.facebook.com/";
@@ -69,7 +69,7 @@ namespace AutoTool.AutoHelper
         private string _xMbasicBtnSubmitLoginApprovalCode = "//*[@id='checkpointSubmitButton-actual-button']";
         private string _xMbasicBtnContinueLogin = "//*[@id='checkpointSubmitButton-actual-button']";
 
-        private string ButtonRequestReviewXpath = "//*[@id='checkpointBottomBar']/input";
+        //private string ButtonRequestReviewXpath = "//*[@id='checkpointBottomBar']/input";
 
         private string _facebookPackageName = "com.facebook.katana";
         private string _oneDotOnePackageName = "com.cloudflare.onedotonedotonedotone";
@@ -96,6 +96,7 @@ namespace AutoTool.AutoHelper
                 finally
                 {
                     _chromeDriver.Dispose();
+                    GC.Collect();
                     GC.SuppressFinalize(this);
                 }
             }
@@ -486,8 +487,7 @@ namespace AutoTool.AutoHelper
             {
                 if (!string.IsNullOrEmpty(FbAcc.Email))
                 {
-                    GlobalVar.ListUsedEmail.Add(FbAcc.Email);
-                    File.WriteAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath, GlobalVar.ListUsedEmail);
+                    FunctionHelper.AppendUsedEmail(FbAcc.Email);
                 }
                 //_EmulatorFunc.ClearAppData(_device, _facebookPackageName);
                 //_EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);

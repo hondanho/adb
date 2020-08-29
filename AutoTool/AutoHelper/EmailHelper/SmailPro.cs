@@ -51,7 +51,7 @@ namespace AutoTool.AutoHelper.EmailHelper
                 if (string.IsNullOrEmpty(email)
                     || email.Contains("@gmail.com")
                     || email.Contains("@googlemail.com")
-                    || GlobalVar.ListUsedEmail.Contains(email)) return null;
+                    || FunctionHelper.EmailIsUsed(email)) return null;
 
                 return email;
             });

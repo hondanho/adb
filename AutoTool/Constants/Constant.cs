@@ -58,7 +58,7 @@ namespace AutoTool
 
         public const string ListUsedEmailPath = @"\used_emails.txt";
         public const string ListSuccessAccountPath = @"\success_accounts.txt";
-        public const string ListFailAccountPath = @"\fail_accounts.txt";
+        public const string ListFailureAccountPath = @"\fail_accounts.txt";
         public const string ProxiesPath = @"\proxies.txt";
         public const string ProxiesCounterPath = @"\proxies_counter.txt";
 

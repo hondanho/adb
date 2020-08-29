@@ -14,8 +14,6 @@ using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
-using Emgu.CV.Shape;
-using AutoTool.Network;
 using System.Data;
 
 namespace AutoTool
@@ -25,8 +23,6 @@ namespace AutoTool
         private ILog _log;
         private string _pathFileFirstName = Environment.CurrentDirectory + "\\source\\data\\firstName.txt";
         private string _pathFileLastName = Environment.CurrentDirectory + "\\source\\data\\lastName.txt";
-        private StreamWriter _fileAccountSuccess;
-        private StreamWriter _fileAccountFailer;
         public delegate void ShowLog(string message);
         public delegate void LogInfo(string info);
         private bool _regFbIsRunning = false;
@@ -59,8 +55,6 @@ namespace AutoTool
             {
                 Directory.CreateDirectory(GlobalVar.OutputDirectory);
             }
-            this._fileAccountSuccess = File.AppendText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
-            this._fileAccountFailer = File.AppendText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
             this._log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath))
@@ -80,12 +74,11 @@ namespace AutoTool
             {
                 File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath, string.Empty);
             }
-            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListFailAccountPath))
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListFailureAccountPath))
             {
-                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath, string.Empty);
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListFailureAccountPath, string.Empty);
             }
 
-            GlobalVar.ListUsedEmail = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath).ToList();
             SettingProxies();
 
             this.rbUseLDPLayer.CheckedChanged += new EventHandler(this.ListRbCheckedChange);
@@ -250,33 +243,10 @@ namespace AutoTool
             this.txtOutputDirectory.Enabled = false;
             this.cbUseProxy.Enabled = false;
             this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
-
-            if (this._fileAccountSuccess == null)
-            {
-                this._fileAccountSuccess = File.AppendText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath);
-            }
-            if (this._fileAccountFailer == null)
-            {
-                this._fileAccountFailer = File.AppendText(GlobalVar.OutputDirectory + Constant.ListFailAccountPath);
-            }
         }
 
         private void _SetStopUI()
         {
-            if (this._fileAccountFailer != null)
-            {
-                this._fileAccountFailer.Flush();
-                this._fileAccountFailer.Close();
-                this._fileAccountFailer.Dispose();
-                this._fileAccountFailer = null;
-            }
-            if (this._fileAccountSuccess != null)
-            {
-                this._fileAccountSuccess.Flush();
-                this._fileAccountSuccess.Close();
-                this._fileAccountSuccess.Dispose();
-                this._fileAccountSuccess = null;
-            }
             this.btnStart.Enabled = true;
             this.btnStop.Enabled = false;
             this.nudThreadNo.Enabled = true;
@@ -343,7 +313,7 @@ namespace AutoTool
                     }
                     this.Invoke((LogInfo)((logInfo) =>
                     {
-                        _fileAccountSuccess.WriteLine(logInfo);
+                        FunctionHelper.SaveSuccess(logInfo);
                         txtSuccess.AppendText(logInfo + "\r\n");
                     }), regClone.FbAcc.StringInfo());
                 }
@@ -352,7 +322,7 @@ namespace AutoTool
                     regClone.LogStepTrace("Register error");
                     this.Invoke((LogInfo)((logInfo) =>
                     {
-                        _fileAccountFailer.WriteLine(logInfo);
+                        FunctionHelper.SaveFailure(logInfo);
                         txtFail.AppendText(logInfo + "\r\n");
                     }), regClone.FbAcc.StringInfo() + " <<< " + create.Message);
                 }
@@ -836,17 +806,17 @@ namespace AutoTool
             ////regFb.TurnOn2Fa();
             ////regFb.GetUid();
 
-            for (var i = 0; i < 8; i++)
-            {
-                var t = new Thread((obj) => {
-                    for (; ; )
-                    {
-                        RegisFb((int)obj);
-                    }
-                });
-                _RegisFbThreads.Add(t);
-                t.Start(i + 1);
-            }
+            //for (var i = 0; i < 8; i++)
+            //{
+            //    var t = new Thread((obj) => {
+            //        for (; ; )
+            //        {
+            //            RegisFb((int)obj);
+            //        }
+            //    });
+            //    _RegisFbThreads.Add(t);
+            //    t.Start(i + 1);
+            //}
         }
 
         private void button2_Click(object sender, EventArgs e)

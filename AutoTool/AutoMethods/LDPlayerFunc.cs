@@ -18,6 +18,12 @@ namespace AutoTool.AutoMethods
             _cmd = new CmdFunc(GlobalVar.LDPlayerWorkingDirectory);
         }
 
+        ~LDPlayerFunc()
+        {
+            _cmd = null;
+            GC.Collect();
+        }
+
         public List<EmulatorInfo> GetDevices()
         {
             List<EmulatorInfo> devices = new List<EmulatorInfo>();

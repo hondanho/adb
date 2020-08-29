@@ -1,26 +1,84 @@
-﻿using AutoTool.AutoHelper;
-using AutoTool.Models;
+﻿using AutoTool.Models;
 using log4net;
 using OpenQA.Selenium.Chrome;
 using OtpNet;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace AutoTool
 {
     public class FunctionHelper
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        static object SaveSuccessLock = new object();
+        static object SaveFailureLock = new object();
+        static object UsedMailLock = new object();
+
+        public static bool EmailIsUsed(string emailAddress)
+        {
+            lock (UsedMailLock)
+            {
+                try
+                {
+                    var usedEmails = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath);
+                    return usedEmails.Contains(emailAddress.Trim().ToLower());
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
+                return false;
+            }
+        }
+
+        public static void AppendUsedEmail(string emailAddress)
+        {
+            lock (UsedMailLock)
+            {
+                try
+                {
+                    File.AppendAllText(GlobalVar.OutputDirectory + Constant.ListUsedEmailPath, emailAddress.Trim().ToLower() + "\r\n");
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
+            }
+        }
+
+        public static void SaveSuccess(string data)
+        {
+            lock (SaveSuccessLock)
+            {
+                try
+                {
+                    File.AppendAllText(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath, data + "\r\n");
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
+            }
+        }
+        public static void SaveFailure(string data)
+        {
+            lock (SaveFailureLock)
+            {
+                try
+                {
+                    File.AppendAllText(GlobalVar.OutputDirectory + Constant.ListFailureAccountPath, data + "\r\n");
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
+            }
+        }
 
         public static string getMaleRandom()
         {

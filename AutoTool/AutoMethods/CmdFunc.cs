@@ -16,6 +16,11 @@ namespace AutoTool.AutoMethods
             this.WorkingDirectory = workingDirectory;
         }
 
+        ~CmdFunc()
+        {
+            this.WorkingDirectory = null;
+        }
+
         public string RunCMD(string cmd, string workingDirectory)
         {
             string output;
