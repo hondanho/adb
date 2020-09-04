@@ -29,7 +29,7 @@ namespace AutoTool.AutoHelper.EmailHelper
 
         }
 
-        public override string EmailAddress()
+        public override string GetEmailAddress()
         {
             Driver.Navigate().GoToUrl(SmailproUrl);
             new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
@@ -55,6 +55,8 @@ namespace AutoTool.AutoHelper.EmailHelper
 
                 return email;
             });
+
+            this.EmailAddress = emailAddress;
 
             return emailAddress;
         }
@@ -125,7 +127,7 @@ namespace AutoTool.AutoHelper.EmailHelper
             return emailAddress;
         }
 
-        public override string GetFacebookConfirmationCode()
+        public override string GetConfirmationCode()
         {
             string code = new WaitHelper(TimeSpan.FromSeconds(60)).Until(() => {
                 // Click Refresh
@@ -177,6 +179,7 @@ namespace AutoTool.AutoHelper.EmailHelper
                 }
             });
 
+            this.ConfirmationCode = code;
             return code;
         }
     }

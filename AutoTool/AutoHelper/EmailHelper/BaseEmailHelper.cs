@@ -5,10 +5,12 @@ namespace AutoTool.AutoHelper.EmailHelper
     abstract public class BaseEmailHelper
     {
         public ChromeDriver Driver;
+        public string EmailAddress;
+        public string ConfirmationCode;
 
         public BaseEmailHelper()
         {
-            Driver = new ChromeDriver();
+            //Driver = new ChromeDriver();
         }
 
         public BaseEmailHelper(ChromeDriver driver)
@@ -16,8 +18,8 @@ namespace AutoTool.AutoHelper.EmailHelper
             Driver = driver;
         }
 
-        public abstract string EmailAddress();
+        public abstract string GetEmailAddress();
 
-        public abstract string GetFacebookConfirmationCode();
+        public abstract string GetConfirmationCode();
     }
 }

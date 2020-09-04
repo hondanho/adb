@@ -361,7 +361,8 @@ namespace AutoTool.AutoHelper
 
                 // Get email
                 LogStepTrace("Getting Email address");
-                FbAcc.Email = _emailHelper.EmailAddress();
+                _emailHelper.GetEmailAddress();
+                FbAcc.Email = _emailHelper.EmailAddress;
 
                 // Input email address
                 LogStepTrace("Tap input Email address");
@@ -521,8 +522,8 @@ namespace AutoTool.AutoHelper
 
                 //    return resultCodeMail;
                 //});
-
-                string codeMail = _emailHelper.GetFacebookConfirmationCode();
+                _emailHelper.GetConfirmationCode();
+                string codeMail = _emailHelper.ConfirmationCode;
 
                 if (string.IsNullOrEmpty(codeMail)) return false;
 
