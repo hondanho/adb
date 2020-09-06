@@ -59,12 +59,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoCommons\AutoExceptions\OutOfEmailException.cs" />
     <Compile Include="AutoCommons\Extensions.cs" />
     <Compile Include="AutoCommons\ImagePoint.cs" />
     <Compile Include="AutoHelper\AdbHelper.cs" />
     <Compile Include="AutoCommons\AdbKeyEvent.cs" />
     <Compile Include="AutoCommons\GetTextFromImage.cs" />
     <Compile Include="AutoHelper\EmailHelper\BaseEmailHelper.cs" />
+    <Compile Include="AutoHelper\EmailHelper\ServerMail.cs" />
     <Compile Include="AutoHelper\EmailHelper\SmailPro.cs" />
     <Compile Include="AutoHelper\MemuHelper.cs" />
     <Compile Include="AutoCommons\QRCode.cs" />
@@ -140,8 +142,20 @@
     <PackageReference Include="log4net">
       <Version>2.0.8</Version>
     </PackageReference>
+    <PackageReference Include="Mail.dll">
+      <Version>3.0.20174.2011</Version>
+    </PackageReference>
+    <PackageReference Include="MailSystem.NET">
+      <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
     <PackageReference Include="Otp.NET">
       <Version>1.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>106.11.4</Version>
     </PackageReference>
     <PackageReference Include="Selenium.WebDriver">
       <Version>3.141.0</Version>

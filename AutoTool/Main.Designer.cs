@@ -57,11 +57,21 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.tabSetting = new System.Windows.Forms.TabControl();
             this.tbRegFbSetting = new System.Windows.Forms.TabPage();
+            this.cbUseMailServer = new System.Windows.Forms.CheckBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.cbUseProxy = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
             this.btnChooseAll = new System.Windows.Forms.Button();
             this.btnReloadDevices = new System.Windows.Forms.Button();
             this.dgvListDevices = new System.Windows.Forms.DataGridView();
+            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.configDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.proxyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label15 = new System.Windows.Forms.Label();
             this.txtOutputDirectory = new System.Windows.Forms.TextBox();
             this.rbUseMEmu = new System.Windows.Forms.RadioButton();
@@ -94,25 +104,19 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.gbSetting = new System.Windows.Forms.GroupBox();
-            this.emulatorInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.chooseDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.configDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.proxyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
             this.tbRegFbSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.tpLDPlayerSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).BeginInit();
             this.tpMEmuSetting.SuspendLayout();
             this.tbLogs.SuspendLayout();
             this.gbSetting.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
@@ -135,7 +139,7 @@
             this.label1.Location = new System.Drawing.Point(183, 25);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 18);
+            this.label1.Size = new System.Drawing.Size(0, 15);
             this.label1.TabIndex = 3;
             // 
             // btnResetSetting
@@ -166,7 +170,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(7, 44);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(60, 18);
+            this.label8.Size = new System.Drawing.Size(49, 15);
             this.label8.TabIndex = 13;
             this.label8.Text = "Bật 2FA";
             // 
@@ -177,7 +181,7 @@
             this.cbTurn2faOn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbTurn2faOn.Location = new System.Drawing.Point(132, 43);
             this.cbTurn2faOn.Name = "cbTurn2faOn";
-            this.cbTurn2faOn.Size = new System.Drawing.Size(18, 17);
+            this.cbTurn2faOn.Size = new System.Drawing.Size(15, 14);
             this.cbTurn2faOn.TabIndex = 12;
             this.cbTurn2faOn.UseVisualStyleBackColor = true;
             this.cbTurn2faOn.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
@@ -220,7 +224,7 @@
             0,
             0});
             this.nudThreadNo.Name = "nudThreadNo";
-            this.nudThreadNo.Size = new System.Drawing.Size(60, 24);
+            this.nudThreadNo.Size = new System.Drawing.Size(60, 21);
             this.nudThreadNo.TabIndex = 3;
             this.nudThreadNo.Value = new decimal(new int[] {
             2,
@@ -236,7 +240,7 @@
             this.label3.Location = new System.Drawing.Point(7, 15);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 18);
+            this.label3.Size = new System.Drawing.Size(56, 15);
             this.label3.TabIndex = 2;
             this.label3.Text = "Số luồng";
             // 
@@ -268,7 +272,7 @@
             0,
             0});
             this.nudNoMEmuDevices.Name = "nudNoMEmuDevices";
-            this.nudNoMEmuDevices.Size = new System.Drawing.Size(60, 24);
+            this.nudNoMEmuDevices.Size = new System.Drawing.Size(60, 21);
             this.nudNoMEmuDevices.TabIndex = 6;
             this.nudNoMEmuDevices.Value = new decimal(new int[] {
             2,
@@ -284,7 +288,7 @@
             this.label4.Location = new System.Drawing.Point(7, 49);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(134, 18);
+            this.label4.Size = new System.Drawing.Size(110, 15);
             this.label4.TabIndex = 5;
             this.label4.Text = "No. MEmu devices";
             // 
@@ -294,7 +298,7 @@
             this.txtMEmuRootPath.Location = new System.Drawing.Point(158, 8);
             this.txtMEmuRootPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtMEmuRootPath.Name = "txtMEmuRootPath";
-            this.txtMEmuRootPath.Size = new System.Drawing.Size(320, 24);
+            this.txtMEmuRootPath.Size = new System.Drawing.Size(320, 21);
             this.txtMEmuRootPath.TabIndex = 1;
             this.txtMEmuRootPath.Text = "D:\\Program Files\\Microvirt\\MEmu";
             this.txtMEmuRootPath.TextChanged += new System.EventHandler(this.SettingValueChanged);
@@ -307,7 +311,7 @@
             this.label2.Location = new System.Drawing.Point(7, 13);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 18);
+            this.label2.Size = new System.Drawing.Size(68, 15);
             this.label2.TabIndex = 0;
             this.label2.Text = "MEmu root";
             // 
@@ -318,7 +322,7 @@
             this.label5.Location = new System.Drawing.Point(7, 393);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(148, 18);
+            this.label5.Size = new System.Drawing.Size(119, 15);
             this.label5.TabIndex = 5;
             this.label5.Text = "Successed Accounts";
             // 
@@ -362,7 +366,7 @@
             this.label6.Location = new System.Drawing.Point(465, 393);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(113, 18);
+            this.label6.Size = new System.Drawing.Size(93, 15);
             this.label6.TabIndex = 8;
             this.label6.Text = "Failed Accounts";
             // 
@@ -373,7 +377,7 @@
             this.label7.Location = new System.Drawing.Point(7, 86);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(111, 18);
+            this.label7.Size = new System.Drawing.Size(93, 15);
             this.label7.TabIndex = 10;
             this.label7.Text = "MEmu zip base";
             // 
@@ -396,7 +400,7 @@
             this.txtMEmuZipBase.Margin = new System.Windows.Forms.Padding(4);
             this.txtMEmuZipBase.Name = "txtMEmuZipBase";
             this.txtMEmuZipBase.ReadOnly = true;
-            this.txtMEmuZipBase.Size = new System.Drawing.Size(248, 24);
+            this.txtMEmuZipBase.Size = new System.Drawing.Size(248, 21);
             this.txtMEmuZipBase.TabIndex = 8;
             // 
             // btnStop
@@ -439,6 +443,8 @@
             // 
             // tbRegFbSetting
             // 
+            this.tbRegFbSetting.Controls.Add(this.cbUseMailServer);
+            this.tbRegFbSetting.Controls.Add(this.label17);
             this.tbRegFbSetting.Controls.Add(this.cbUseProxy);
             this.tbRegFbSetting.Controls.Add(this.label16);
             this.tbRegFbSetting.Controls.Add(this.btnChooseAll);
@@ -464,20 +470,41 @@
             this.tbRegFbSetting.Controls.Add(this.nudThreadNo);
             this.tbRegFbSetting.Controls.Add(this.label8);
             this.tbRegFbSetting.Controls.Add(this.cbTurn2faOn);
-            this.tbRegFbSetting.Location = new System.Drawing.Point(4, 27);
+            this.tbRegFbSetting.Location = new System.Drawing.Point(4, 24);
             this.tbRegFbSetting.Name = "tbRegFbSetting";
             this.tbRegFbSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tbRegFbSetting.Size = new System.Drawing.Size(888, 214);
+            this.tbRegFbSetting.Size = new System.Drawing.Size(888, 217);
             this.tbRegFbSetting.TabIndex = 0;
             this.tbRegFbSetting.Text = "Cài đặt Reg Facebook";
             this.tbRegFbSetting.UseVisualStyleBackColor = true;
             // 
+            // cbUseMailServer
+            // 
+            this.cbUseMailServer.AutoSize = true;
+            this.cbUseMailServer.Checked = true;
+            this.cbUseMailServer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbUseMailServer.Location = new System.Drawing.Point(232, 125);
+            this.cbUseMailServer.Name = "cbUseMailServer";
+            this.cbUseMailServer.Size = new System.Drawing.Size(15, 14);
+            this.cbUseMailServer.TabIndex = 36;
+            this.cbUseMailServer.UseVisualStyleBackColor = true;
+            this.cbUseMailServer.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(130, 124);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(103, 15);
+            this.label17.TabIndex = 35;
+            this.label17.Text = "Dùng mail server ";
+            // 
             // cbUseProxy
             // 
             this.cbUseProxy.AutoSize = true;
-            this.cbUseProxy.Location = new System.Drawing.Point(132, 125);
+            this.cbUseProxy.Location = new System.Drawing.Point(50, 125);
             this.cbUseProxy.Name = "cbUseProxy";
-            this.cbUseProxy.Size = new System.Drawing.Size(18, 17);
+            this.cbUseProxy.Size = new System.Drawing.Size(15, 14);
             this.cbUseProxy.TabIndex = 34;
             this.cbUseProxy.UseVisualStyleBackColor = true;
             this.cbUseProxy.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
@@ -487,7 +514,7 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(7, 124);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(46, 18);
+            this.label16.Size = new System.Drawing.Size(37, 15);
             this.label16.TabIndex = 33;
             this.label16.Text = "Proxy";
             // 
@@ -536,397 +563,6 @@
             this.dgvListDevices.ShowEditingIcon = false;
             this.dgvListDevices.Size = new System.Drawing.Size(240, 184);
             this.dgvListDevices.TabIndex = 30;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(5, 177);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(52, 18);
-            this.label15.TabIndex = 29;
-            this.label15.Text = "Output";
-            // 
-            // txtOutputDirectory
-            // 
-            this.txtOutputDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputDirectory.Location = new System.Drawing.Point(64, 174);
-            this.txtOutputDirectory.Margin = new System.Windows.Forms.Padding(4);
-            this.txtOutputDirectory.Name = "txtOutputDirectory";
-            this.txtOutputDirectory.ReadOnly = true;
-            this.txtOutputDirectory.Size = new System.Drawing.Size(195, 24);
-            this.txtOutputDirectory.TabIndex = 28;
-            this.txtOutputDirectory.Text = "D:\\rcfb";
-            this.txtOutputDirectory.TextChanged += new System.EventHandler(this.SettingValueChanged);
-            this.txtOutputDirectory.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtOutputDirectory_MouseDoubleClick);
-            // 
-            // rbUseMEmu
-            // 
-            this.rbUseMEmu.AutoSize = true;
-            this.rbUseMEmu.Location = new System.Drawing.Point(132, 145);
-            this.rbUseMEmu.Name = "rbUseMEmu";
-            this.rbUseMEmu.Size = new System.Drawing.Size(101, 22);
-            this.rbUseMEmu.TabIndex = 27;
-            this.rbUseMEmu.Text = "MEmuPlay";
-            this.rbUseMEmu.UseVisualStyleBackColor = true;
-            this.rbUseMEmu.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // rbUseLDPLayer
-            // 
-            this.rbUseLDPLayer.AutoSize = true;
-            this.rbUseLDPLayer.Checked = true;
-            this.rbUseLDPLayer.Location = new System.Drawing.Point(10, 145);
-            this.rbUseLDPLayer.Name = "rbUseLDPLayer";
-            this.rbUseLDPLayer.Size = new System.Drawing.Size(89, 22);
-            this.rbUseLDPLayer.TabIndex = 26;
-            this.rbUseLDPLayer.TabStop = true;
-            this.rbUseLDPLayer.Text = "LDPlayer";
-            this.rbUseLDPLayer.UseVisualStyleBackColor = true;
-            this.rbUseLDPLayer.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // btnRemoveLastName
-            // 
-            this.btnRemoveLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemoveLastName.Location = new System.Drawing.Point(851, 2);
-            this.btnRemoveLastName.Name = "btnRemoveLastName";
-            this.btnRemoveLastName.Size = new System.Drawing.Size(32, 23);
-            this.btnRemoveLastName.TabIndex = 25;
-            this.btnRemoveLastName.Text = "-";
-            this.btnRemoveLastName.UseVisualStyleBackColor = true;
-            this.btnRemoveLastName.Click += new System.EventHandler(this.btnRemoveLastName_Click);
-            // 
-            // btnAddLastName
-            // 
-            this.btnAddLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddLastName.Location = new System.Drawing.Point(819, 2);
-            this.btnAddLastName.Name = "btnAddLastName";
-            this.btnAddLastName.Size = new System.Drawing.Size(32, 23);
-            this.btnAddLastName.TabIndex = 24;
-            this.btnAddLastName.Text = "+";
-            this.btnAddLastName.UseVisualStyleBackColor = true;
-            this.btnAddLastName.Click += new System.EventHandler(this.btnAddLastName_Click);
-            // 
-            // txtLastName
-            // 
-            this.txtLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtLastName.Location = new System.Drawing.Point(707, 3);
-            this.txtLastName.Name = "txtLastName";
-            this.txtLastName.Size = new System.Drawing.Size(109, 24);
-            this.txtLastName.TabIndex = 23;
-            // 
-            // lbLastName
-            // 
-            this.lbLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbLastName.FormattingEnabled = true;
-            this.lbLastName.ItemHeight = 18;
-            this.lbLastName.Location = new System.Drawing.Point(707, 27);
-            this.lbLastName.Name = "lbLastName";
-            this.lbLastName.Size = new System.Drawing.Size(175, 184);
-            this.lbLastName.TabIndex = 22;
-            // 
-            // btnRemoveFirstName
-            // 
-            this.btnRemoveFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemoveFirstName.Location = new System.Drawing.Point(670, 2);
-            this.btnRemoveFirstName.Name = "btnRemoveFirstName";
-            this.btnRemoveFirstName.Size = new System.Drawing.Size(32, 23);
-            this.btnRemoveFirstName.TabIndex = 21;
-            this.btnRemoveFirstName.Text = "-";
-            this.btnRemoveFirstName.UseVisualStyleBackColor = true;
-            this.btnRemoveFirstName.Click += new System.EventHandler(this.btnRemoveFirstName_Click);
-            // 
-            // btnAddFirstName
-            // 
-            this.btnAddFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddFirstName.Location = new System.Drawing.Point(638, 2);
-            this.btnAddFirstName.Name = "btnAddFirstName";
-            this.btnAddFirstName.Size = new System.Drawing.Size(32, 23);
-            this.btnAddFirstName.TabIndex = 20;
-            this.btnAddFirstName.Text = "+";
-            this.btnAddFirstName.UseVisualStyleBackColor = true;
-            this.btnAddFirstName.Click += new System.EventHandler(this.btnAddFirstName_Click);
-            // 
-            // txtFirstName
-            // 
-            this.txtFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFirstName.Location = new System.Drawing.Point(526, 3);
-            this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.Size = new System.Drawing.Size(109, 24);
-            this.txtFirstName.TabIndex = 19;
-            // 
-            // lbFirstName
-            // 
-            this.lbFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbFirstName.FormattingEnabled = true;
-            this.lbFirstName.ItemHeight = 18;
-            this.lbFirstName.Location = new System.Drawing.Point(526, 27);
-            this.lbFirstName.Name = "lbFirstName";
-            this.lbFirstName.Size = new System.Drawing.Size(175, 184);
-            this.lbFirstName.TabIndex = 18;
-            // 
-            // cbMinimizeChrome
-            // 
-            this.cbMinimizeChrome.AutoSize = true;
-            this.cbMinimizeChrome.Location = new System.Drawing.Point(132, 98);
-            this.cbMinimizeChrome.Name = "cbMinimizeChrome";
-            this.cbMinimizeChrome.Size = new System.Drawing.Size(18, 17);
-            this.cbMinimizeChrome.TabIndex = 17;
-            this.cbMinimizeChrome.UseVisualStyleBackColor = true;
-            this.cbMinimizeChrome.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 97);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(125, 18);
-            this.label10.TabIndex = 16;
-            this.label10.Text = "Minimize Chrome";
-            // 
-            // cbHideChrome
-            // 
-            this.cbHideChrome.AutoSize = true;
-            this.cbHideChrome.Location = new System.Drawing.Point(132, 72);
-            this.cbHideChrome.Name = "cbHideChrome";
-            this.cbHideChrome.Size = new System.Drawing.Size(18, 17);
-            this.cbHideChrome.TabIndex = 15;
-            this.cbHideChrome.UseVisualStyleBackColor = true;
-            this.cbHideChrome.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 71);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(83, 18);
-            this.label9.TabIndex = 14;
-            this.label9.Text = "Ẩn Chrome";
-            // 
-            // tpLDPlayerSetting
-            // 
-            this.tpLDPlayerSetting.Controls.Add(this.cbLdRmDevices);
-            this.tpLDPlayerSetting.Controls.Add(this.label11);
-            this.tpLDPlayerSetting.Controls.Add(this.btnSetupLDPlayer);
-            this.tpLDPlayerSetting.Controls.Add(this.nudNoLDPlayerDevices);
-            this.tpLDPlayerSetting.Controls.Add(this.label13);
-            this.tpLDPlayerSetting.Controls.Add(this.btnChooseBaseLDPlayer);
-            this.tpLDPlayerSetting.Controls.Add(this.label12);
-            this.tpLDPlayerSetting.Controls.Add(this.txtLDPlayerBase);
-            this.tpLDPlayerSetting.Controls.Add(this.txtLDPlayerRootPath);
-            this.tpLDPlayerSetting.Location = new System.Drawing.Point(4, 27);
-            this.tpLDPlayerSetting.Name = "tpLDPlayerSetting";
-            this.tpLDPlayerSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tpLDPlayerSetting.Size = new System.Drawing.Size(888, 214);
-            this.tpLDPlayerSetting.TabIndex = 1;
-            this.tpLDPlayerSetting.Text = "Cài đặt LDPlayer";
-            this.tpLDPlayerSetting.UseVisualStyleBackColor = true;
-            // 
-            // cbLdRmDevices
-            // 
-            this.cbLdRmDevices.AutoSize = true;
-            this.cbLdRmDevices.Checked = true;
-            this.cbLdRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbLdRmDevices.Location = new System.Drawing.Point(137, 181);
-            this.cbLdRmDevices.Name = "cbLdRmDevices";
-            this.cbLdRmDevices.Size = new System.Drawing.Size(189, 22);
-            this.cbLdRmDevices.TabIndex = 19;
-            this.cbLdRmDevices.Text = "Xóa hết trước khi cài đặt";
-            this.cbLdRmDevices.UseVisualStyleBackColor = true;
-            this.cbLdRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(7, 86);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(104, 18);
-            this.label11.TabIndex = 18;
-            this.label11.Text = "LDPlayer base";
-            // 
-            // btnSetupLDPlayer
-            // 
-            this.btnSetupLDPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSetupLDPlayer.Location = new System.Drawing.Point(7, 175);
-            this.btnSetupLDPlayer.Margin = new System.Windows.Forms.Padding(4);
-            this.btnSetupLDPlayer.Name = "btnSetupLDPlayer";
-            this.btnSetupLDPlayer.Size = new System.Drawing.Size(123, 32);
-            this.btnSetupLDPlayer.TabIndex = 15;
-            this.btnSetupLDPlayer.Text = "Cài đặt";
-            this.btnSetupLDPlayer.UseVisualStyleBackColor = true;
-            this.btnSetupLDPlayer.Click += new System.EventHandler(this.btnSetupLDPlayer_Click);
-            // 
-            // nudNoLDPlayerDevices
-            // 
-            this.nudNoLDPlayerDevices.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudNoLDPlayerDevices.Location = new System.Drawing.Point(158, 46);
-            this.nudNoLDPlayerDevices.Margin = new System.Windows.Forms.Padding(4);
-            this.nudNoLDPlayerDevices.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.nudNoLDPlayerDevices.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudNoLDPlayerDevices.Name = "nudNoLDPlayerDevices";
-            this.nudNoLDPlayerDevices.Size = new System.Drawing.Size(60, 24);
-            this.nudNoLDPlayerDevices.TabIndex = 14;
-            this.nudNoLDPlayerDevices.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.nudNoLDPlayerDevices.ValueChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(7, 13);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(99, 18);
-            this.label13.TabIndex = 11;
-            this.label13.Text = "LDPlayer root";
-            // 
-            // btnChooseBaseLDPlayer
-            // 
-            this.btnChooseBaseLDPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChooseBaseLDPlayer.Location = new System.Drawing.Point(413, 81);
-            this.btnChooseBaseLDPlayer.Margin = new System.Windows.Forms.Padding(4);
-            this.btnChooseBaseLDPlayer.Name = "btnChooseBaseLDPlayer";
-            this.btnChooseBaseLDPlayer.Size = new System.Drawing.Size(63, 24);
-            this.btnChooseBaseLDPlayer.TabIndex = 17;
-            this.btnChooseBaseLDPlayer.Text = "Chọn";
-            this.btnChooseBaseLDPlayer.UseVisualStyleBackColor = true;
-            this.btnChooseBaseLDPlayer.Click += new System.EventHandler(this.btnChooseBaseLDPlayer_Click);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(7, 49);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(150, 18);
-            this.label12.TabIndex = 13;
-            this.label12.Text = "No. LDPlayer devices";
-            // 
-            // txtLDPlayerBase
-            // 
-            this.txtLDPlayerBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLDPlayerBase.Location = new System.Drawing.Point(158, 82);
-            this.txtLDPlayerBase.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLDPlayerBase.Name = "txtLDPlayerBase";
-            this.txtLDPlayerBase.ReadOnly = true;
-            this.txtLDPlayerBase.Size = new System.Drawing.Size(248, 24);
-            this.txtLDPlayerBase.TabIndex = 16;
-            // 
-            // txtLDPlayerRootPath
-            // 
-            this.txtLDPlayerRootPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLDPlayerRootPath.Location = new System.Drawing.Point(158, 8);
-            this.txtLDPlayerRootPath.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLDPlayerRootPath.Name = "txtLDPlayerRootPath";
-            this.txtLDPlayerRootPath.Size = new System.Drawing.Size(320, 24);
-            this.txtLDPlayerRootPath.TabIndex = 12;
-            this.txtLDPlayerRootPath.Text = "E:\\ChangZhi\\LDPlayer";
-            this.txtLDPlayerRootPath.TextChanged += new System.EventHandler(this.SettingValueChanged);
-            this.txtLDPlayerRootPath.DoubleClick += new System.EventHandler(this.txtLDPlayerRootPath_DoubleClick);
-            // 
-            // tpMEmuSetting
-            // 
-            this.tpMEmuSetting.Controls.Add(this.cbMmRmDevices);
-            this.tpMEmuSetting.Controls.Add(this.label7);
-            this.tpMEmuSetting.Controls.Add(this.btnSetupMEmu);
-            this.tpMEmuSetting.Controls.Add(this.nudNoMEmuDevices);
-            this.tpMEmuSetting.Controls.Add(this.label2);
-            this.tpMEmuSetting.Controls.Add(this.label4);
-            this.tpMEmuSetting.Controls.Add(this.btnChooseBaseMEmu);
-            this.tpMEmuSetting.Controls.Add(this.txtMEmuZipBase);
-            this.tpMEmuSetting.Controls.Add(this.txtMEmuRootPath);
-            this.tpMEmuSetting.Location = new System.Drawing.Point(4, 27);
-            this.tpMEmuSetting.Name = "tpMEmuSetting";
-            this.tpMEmuSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tpMEmuSetting.Size = new System.Drawing.Size(888, 214);
-            this.tpMEmuSetting.TabIndex = 2;
-            this.tpMEmuSetting.Text = "Cài đặt MEmu";
-            this.tpMEmuSetting.UseVisualStyleBackColor = true;
-            // 
-            // cbMmRmDevices
-            // 
-            this.cbMmRmDevices.AutoSize = true;
-            this.cbMmRmDevices.Checked = true;
-            this.cbMmRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbMmRmDevices.Location = new System.Drawing.Point(137, 181);
-            this.cbMmRmDevices.Name = "cbMmRmDevices";
-            this.cbMmRmDevices.Size = new System.Drawing.Size(189, 22);
-            this.cbMmRmDevices.TabIndex = 11;
-            this.cbMmRmDevices.Text = "Xóa hết trước khi cài đặt";
-            this.cbMmRmDevices.UseVisualStyleBackColor = true;
-            this.cbMmRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // tbLogs
-            // 
-            this.tbLogs.Controls.Add(this.label14);
-            this.tbLogs.Controls.Add(this.txtRegisterLogs);
-            this.tbLogs.Location = new System.Drawing.Point(4, 27);
-            this.tbLogs.Name = "tbLogs";
-            this.tbLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tbLogs.Size = new System.Drawing.Size(888, 214);
-            this.tbLogs.TabIndex = 3;
-            this.tbLogs.Text = "Logs";
-            this.tbLogs.UseVisualStyleBackColor = true;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(4, 5);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(95, 18);
-            this.label14.TabIndex = 17;
-            this.label14.Text = "Register logs";
-            // 
-            // txtRegisterLogs
-            // 
-            this.txtRegisterLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRegisterLogs.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtRegisterLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRegisterLogs.Location = new System.Drawing.Point(4, 27);
-            this.txtRegisterLogs.Margin = new System.Windows.Forms.Padding(4);
-            this.txtRegisterLogs.Multiline = true;
-            this.txtRegisterLogs.Name = "txtRegisterLogs";
-            this.txtRegisterLogs.ReadOnly = true;
-            this.txtRegisterLogs.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtRegisterLogs.Size = new System.Drawing.Size(876, 180);
-            this.txtRegisterLogs.TabIndex = 17;
-            this.txtRegisterLogs.WordWrap = false;
-            // 
-            // gbSetting
-            // 
-            this.gbSetting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbSetting.Controls.Add(this.tabSetting);
-            this.gbSetting.Controls.Add(this.btnResetSetting);
-            this.gbSetting.Controls.Add(this.btnSaveSetting);
-            this.gbSetting.Controls.Add(this.button1);
-            this.gbSetting.Controls.Add(this.button2);
-            this.gbSetting.Location = new System.Drawing.Point(10, 7);
-            this.gbSetting.Name = "gbSetting";
-            this.gbSetting.Size = new System.Drawing.Size(909, 317);
-            this.gbSetting.TabIndex = 16;
-            this.gbSetting.TabStop = false;
-            this.gbSetting.Text = "Cặt đặt";
-            // 
-            // emulatorInfoBindingSource
-            // 
-            this.emulatorInfoBindingSource.DataSource = typeof(AutoTool.Models.EmulatorInfo);
             // 
             // indexDataGridViewTextBoxColumn
             // 
@@ -989,9 +625,424 @@
             this.proxyDataGridViewTextBoxColumn.Visible = false;
             this.proxyDataGridViewTextBoxColumn.Width = 125;
             // 
+            // emulatorInfoBindingSource
+            // 
+            this.emulatorInfoBindingSource.DataSource = typeof(AutoTool.Models.EmulatorInfo);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(5, 177);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(43, 15);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "Output";
+            // 
+            // txtOutputDirectory
+            // 
+            this.txtOutputDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutputDirectory.Location = new System.Drawing.Point(64, 174);
+            this.txtOutputDirectory.Margin = new System.Windows.Forms.Padding(4);
+            this.txtOutputDirectory.Name = "txtOutputDirectory";
+            this.txtOutputDirectory.ReadOnly = true;
+            this.txtOutputDirectory.Size = new System.Drawing.Size(195, 21);
+            this.txtOutputDirectory.TabIndex = 28;
+            this.txtOutputDirectory.Text = "D:\\rcfb";
+            this.txtOutputDirectory.TextChanged += new System.EventHandler(this.SettingValueChanged);
+            this.txtOutputDirectory.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtOutputDirectory_MouseDoubleClick);
+            // 
+            // rbUseMEmu
+            // 
+            this.rbUseMEmu.AutoSize = true;
+            this.rbUseMEmu.Location = new System.Drawing.Point(132, 145);
+            this.rbUseMEmu.Name = "rbUseMEmu";
+            this.rbUseMEmu.Size = new System.Drawing.Size(85, 19);
+            this.rbUseMEmu.TabIndex = 27;
+            this.rbUseMEmu.Text = "MEmuPlay";
+            this.rbUseMEmu.UseVisualStyleBackColor = true;
+            this.rbUseMEmu.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // rbUseLDPLayer
+            // 
+            this.rbUseLDPLayer.AutoSize = true;
+            this.rbUseLDPLayer.Checked = true;
+            this.rbUseLDPLayer.Location = new System.Drawing.Point(10, 145);
+            this.rbUseLDPLayer.Name = "rbUseLDPLayer";
+            this.rbUseLDPLayer.Size = new System.Drawing.Size(75, 19);
+            this.rbUseLDPLayer.TabIndex = 26;
+            this.rbUseLDPLayer.TabStop = true;
+            this.rbUseLDPLayer.Text = "LDPlayer";
+            this.rbUseLDPLayer.UseVisualStyleBackColor = true;
+            this.rbUseLDPLayer.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // btnRemoveLastName
+            // 
+            this.btnRemoveLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveLastName.Location = new System.Drawing.Point(851, 2);
+            this.btnRemoveLastName.Name = "btnRemoveLastName";
+            this.btnRemoveLastName.Size = new System.Drawing.Size(32, 23);
+            this.btnRemoveLastName.TabIndex = 25;
+            this.btnRemoveLastName.Text = "-";
+            this.btnRemoveLastName.UseVisualStyleBackColor = true;
+            this.btnRemoveLastName.Click += new System.EventHandler(this.btnRemoveLastName_Click);
+            // 
+            // btnAddLastName
+            // 
+            this.btnAddLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddLastName.Location = new System.Drawing.Point(819, 2);
+            this.btnAddLastName.Name = "btnAddLastName";
+            this.btnAddLastName.Size = new System.Drawing.Size(32, 23);
+            this.btnAddLastName.TabIndex = 24;
+            this.btnAddLastName.Text = "+";
+            this.btnAddLastName.UseVisualStyleBackColor = true;
+            this.btnAddLastName.Click += new System.EventHandler(this.btnAddLastName_Click);
+            // 
+            // txtLastName
+            // 
+            this.txtLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLastName.Location = new System.Drawing.Point(707, 3);
+            this.txtLastName.Name = "txtLastName";
+            this.txtLastName.Size = new System.Drawing.Size(109, 21);
+            this.txtLastName.TabIndex = 23;
+            // 
+            // lbLastName
+            // 
+            this.lbLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbLastName.FormattingEnabled = true;
+            this.lbLastName.ItemHeight = 15;
+            this.lbLastName.Location = new System.Drawing.Point(707, 27);
+            this.lbLastName.Name = "lbLastName";
+            this.lbLastName.Size = new System.Drawing.Size(175, 184);
+            this.lbLastName.TabIndex = 22;
+            // 
+            // btnRemoveFirstName
+            // 
+            this.btnRemoveFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveFirstName.Location = new System.Drawing.Point(670, 2);
+            this.btnRemoveFirstName.Name = "btnRemoveFirstName";
+            this.btnRemoveFirstName.Size = new System.Drawing.Size(32, 23);
+            this.btnRemoveFirstName.TabIndex = 21;
+            this.btnRemoveFirstName.Text = "-";
+            this.btnRemoveFirstName.UseVisualStyleBackColor = true;
+            this.btnRemoveFirstName.Click += new System.EventHandler(this.btnRemoveFirstName_Click);
+            // 
+            // btnAddFirstName
+            // 
+            this.btnAddFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddFirstName.Location = new System.Drawing.Point(638, 2);
+            this.btnAddFirstName.Name = "btnAddFirstName";
+            this.btnAddFirstName.Size = new System.Drawing.Size(32, 23);
+            this.btnAddFirstName.TabIndex = 20;
+            this.btnAddFirstName.Text = "+";
+            this.btnAddFirstName.UseVisualStyleBackColor = true;
+            this.btnAddFirstName.Click += new System.EventHandler(this.btnAddFirstName_Click);
+            // 
+            // txtFirstName
+            // 
+            this.txtFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFirstName.Location = new System.Drawing.Point(526, 3);
+            this.txtFirstName.Name = "txtFirstName";
+            this.txtFirstName.Size = new System.Drawing.Size(109, 21);
+            this.txtFirstName.TabIndex = 19;
+            // 
+            // lbFirstName
+            // 
+            this.lbFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbFirstName.FormattingEnabled = true;
+            this.lbFirstName.ItemHeight = 15;
+            this.lbFirstName.Location = new System.Drawing.Point(526, 27);
+            this.lbFirstName.Name = "lbFirstName";
+            this.lbFirstName.Size = new System.Drawing.Size(175, 184);
+            this.lbFirstName.TabIndex = 18;
+            // 
+            // cbMinimizeChrome
+            // 
+            this.cbMinimizeChrome.AutoSize = true;
+            this.cbMinimizeChrome.Location = new System.Drawing.Point(132, 98);
+            this.cbMinimizeChrome.Name = "cbMinimizeChrome";
+            this.cbMinimizeChrome.Size = new System.Drawing.Size(15, 14);
+            this.cbMinimizeChrome.TabIndex = 17;
+            this.cbMinimizeChrome.UseVisualStyleBackColor = true;
+            this.cbMinimizeChrome.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(7, 97);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(105, 15);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "Minimize Chrome";
+            // 
+            // cbHideChrome
+            // 
+            this.cbHideChrome.AutoSize = true;
+            this.cbHideChrome.Location = new System.Drawing.Point(132, 72);
+            this.cbHideChrome.Name = "cbHideChrome";
+            this.cbHideChrome.Size = new System.Drawing.Size(15, 14);
+            this.cbHideChrome.TabIndex = 15;
+            this.cbHideChrome.UseVisualStyleBackColor = true;
+            this.cbHideChrome.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 71);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(68, 15);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Ẩn Chrome";
+            // 
+            // tpLDPlayerSetting
+            // 
+            this.tpLDPlayerSetting.Controls.Add(this.cbLdRmDevices);
+            this.tpLDPlayerSetting.Controls.Add(this.label11);
+            this.tpLDPlayerSetting.Controls.Add(this.btnSetupLDPlayer);
+            this.tpLDPlayerSetting.Controls.Add(this.nudNoLDPlayerDevices);
+            this.tpLDPlayerSetting.Controls.Add(this.label13);
+            this.tpLDPlayerSetting.Controls.Add(this.btnChooseBaseLDPlayer);
+            this.tpLDPlayerSetting.Controls.Add(this.label12);
+            this.tpLDPlayerSetting.Controls.Add(this.txtLDPlayerBase);
+            this.tpLDPlayerSetting.Controls.Add(this.txtLDPlayerRootPath);
+            this.tpLDPlayerSetting.Location = new System.Drawing.Point(4, 24);
+            this.tpLDPlayerSetting.Name = "tpLDPlayerSetting";
+            this.tpLDPlayerSetting.Padding = new System.Windows.Forms.Padding(3);
+            this.tpLDPlayerSetting.Size = new System.Drawing.Size(888, 217);
+            this.tpLDPlayerSetting.TabIndex = 1;
+            this.tpLDPlayerSetting.Text = "Cài đặt LDPlayer";
+            this.tpLDPlayerSetting.UseVisualStyleBackColor = true;
+            // 
+            // cbLdRmDevices
+            // 
+            this.cbLdRmDevices.AutoSize = true;
+            this.cbLdRmDevices.Checked = true;
+            this.cbLdRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbLdRmDevices.Location = new System.Drawing.Point(137, 181);
+            this.cbLdRmDevices.Name = "cbLdRmDevices";
+            this.cbLdRmDevices.Size = new System.Drawing.Size(156, 19);
+            this.cbLdRmDevices.TabIndex = 19;
+            this.cbLdRmDevices.Text = "Xóa hết trước khi cài đặt";
+            this.cbLdRmDevices.UseVisualStyleBackColor = true;
+            this.cbLdRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(7, 86);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(87, 15);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "LDPlayer base";
+            // 
+            // btnSetupLDPlayer
+            // 
+            this.btnSetupLDPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSetupLDPlayer.Location = new System.Drawing.Point(7, 175);
+            this.btnSetupLDPlayer.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSetupLDPlayer.Name = "btnSetupLDPlayer";
+            this.btnSetupLDPlayer.Size = new System.Drawing.Size(123, 32);
+            this.btnSetupLDPlayer.TabIndex = 15;
+            this.btnSetupLDPlayer.Text = "Cài đặt";
+            this.btnSetupLDPlayer.UseVisualStyleBackColor = true;
+            this.btnSetupLDPlayer.Click += new System.EventHandler(this.btnSetupLDPlayer_Click);
+            // 
+            // nudNoLDPlayerDevices
+            // 
+            this.nudNoLDPlayerDevices.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudNoLDPlayerDevices.Location = new System.Drawing.Point(158, 46);
+            this.nudNoLDPlayerDevices.Margin = new System.Windows.Forms.Padding(4);
+            this.nudNoLDPlayerDevices.Maximum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.nudNoLDPlayerDevices.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudNoLDPlayerDevices.Name = "nudNoLDPlayerDevices";
+            this.nudNoLDPlayerDevices.Size = new System.Drawing.Size(60, 21);
+            this.nudNoLDPlayerDevices.TabIndex = 14;
+            this.nudNoLDPlayerDevices.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.nudNoLDPlayerDevices.ValueChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(7, 13);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(81, 15);
+            this.label13.TabIndex = 11;
+            this.label13.Text = "LDPlayer root";
+            // 
+            // btnChooseBaseLDPlayer
+            // 
+            this.btnChooseBaseLDPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChooseBaseLDPlayer.Location = new System.Drawing.Point(413, 81);
+            this.btnChooseBaseLDPlayer.Margin = new System.Windows.Forms.Padding(4);
+            this.btnChooseBaseLDPlayer.Name = "btnChooseBaseLDPlayer";
+            this.btnChooseBaseLDPlayer.Size = new System.Drawing.Size(63, 24);
+            this.btnChooseBaseLDPlayer.TabIndex = 17;
+            this.btnChooseBaseLDPlayer.Text = "Chọn";
+            this.btnChooseBaseLDPlayer.UseVisualStyleBackColor = true;
+            this.btnChooseBaseLDPlayer.Click += new System.EventHandler(this.btnChooseBaseLDPlayer_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(7, 49);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(123, 15);
+            this.label12.TabIndex = 13;
+            this.label12.Text = "No. LDPlayer devices";
+            // 
+            // txtLDPlayerBase
+            // 
+            this.txtLDPlayerBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLDPlayerBase.Location = new System.Drawing.Point(158, 82);
+            this.txtLDPlayerBase.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLDPlayerBase.Name = "txtLDPlayerBase";
+            this.txtLDPlayerBase.ReadOnly = true;
+            this.txtLDPlayerBase.Size = new System.Drawing.Size(248, 21);
+            this.txtLDPlayerBase.TabIndex = 16;
+            // 
+            // txtLDPlayerRootPath
+            // 
+            this.txtLDPlayerRootPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLDPlayerRootPath.Location = new System.Drawing.Point(158, 8);
+            this.txtLDPlayerRootPath.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLDPlayerRootPath.Name = "txtLDPlayerRootPath";
+            this.txtLDPlayerRootPath.Size = new System.Drawing.Size(320, 21);
+            this.txtLDPlayerRootPath.TabIndex = 12;
+            this.txtLDPlayerRootPath.Text = "E:\\ChangZhi\\LDPlayer";
+            this.txtLDPlayerRootPath.TextChanged += new System.EventHandler(this.SettingValueChanged);
+            this.txtLDPlayerRootPath.DoubleClick += new System.EventHandler(this.txtLDPlayerRootPath_DoubleClick);
+            // 
+            // tpMEmuSetting
+            // 
+            this.tpMEmuSetting.Controls.Add(this.cbMmRmDevices);
+            this.tpMEmuSetting.Controls.Add(this.label7);
+            this.tpMEmuSetting.Controls.Add(this.btnSetupMEmu);
+            this.tpMEmuSetting.Controls.Add(this.nudNoMEmuDevices);
+            this.tpMEmuSetting.Controls.Add(this.label2);
+            this.tpMEmuSetting.Controls.Add(this.label4);
+            this.tpMEmuSetting.Controls.Add(this.btnChooseBaseMEmu);
+            this.tpMEmuSetting.Controls.Add(this.txtMEmuZipBase);
+            this.tpMEmuSetting.Controls.Add(this.txtMEmuRootPath);
+            this.tpMEmuSetting.Location = new System.Drawing.Point(4, 24);
+            this.tpMEmuSetting.Name = "tpMEmuSetting";
+            this.tpMEmuSetting.Padding = new System.Windows.Forms.Padding(3);
+            this.tpMEmuSetting.Size = new System.Drawing.Size(888, 217);
+            this.tpMEmuSetting.TabIndex = 2;
+            this.tpMEmuSetting.Text = "Cài đặt MEmu";
+            this.tpMEmuSetting.UseVisualStyleBackColor = true;
+            // 
+            // cbMmRmDevices
+            // 
+            this.cbMmRmDevices.AutoSize = true;
+            this.cbMmRmDevices.Checked = true;
+            this.cbMmRmDevices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbMmRmDevices.Location = new System.Drawing.Point(137, 181);
+            this.cbMmRmDevices.Name = "cbMmRmDevices";
+            this.cbMmRmDevices.Size = new System.Drawing.Size(156, 19);
+            this.cbMmRmDevices.TabIndex = 11;
+            this.cbMmRmDevices.Text = "Xóa hết trước khi cài đặt";
+            this.cbMmRmDevices.UseVisualStyleBackColor = true;
+            this.cbMmRmDevices.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // tbLogs
+            // 
+            this.tbLogs.Controls.Add(this.label14);
+            this.tbLogs.Controls.Add(this.txtRegisterLogs);
+            this.tbLogs.Location = new System.Drawing.Point(4, 24);
+            this.tbLogs.Name = "tbLogs";
+            this.tbLogs.Padding = new System.Windows.Forms.Padding(3);
+            this.tbLogs.Size = new System.Drawing.Size(888, 217);
+            this.tbLogs.TabIndex = 3;
+            this.tbLogs.Text = "Logs";
+            this.tbLogs.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(4, 5);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(79, 15);
+            this.label14.TabIndex = 17;
+            this.label14.Text = "Register logs";
+            // 
+            // txtRegisterLogs
+            // 
+            this.txtRegisterLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRegisterLogs.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtRegisterLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRegisterLogs.Location = new System.Drawing.Point(4, 27);
+            this.txtRegisterLogs.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRegisterLogs.Multiline = true;
+            this.txtRegisterLogs.Name = "txtRegisterLogs";
+            this.txtRegisterLogs.ReadOnly = true;
+            this.txtRegisterLogs.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtRegisterLogs.Size = new System.Drawing.Size(876, 180);
+            this.txtRegisterLogs.TabIndex = 17;
+            this.txtRegisterLogs.WordWrap = false;
+            // 
+            // gbSetting
+            // 
+            this.gbSetting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbSetting.Controls.Add(this.button4);
+            this.gbSetting.Controls.Add(this.button3);
+            this.gbSetting.Controls.Add(this.tabSetting);
+            this.gbSetting.Controls.Add(this.btnResetSetting);
+            this.gbSetting.Controls.Add(this.btnSaveSetting);
+            this.gbSetting.Controls.Add(this.button1);
+            this.gbSetting.Controls.Add(this.button2);
+            this.gbSetting.Location = new System.Drawing.Point(10, 7);
+            this.gbSetting.Name = "gbSetting";
+            this.gbSetting.Size = new System.Drawing.Size(909, 317);
+            this.gbSetting.TabIndex = 16;
+            this.gbSetting.TabStop = false;
+            this.gbSetting.Text = "Cặt đặt";
+            // 
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(324, 275);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(94, 26);
+            this.button4.TabIndex = 17;
+            this.button4.Text = "get code mail";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button3
+            // 
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(228, 276);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(84, 26);
+            this.button3.TabIndex = 16;
+            this.button3.Text = "get email";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 691);
             this.Controls.Add(this.gbSetting);
@@ -1016,6 +1067,7 @@
             this.tbRegFbSetting.ResumeLayout(false);
             this.tbRegFbSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.tpLDPlayerSetting.ResumeLayout(false);
             this.tpLDPlayerSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoLDPlayerDevices)).EndInit();
@@ -1024,7 +1076,6 @@
             this.tbLogs.ResumeLayout(false);
             this.tbLogs.PerformLayout();
             this.gbSetting.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1102,5 +1153,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn configDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn proxyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.CheckBox cbUseMailServer;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }

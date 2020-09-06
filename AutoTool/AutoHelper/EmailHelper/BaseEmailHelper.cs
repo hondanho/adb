@@ -6,6 +6,7 @@ namespace AutoTool.AutoHelper.EmailHelper
     {
         public ChromeDriver Driver;
         public string EmailAddress;
+        public string EmailPasswd;
         public string ConfirmationCode;
 
         public BaseEmailHelper()

@@ -10,6 +10,9 @@ namespace AutoTool.Models
         public static string[] ListLastName { get; set; }
         public static string[] ListFirstName { get; set; }
         public static string[] Proxies { get; set; }
+        public static string[] Emails { get; set; }
+        public static int EmailsCounter { get; set; }
+        public static bool UseMailServer { get; set; }
         public static int ProxiesCounter { get; set; }
         public static bool UseProxy { get; set; }
         public static string OutputDirectory { get; set; }

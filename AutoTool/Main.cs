@@ -15,6 +15,7 @@ using log4net;
 using AutoTool.AutoCommons;
 using AutoTool.Constants;
 using System.Data;
+using AutoTool.AutoHelper.EmailHelper;
 
 namespace AutoTool
 {
@@ -69,6 +70,14 @@ namespace AutoTool
             {
                 //File.Create(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath);
                 File.WriteAllText(GlobalVar.OutputDirectory + Constant.ProxiesCounterPath, "0");
+            }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.EmailsPath))
+            {
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.EmailsPath, string.Empty);
+            }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.EmailsCounterPath))
+            {
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.EmailsCounterPath, "0");
             }
             if (!File.Exists(GlobalVar.OutputDirectory + Constant.ListSuccessAccountPath))
             {
@@ -151,6 +160,7 @@ namespace AutoTool
         {
             IEmulatorFunc emulatorFunc = GetEmulatorFunc();
             GlobalVar.UseProxy = this.cbUseProxy.Checked;
+            GlobalVar.UseMailServer = this.cbUseMailServer.Checked;
             //if ()
             try
             {
@@ -163,15 +173,11 @@ namespace AutoTool
                         return;
                     }
                 }
-                //var devices = new List<EmulatorInfo>
-                //{
-                //    new EmulatorInfo("1", "1111"),
-                //    new EmulatorInfo("2", "2222"),
-                //    new EmulatorInfo("3", "3333"),
-                //    new EmulatorInfo("4", "4444"),
-                //    new EmulatorInfo("5", "5555"),
-                //    new EmulatorInfo("6", "6666")
-                //};
+                if (GlobalVar.UseMailServer)
+                {
+                    var lstEmails = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.EmailsPath);
+                    GlobalVar.Emails = lstEmails;
+                }
 
                 // get choosed devices
                 var choosedDevices = devices.Where(d => d.Choose).ToList();
@@ -189,14 +195,14 @@ namespace AutoTool
                 {
                     _regFbIsRunning = true;
                     _SetStartUI();
-                    
+
                     for (var i = 0; i < _numberOfThread; i++)
                     {
                         var device = choosedDevices[i];
                         device.Index = i + 1;
                         var t = new Thread((d) =>
                         {
-                            for (;;)
+                            for (; ; )
                             {
                                 RegisterAccountFacebook((EmulatorInfo)d);
                                 Thread.Sleep(500);
@@ -242,6 +248,7 @@ namespace AutoTool
             this.rbUseMEmu.Enabled = false;
             this.txtOutputDirectory.Enabled = false;
             this.cbUseProxy.Enabled = false;
+            this.cbUseMailServer.Enabled = false;
             this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
         }
 
@@ -257,6 +264,7 @@ namespace AutoTool
             this.rbUseMEmu.Enabled = true;
             this.txtOutputDirectory.Enabled = true;
             this.cbUseProxy.Enabled = true;
+            this.cbUseMailServer.Enabled = true;
             this.lblStatus.Text = "Stopped";
         }
 
@@ -369,6 +377,7 @@ namespace AutoTool
             this.cbLdRmDevices.Checked = (bool)Settings.Default["LdRmAllDevicesWhenRestore"];
             this.cbMmRmDevices.Checked = (bool)Settings.Default["MmRmAllDevicesWhenRestore"];
             this.cbUseProxy.Checked = (bool)Settings.Default["UseProxy"];
+            this.cbUseProxy.Checked = (bool)Settings.Default["UseMailServer"];
             SettingInitialized = true;
         }
 
@@ -387,6 +396,7 @@ namespace AutoTool
             Settings.Default["LdRmAllDevicesWhenRestore"] = this.cbLdRmDevices.Checked;
             Settings.Default["MmRmAllDevicesWhenRestore"] = this.cbMmRmDevices.Checked;
             Settings.Default["UseProxy"] = this.cbUseProxy.Checked;
+            Settings.Default["UseMailServer"] = this.cbUseMailServer.Checked;
             Settings.Default.Save();
         }
 
@@ -446,7 +456,7 @@ namespace AutoTool
 
         private void btnRemoveFirstName_Click(object sender, EventArgs e)
         {
-            if(this.lbFirstName.SelectedItem != null)
+            if (this.lbFirstName.SelectedItem != null)
             {
                 this.lbFirstName.Items.Remove(this.lbFirstName.SelectedItem);
                 GlobalVar.ListFirstName = lbFirstName.ToStringArray();
@@ -772,7 +782,8 @@ namespace AutoTool
         static int count = 0;
         private void button1_Click(object sender, EventArgs e)
         {
-            var t1 = new Thread(() => {
+            var t1 = new Thread(() =>
+            {
                 while (count < 20)
                 {
                     lock (linkslock)
@@ -783,10 +794,11 @@ namespace AutoTool
                     Thread.Sleep(1);
                 }
             });
-            var t2 = new Thread(() => {
+            var t2 = new Thread(() =>
+            {
                 while (count < 20)
                 {
-                    lock(linkslock)
+                    lock (linkslock)
                     {
                         count++;
                     }
@@ -892,6 +904,25 @@ namespace AutoTool
         private void tabSetting_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ServerMail _emailHelper = new ServerMail();
+            var lstEmails = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.EmailsPath);
+            GlobalVar.Emails = lstEmails.Select(x =>
+                                (!string.IsNullOrEmpty(x) && x.Split('|').Length > 1) ? x.Split('|')[0] : string.Empty
+                            ).ToArray();
+            _emailHelper.GetEmailAddress();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ServerMail _emailHelper = new ServerMail();
+            _emailHelper.EmailAddress = "buianh0000@phimdoc.online";
+            _emailHelper.EmailPasswd = "quocThang@12321";
+            var code = _emailHelper.GetConfirmationCode();
+            Info(code);
         }
     }
 }
