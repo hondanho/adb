@@ -28,8 +28,7 @@ namespace AutoTool.AutoHelper
         private ILog _log;
         private EmulatorInfo _device;
         private IEmulatorFunc _EmulatorFunc;
-        private UserSetting _userSetting;
-        private RegFbType _regType;
+        private RegFbConfig _config;
         private BaseEmailHelper _emailHelper;
 
         private string _onedotonePck = "com.cloudflare.onedotonedotonedotone";
@@ -109,16 +108,15 @@ namespace AutoTool.AutoHelper
             }
         }
 
-        public RegFb(EmulatorInfo device, LogTrace logTrace, UserSetting userSetting, RegFbType regType, int timeout = 1000)
+        public RegFb(EmulatorInfo device, LogTrace logTrace, RegFbConfig config, int timeout = 1000)
         {
             _logTrace = logTrace;
             _device = device;
 
             LogStepTrace("Initialing..");
 
-            _userSetting = userSetting;
-            _regType = regType;
-            switch (_regType)
+            _config = config;
+            switch (_config.RegType)
             {
                 case RegFbType.REG_WITH_MEMU:
                     _EmulatorFunc = new MEmuFunc();
@@ -131,13 +129,20 @@ namespace AutoTool.AutoHelper
             _timeout = timeout;
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             string proxy = null;
-            if (GlobalVar.UseProxy)
+            if (AutoNetworkType.Proxy == _config.RegFbNetworkType)
             {
                 proxy = device.Proxy;
             }
-            _chromeDriver = FunctionHelper.InitWebDriver(_userSetting, device.Index, proxy);
+            _chromeDriver = FunctionHelper.InitWebDriver(_config, device.Index, proxy);
 
-            _emailHelper = new SmailPro(_chromeDriver);
+            if (_config.UseEmailServer)
+            {
+                _emailHelper = new ServerMail();
+            }
+            else
+            {
+                _emailHelper = new SmailPro(_chromeDriver);
+            }
             // Init Facebook info
             var random = new Random();
             FbAcc = new FacebookAccountInfo();
@@ -148,13 +153,6 @@ namespace AutoTool.AutoHelper
             FbAcc.Gender = (FbGender)random.Next(0, 2);
         }
 
-        public RegFb(FacebookAccountInfo fb, int idx)
-        {
-            FbAcc = fb;
-            _chromeDriver = FunctionHelper.InitWebDriver(_userSetting, idx);
-            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        }
-
         public void LogStepTrace(string message)
         {
             _logTrace.Invoke($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff")}: {_device.Id}<>{_device.Name}: {message}");
@@ -162,7 +160,7 @@ namespace AutoTool.AutoHelper
 
         public FbRegResult RegisterFacebook()
         {
-            if (_regType == RegFbType.REG_WITH_MEMU)
+            if (_config.RegType == RegFbType.REG_WITH_MEMU)
             {
                 return RegisterFacebookMEmuFbLite();
             }
@@ -207,52 +205,57 @@ namespace AutoTool.AutoHelper
                 _EmulatorFunc.ClearAppData(_device, _oneDotOnePackageName);
                 Thread.Sleep(1000);
 
-                if (GlobalVar.UseProxy)
+                switch(_config.RegFbNetworkType)
                 {
-                    // Set proxy
-                    LogStepTrace("Set proxy");
-                    _EmulatorFunc.SetProxy(_device, _device.Proxy);
-                    Thread.Sleep(120);
-                }
-                else
-                {
-                    // Start 1.1.1.1
-                    LogStepTrace("Start 1.1.1.1");
-                    _EmulatorFunc.StartApp(_device, _oneDotOnePackageName);
-                    Thread.Sleep(120);
+                    case AutoNetworkType.Proxy:
+                        // Set proxy
+                        LogStepTrace("Set proxy");
+                        _EmulatorFunc.SetProxy(_device, _device.Proxy);
+                        Thread.Sleep(120);
+                        break;
+                    case AutoNetworkType.OneDotOne:
+                        // Start 1.1.1.1
+                        LogStepTrace("Start 1.1.1.1");
+                        _EmulatorFunc.StartApp(_device, _oneDotOnePackageName);
+                        Thread.Sleep(120);
 
-                    // Finding button Get started on home screen and Tap it
-                    LogStepTrace("Tap button \"Get started\"");
-                    _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnGetStarted);
-                    Thread.Sleep(120);
-                    LogStepTrace("Tap button \"Done\"");
-                    // Finding button Done on intro screen and Tap it
-                    _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnIntroDone);
-                    Thread.Sleep(120);
-                    LogStepTrace("Tap button \"Accept\"");
-                    // Finding button Accept on Term & Privacy screen and Tap it
-                    _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnAccept);
-                    Thread.Sleep(120);
-                    LogStepTrace("Finding button Disconnected or Connected");
-                    // Finding button Disconnected on screen and Tap it
-                    new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
-                        var pointDisconnected = _EmulatorFunc.FindOutPoint(_device,
-                            _defaultPathExec + Constant.TemplateOneDotOne.Disconnected);
-                        var pointConnected = _EmulatorFunc.FindOutPoint(_device,
-                            _defaultPathExec + Constant.TemplateOneDotOne.Connected);
+                        // Finding button Get started on home screen and Tap it
+                        LogStepTrace("Tap button \"Get started\"");
+                        _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnGetStarted);
+                        Thread.Sleep(120);
+                        LogStepTrace("Tap button \"Done\"");
+                        // Finding button Done on intro screen and Tap it
+                        _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnIntroDone);
+                        Thread.Sleep(120);
+                        LogStepTrace("Tap button \"Accept\"");
+                        // Finding button Accept on Term & Privacy screen and Tap it
+                        _EmulatorFunc.TapImage(_device, _defaultPathExec + Constant.TemplateOneDotOne.BtnAccept);
+                        Thread.Sleep(120);
+                        LogStepTrace("Finding button Disconnected or Connected");
+                        // Finding button Disconnected on screen and Tap it
+                        new WaitHelper(TimeSpan.FromSeconds(30)).Until(() => {
+                            var pointDisconnected = _EmulatorFunc.FindOutPoint(_device,
+                                _defaultPathExec + Constant.TemplateOneDotOne.Disconnected);
+                            var pointConnected = _EmulatorFunc.FindOutPoint(_device,
+                                _defaultPathExec + Constant.TemplateOneDotOne.Connected);
 
-                        if (pointConnected == null
-                            && pointDisconnected == null) return false;
+                            if (pointConnected == null
+                                && pointDisconnected == null) return false;
 
-                        if (pointDisconnected != null)
-                        {
-                            LogStepTrace(">>>> Tap button Disconnected");
-                            _EmulatorFunc.Tap(_device, pointDisconnected.Point);
-                            return false;
-                        }
+                            if (pointDisconnected != null)
+                            {
+                                LogStepTrace(">>>> Tap button Disconnected");
+                                _EmulatorFunc.Tap(_device, pointDisconnected.Point);
+                                return false;
+                            }
 
-                        return true;
-                    });
+                            return true;
+                        });
+                        break;
+                    case AutoNetworkType.None:
+                    case AutoNetworkType.Dcom:
+                    default:
+                        break;
                 }
 
                 // Start app facebook

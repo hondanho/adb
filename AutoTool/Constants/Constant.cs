@@ -63,6 +63,8 @@ namespace AutoTool
         public const string EmailsPath = @"\emails.txt";
         public const string EmailsCounterPath = @"\emails_counter.txt";
         public const string ProxiesCounterPath = @"\proxies_counter.txt";
+        public const string DcomIpPath = @"\dcom_ip.txt";
+        public const string DcomIpBlackListPath = @"\dcom_ip_black_list.txt";
 
         public static class TemplateFacebook
         {

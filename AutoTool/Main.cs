@@ -13,9 +13,8 @@ using AutoTool.Models;
 using AutoTool.Properties;
 using log4net;
 using AutoTool.AutoCommons;
-using AutoTool.Constants;
 using System.Data;
-using AutoTool.AutoHelper.EmailHelper;
+using AutoTool.Network;
 
 namespace AutoTool
 {
@@ -32,7 +31,15 @@ namespace AutoTool
         private bool SettingInitialized = false;
         private bool SettingChanged = false;
         private List<EmulatorInfo> devices = new List<EmulatorInfo>();
+        private List<AutoNetwork> autoNetworks = new List<AutoNetwork>()
+        {
+            new AutoNetwork(0, "Không dùng", AutoNetworkType.None),
+            new AutoNetwork(1, "Dcom", AutoNetworkType.Dcom),
+            new AutoNetwork(2, "Proxy", AutoNetworkType.Proxy),
+            new AutoNetwork(3, "OneDotOne", AutoNetworkType.OneDotOne),
+        };
         static object proxiesLock = new object();
+        private AutoNetworkType _AutoNetworkType;
 
         public Main()
         {
@@ -44,6 +51,9 @@ namespace AutoTool
             GlobalVar.ListLastName = FunctionHelper.ReadAllTextFromFile(_pathFileLastName);
             this.lbFirstName.Items.AddRange(GlobalVar.ListFirstName);
             this.lbLastName.Items.AddRange(GlobalVar.ListLastName);
+
+            // init network 
+            this.cbbAutoNetwork.DataSource = autoNetworks;
 
             InitSetting();
 
@@ -87,12 +97,33 @@ namespace AutoTool
             {
                 File.WriteAllText(GlobalVar.OutputDirectory + Constant.ListFailureAccountPath, string.Empty);
             }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.DcomIpPath))
+            {
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.DcomIpPath, string.Empty);
+            }
+            if (!File.Exists(GlobalVar.OutputDirectory + Constant.DcomIpBlackListPath))
+            {
+                File.WriteAllText(GlobalVar.OutputDirectory + Constant.DcomIpBlackListPath, string.Empty);
+            }
 
             SettingProxies();
 
+            // get ip
+            this.lblIpAddress.Text = DcomChanger.GetIP(true);
+
+            var networkType = (AutoNetworkType)this.cbbAutoNetwork.SelectedValue;
+            this.txtDcomNetworkName.Enabled = (networkType == AutoNetworkType.Dcom);
+
             this.rbUseLDPLayer.CheckedChanged += new EventHandler(this.ListRbCheckedChange);
+            this.cbbAutoNetwork.SelectedIndexChanged += new EventHandler(this.cbbAutoNetwork_SelectedIndexChanged);
             // list devices
             LoadDevices();
+        }
+
+        private void cbbAutoNetwork_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var networkType = (AutoNetworkType)this.cbbAutoNetwork.SelectedValue;
+            this.txtDcomNetworkName.Enabled = (networkType == AutoNetworkType.Dcom);
         }
 
         private static void SettingProxies()
@@ -158,13 +189,11 @@ namespace AutoTool
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            _AutoNetworkType = (AutoNetworkType)this.cbbAutoNetwork.SelectedValue;
             IEmulatorFunc emulatorFunc = GetEmulatorFunc();
-            GlobalVar.UseProxy = this.cbUseProxy.Checked;
-            GlobalVar.UseMailServer = this.cbUseMailServer.Checked;
-            //if ()
             try
             {
-                if (GlobalVar.UseProxy)
+                if (AutoNetworkType.Proxy == (AutoNetworkType)this.cbbAutoNetwork.SelectedValue)
                 {
                     SettingProxies();
                     if (GlobalVar.Proxies == null || GlobalVar.Proxies.Length <= 0)
@@ -173,7 +202,7 @@ namespace AutoTool
                         return;
                     }
                 }
-                if (GlobalVar.UseMailServer)
+                if (this.cbUseMailServer.Checked)
                 {
                     var lstEmails = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.EmailsPath);
                     GlobalVar.Emails = lstEmails;
@@ -193,6 +222,10 @@ namespace AutoTool
 
                 if (_numberOfThread > 0)
                 {
+                    if (AutoNetworkType.Dcom == (AutoNetworkType)this.cbbAutoNetwork.SelectedValue)
+                    {
+                        _numberOfThread = 1;
+                    }
                     _regFbIsRunning = true;
                     _SetStartUI();
 
@@ -247,8 +280,10 @@ namespace AutoTool
             this.rbUseLDPLayer.Enabled = false;
             this.rbUseMEmu.Enabled = false;
             this.txtOutputDirectory.Enabled = false;
-            this.cbUseProxy.Enabled = false;
+            //this.cbUseProxy.Enabled = false;
             this.cbUseMailServer.Enabled = false;
+            this.cbbAutoNetwork.Enabled = false;
+            this.txtDcomNetworkName.Enabled = false;
             this.lblStatus.Text = "Running with " + _numberOfThread + " threads";
         }
 
@@ -263,9 +298,13 @@ namespace AutoTool
             this.rbUseLDPLayer.Enabled = true;
             this.rbUseMEmu.Enabled = true;
             this.txtOutputDirectory.Enabled = true;
-            this.cbUseProxy.Enabled = true;
+            //this.cbUseProxy.Enabled = true;
             this.cbUseMailServer.Enabled = true;
+            this.cbbAutoNetwork.Enabled = true;
+            var networkType = (AutoNetworkType)this.cbbAutoNetwork.SelectedValue;
+            this.txtDcomNetworkName.Enabled = (networkType == AutoNetworkType.Dcom);
             this.lblStatus.Text = "Stopped";
+            this.lblIpAddress.Text = DcomChanger.GetIP(true);
         }
 
         private void AbortRegisFbThreads()
@@ -282,19 +321,35 @@ namespace AutoTool
         {
             // Dcom Changer
             string ipAddress = string.Empty;
-            //while (true)
-            //{
-            //    if (DcomChanger.ChangeIP("Mobifone", out ipAddress))
-            //    {
-            //        break;
-            //    }
-            //}
-            var userSetting = new UserSetting();
-            userSetting.HideChrome = this.cbHideChrome.Checked;
-            userSetting.Minimize = this.cbMinimizeChrome.Checked;
+            this.Invoke(new Action(() =>
+            {
+                this.lblIpAddress.Text = "Changing..";
+            }));
+
+            while (true)
+            {
+                if (DcomChanger.ChangeIP("Viettel", out ipAddress))
+                {
+                    this.Invoke(new Action<string>((ip) =>
+                    {
+                        this.lblIpAddress.Text = ip;
+                    }), ipAddress);
+                    break;
+                }
+            }
+            var regFbConfig = new RegFbConfig();
+            regFbConfig.HideChrome = this.cbHideChrome.Checked;
+            regFbConfig.MinimizeChrome = this.cbMinimizeChrome.Checked;
+            regFbConfig.RegFbNetworkType = _AutoNetworkType;
+            regFbConfig.UseEmailServer = this.cbUseMailServer.Checked;
+            regFbConfig.Turn2FaOn = this.cbTurn2faOn.Checked;
+            if (this.rbUseMEmu.Checked)
+                regFbConfig.RegType = RegFbType.REG_WITH_MEMU;
+            else
+                regFbConfig.RegType = RegFbType.REG_WITH_LDPLAYER;
 
             // Get proxy
-            if (GlobalVar.UseProxy)
+            if (AutoNetworkType.Proxy == regFbConfig.RegFbNetworkType)
             {
                 string proxy = string.Empty;
                 lock (proxiesLock)
@@ -306,7 +361,7 @@ namespace AutoTool
                 device.Proxy = proxy;
             }
 
-            var regClone = new RegFb(device, new RegFb.LogTrace(LogTrace), userSetting, RegFbType.REG_WITH_LDPLAYER);
+            var regClone = new RegFb(device, new RegFb.LogTrace(LogTrace), regFbConfig);
             try
             {
                 regClone.LogStepTrace("Start register");
@@ -375,9 +430,9 @@ namespace AutoTool
             this.rbUseMEmu.Checked = (int)Settings.Default["RegType"] == 1;
             this.txtOutputDirectory.Text = Settings.Default["OutputDirectory"].ToString();
             this.cbLdRmDevices.Checked = (bool)Settings.Default["LdRmAllDevicesWhenRestore"];
-            this.cbMmRmDevices.Checked = (bool)Settings.Default["MmRmAllDevicesWhenRestore"];
-            this.cbUseProxy.Checked = (bool)Settings.Default["UseProxy"];
-            this.cbUseProxy.Checked = (bool)Settings.Default["UseMailServer"];
+            this.cbUseMailServer.Checked = (bool)Settings.Default["UseMailServer"];
+            this.cbbAutoNetwork.SelectedValue = (AutoNetworkType)(int)Settings.Default["AutoNetworkType"]; ;
+            this.txtDcomNetworkName.Text = (string)Settings.Default["DcomNetworkName"];
             SettingInitialized = true;
         }
 
@@ -395,8 +450,9 @@ namespace AutoTool
             Settings.Default["OutputDirectory"] = this.txtOutputDirectory.Text;
             Settings.Default["LdRmAllDevicesWhenRestore"] = this.cbLdRmDevices.Checked;
             Settings.Default["MmRmAllDevicesWhenRestore"] = this.cbMmRmDevices.Checked;
-            Settings.Default["UseProxy"] = this.cbUseProxy.Checked;
             Settings.Default["UseMailServer"] = this.cbUseMailServer.Checked;
+            Settings.Default["AutoNetworkType"] = (int)(AutoNetworkType)this.cbbAutoNetwork.SelectedValue;
+            Settings.Default["DcomNetworkName"] = this.txtDcomNetworkName.Text;
             Settings.Default.Save();
         }
 
@@ -833,37 +889,8 @@ namespace AutoTool
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GlobalVar.MEmuWorkingDirectory = @"E:\ChangZhi\LDPlayer";
-            this.txtSuccess.Text = new CmdFunc(GlobalVar.LDPlayerWorkingDirectory).RunCMD(string.Format(LDPlayerConsts.LIST_DEVICES));
-            IEmulatorFunc emu = new LDPlayerFunc();
-            EmulatorInfo device = new EmulatorInfo("0", "LDPlayer", DeviceStatus.RUNNING);
-            //var list = emu.RestoreDevice(@"E:\ldplayer\LDPlayer-8.ldbk");
-            var ret = emu.ScreenShot(device, @"E:\screennnn.png");
-            Console.WriteLine(this.txtSuccess.Text);
-            var m = new MEmuFunc();
-            //m.TapNumber(device, new int[] { 2, 5, 1, 0, 1, 9, 7, 3 });
-            //AbortRegisFbThreads();
-        }
-
-        private void RegisFb(int idx)
-        {
-            var fb = new FacebookAccountInfo();
-            fb.Email = "ficeboh599@synevde.com";
-            fb.Passwd = "quocThang12321";
-            var regFb = new RegFb(fb, idx);
-            try
-            {
-                regFb.TurnOn2Fa();
-                this.Invoke((ShowLog)printResult, "name_" + idx);
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex);
-            }
-            finally
-            {
-                regFb.Dispose();
-            }
+            DcomChanger.ChangeIP("Viettel", out var ip);
+            Info(ip);
         }
 
         private void printResult(string result)
@@ -899,30 +926,6 @@ namespace AutoTool
             }
 
             this.dgvListDevices.Refresh();
-        }
-
-        private void tabSetting_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            ServerMail _emailHelper = new ServerMail();
-            var lstEmails = File.ReadAllLines(GlobalVar.OutputDirectory + Constant.EmailsPath);
-            GlobalVar.Emails = lstEmails.Select(x =>
-                                (!string.IsNullOrEmpty(x) && x.Split('|').Length > 1) ? x.Split('|')[0] : string.Empty
-                            ).ToArray();
-            _emailHelper.GetEmailAddress();
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            ServerMail _emailHelper = new ServerMail();
-            _emailHelper.EmailAddress = "buianh0000@phimdoc.online";
-            _emailHelper.EmailPasswd = "quocThang@12321";
-            var code = _emailHelper.GetConfirmationCode();
-            Info(code);
         }
     }
 }

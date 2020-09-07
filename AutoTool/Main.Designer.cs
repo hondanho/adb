@@ -57,10 +57,11 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.tabSetting = new System.Windows.Forms.TabControl();
             this.tbRegFbSetting = new System.Windows.Forms.TabPage();
+            this.txtDcomNetworkName = new System.Windows.Forms.TextBox();
+            this.cbbAutoNetwork = new System.Windows.Forms.ComboBox();
+            this.autoNetworkBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.cbUseMailServer = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.cbUseProxy = new System.Windows.Forms.CheckBox();
-            this.label16 = new System.Windows.Forms.Label();
             this.btnChooseAll = new System.Windows.Forms.Button();
             this.btnReloadDevices = new System.Windows.Forms.Button();
             this.dgvListDevices = new System.Windows.Forms.DataGridView();
@@ -104,12 +105,13 @@
             this.label14 = new System.Windows.Forms.Label();
             this.txtRegisterLogs = new System.Windows.Forms.TextBox();
             this.gbSetting = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.lblIpAddress = new System.Windows.Forms.Label();
+            this.emulatorInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nudThreadNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoMEmuDevices)).BeginInit();
             this.tabSetting.SuspendLayout();
             this.tbRegFbSetting.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.autoNetworkBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).BeginInit();
             this.tpLDPlayerSetting.SuspendLayout();
@@ -117,13 +119,14 @@
             this.tpMEmuSetting.SuspendLayout();
             this.tbLogs.SuspendLayout();
             this.gbSetting.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
             // 
             this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.btnStart.Location = new System.Drawing.Point(10, 333);
+            this.btnStart.Location = new System.Drawing.Point(12, 366);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(130, 46);
@@ -145,7 +148,7 @@
             // btnResetSetting
             // 
             this.btnResetSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnResetSetting.Location = new System.Drawing.Point(774, 275);
+            this.btnResetSetting.Location = new System.Drawing.Point(772, 314);
             this.btnResetSetting.Name = "btnResetSetting";
             this.btnResetSetting.Size = new System.Drawing.Size(129, 28);
             this.btnResetSetting.TabIndex = 15;
@@ -157,7 +160,7 @@
             // 
             this.btnSaveSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSaveSetting.Enabled = false;
-            this.btnSaveSetting.Location = new System.Drawing.Point(677, 275);
+            this.btnSaveSetting.Location = new System.Drawing.Point(675, 314);
             this.btnSaveSetting.Name = "btnSaveSetting";
             this.btnSaveSetting.Size = new System.Drawing.Size(91, 28);
             this.btnSaveSetting.TabIndex = 14;
@@ -189,7 +192,7 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(114, 276);
+            this.button2.Location = new System.Drawing.Point(113, 315);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(84, 26);
             this.button2.TabIndex = 11;
@@ -200,7 +203,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(10, 276);
+            this.button1.Location = new System.Drawing.Point(9, 315);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(84, 26);
             this.button1.TabIndex = 10;
@@ -319,7 +322,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(7, 393);
+            this.label5.Location = new System.Drawing.Point(7, 421);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(119, 15);
@@ -332,13 +335,13 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.txtSuccess.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.txtSuccess.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSuccess.Location = new System.Drawing.Point(10, 416);
+            this.txtSuccess.Location = new System.Drawing.Point(10, 440);
             this.txtSuccess.Margin = new System.Windows.Forms.Padding(4);
             this.txtSuccess.Multiline = true;
             this.txtSuccess.Name = "txtSuccess";
             this.txtSuccess.ReadOnly = true;
             this.txtSuccess.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtSuccess.Size = new System.Drawing.Size(450, 263);
+            this.txtSuccess.Size = new System.Drawing.Size(450, 234);
             this.txtSuccess.TabIndex = 6;
             this.txtSuccess.WordWrap = false;
             // 
@@ -348,13 +351,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFail.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.txtFail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFail.Location = new System.Drawing.Point(468, 416);
+            this.txtFail.Location = new System.Drawing.Point(467, 440);
             this.txtFail.Margin = new System.Windows.Forms.Padding(4);
             this.txtFail.Multiline = true;
             this.txtFail.Name = "txtFail";
             this.txtFail.ReadOnly = true;
             this.txtFail.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtFail.Size = new System.Drawing.Size(450, 263);
+            this.txtFail.Size = new System.Drawing.Size(450, 234);
             this.txtFail.TabIndex = 7;
             this.txtFail.WordWrap = false;
             // 
@@ -363,7 +366,7 @@
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(465, 393);
+            this.label6.Location = new System.Drawing.Point(464, 421);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(93, 15);
@@ -408,7 +411,7 @@
             this.btnStop.Enabled = false;
             this.btnStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStop.ForeColor = System.Drawing.Color.Red;
-            this.btnStop.Location = new System.Drawing.Point(150, 333);
+            this.btnStop.Location = new System.Drawing.Point(152, 366);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(130, 46);
@@ -419,10 +422,11 @@
             // 
             // lblStatus
             // 
+            this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.Location = new System.Drawing.Point(288, 346);
+            this.lblStatus.Location = new System.Drawing.Point(290, 371);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(423, 26);
+            this.lblStatus.Size = new System.Drawing.Size(54, 15);
             this.lblStatus.TabIndex = 10;
             this.lblStatus.Text = "lblStatus";
             // 
@@ -437,16 +441,15 @@
             this.tabSetting.Location = new System.Drawing.Point(7, 23);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.SelectedIndex = 0;
-            this.tabSetting.Size = new System.Drawing.Size(896, 245);
+            this.tabSetting.Size = new System.Drawing.Size(895, 275);
             this.tabSetting.TabIndex = 11;
-            this.tabSetting.SelectedIndexChanged += new System.EventHandler(this.tabSetting_SelectedIndexChanged);
             // 
             // tbRegFbSetting
             // 
+            this.tbRegFbSetting.Controls.Add(this.txtDcomNetworkName);
+            this.tbRegFbSetting.Controls.Add(this.cbbAutoNetwork);
             this.tbRegFbSetting.Controls.Add(this.cbUseMailServer);
             this.tbRegFbSetting.Controls.Add(this.label17);
-            this.tbRegFbSetting.Controls.Add(this.cbUseProxy);
-            this.tbRegFbSetting.Controls.Add(this.label16);
             this.tbRegFbSetting.Controls.Add(this.btnChooseAll);
             this.tbRegFbSetting.Controls.Add(this.btnReloadDevices);
             this.tbRegFbSetting.Controls.Add(this.dgvListDevices);
@@ -473,17 +476,43 @@
             this.tbRegFbSetting.Location = new System.Drawing.Point(4, 24);
             this.tbRegFbSetting.Name = "tbRegFbSetting";
             this.tbRegFbSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tbRegFbSetting.Size = new System.Drawing.Size(888, 217);
+            this.tbRegFbSetting.Size = new System.Drawing.Size(887, 247);
             this.tbRegFbSetting.TabIndex = 0;
             this.tbRegFbSetting.Text = "Cài đặt Reg Facebook";
             this.tbRegFbSetting.UseVisualStyleBackColor = true;
+            // 
+            // txtDcomNetworkName
+            // 
+            this.txtDcomNetworkName.Location = new System.Drawing.Point(132, 129);
+            this.txtDcomNetworkName.Name = "txtDcomNetworkName";
+            this.txtDcomNetworkName.Size = new System.Drawing.Size(129, 21);
+            this.txtDcomNetworkName.TabIndex = 38;
+            this.txtDcomNetworkName.TextChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // cbbAutoNetwork
+            // 
+            this.cbbAutoNetwork.DataSource = this.autoNetworkBindingSource;
+            this.cbbAutoNetwork.DisplayMember = "Name";
+            this.cbbAutoNetwork.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbAutoNetwork.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cbbAutoNetwork.FormattingEnabled = true;
+            this.cbbAutoNetwork.Location = new System.Drawing.Point(10, 127);
+            this.cbbAutoNetwork.Name = "cbbAutoNetwork";
+            this.cbbAutoNetwork.Size = new System.Drawing.Size(111, 23);
+            this.cbbAutoNetwork.TabIndex = 37;
+            this.cbbAutoNetwork.ValueMember = "Type";
+            this.cbbAutoNetwork.SelectedIndexChanged += new System.EventHandler(this.SettingValueChanged);
+            // 
+            // autoNetworkBindingSource
+            // 
+            this.autoNetworkBindingSource.DataSource = typeof(AutoTool.Models.AutoNetwork);
             // 
             // cbUseMailServer
             // 
             this.cbUseMailServer.AutoSize = true;
             this.cbUseMailServer.Checked = true;
             this.cbUseMailServer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbUseMailServer.Location = new System.Drawing.Point(232, 125);
+            this.cbUseMailServer.Location = new System.Drawing.Point(132, 163);
             this.cbUseMailServer.Name = "cbUseMailServer";
             this.cbUseMailServer.Size = new System.Drawing.Size(15, 14);
             this.cbUseMailServer.TabIndex = 36;
@@ -493,35 +522,16 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(130, 124);
+            this.label17.Location = new System.Drawing.Point(7, 162);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(103, 15);
             this.label17.TabIndex = 35;
             this.label17.Text = "Dùng mail server ";
             // 
-            // cbUseProxy
-            // 
-            this.cbUseProxy.AutoSize = true;
-            this.cbUseProxy.Location = new System.Drawing.Point(50, 125);
-            this.cbUseProxy.Name = "cbUseProxy";
-            this.cbUseProxy.Size = new System.Drawing.Size(15, 14);
-            this.cbUseProxy.TabIndex = 34;
-            this.cbUseProxy.UseVisualStyleBackColor = true;
-            this.cbUseProxy.CheckedChanged += new System.EventHandler(this.SettingValueChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 124);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(37, 15);
-            this.label16.TabIndex = 33;
-            this.label16.Text = "Proxy";
-            // 
             // btnChooseAll
             // 
             this.btnChooseAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChooseAll.Location = new System.Drawing.Point(403, 2);
+            this.btnChooseAll.Location = new System.Drawing.Point(402, 2);
             this.btnChooseAll.Name = "btnChooseAll";
             this.btnChooseAll.Size = new System.Drawing.Size(117, 23);
             this.btnChooseAll.TabIndex = 32;
@@ -532,7 +542,7 @@
             // btnReloadDevices
             // 
             this.btnReloadDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReloadDevices.Location = new System.Drawing.Point(280, 2);
+            this.btnReloadDevices.Location = new System.Drawing.Point(279, 2);
             this.btnReloadDevices.Name = "btnReloadDevices";
             this.btnReloadDevices.Size = new System.Drawing.Size(117, 23);
             this.btnReloadDevices.TabIndex = 31;
@@ -555,13 +565,13 @@
             this.configDataGridViewTextBoxColumn,
             this.proxyDataGridViewTextBoxColumn});
             this.dgvListDevices.DataSource = this.emulatorInfoBindingSource;
-            this.dgvListDevices.Location = new System.Drawing.Point(280, 27);
+            this.dgvListDevices.Location = new System.Drawing.Point(279, 27);
             this.dgvListDevices.Name = "dgvListDevices";
             this.dgvListDevices.RowHeadersVisible = false;
             this.dgvListDevices.RowHeadersWidth = 51;
             this.dgvListDevices.RowTemplate.Height = 24;
             this.dgvListDevices.ShowEditingIcon = false;
-            this.dgvListDevices.Size = new System.Drawing.Size(240, 184);
+            this.dgvListDevices.Size = new System.Drawing.Size(240, 214);
             this.dgvListDevices.TabIndex = 30;
             // 
             // indexDataGridViewTextBoxColumn
@@ -632,7 +642,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(5, 177);
+            this.label15.Location = new System.Drawing.Point(7, 220);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(43, 15);
             this.label15.TabIndex = 29;
@@ -641,7 +651,7 @@
             // txtOutputDirectory
             // 
             this.txtOutputDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputDirectory.Location = new System.Drawing.Point(64, 174);
+            this.txtOutputDirectory.Location = new System.Drawing.Point(66, 217);
             this.txtOutputDirectory.Margin = new System.Windows.Forms.Padding(4);
             this.txtOutputDirectory.Name = "txtOutputDirectory";
             this.txtOutputDirectory.ReadOnly = true;
@@ -654,7 +664,7 @@
             // rbUseMEmu
             // 
             this.rbUseMEmu.AutoSize = true;
-            this.rbUseMEmu.Location = new System.Drawing.Point(132, 145);
+            this.rbUseMEmu.Location = new System.Drawing.Point(132, 190);
             this.rbUseMEmu.Name = "rbUseMEmu";
             this.rbUseMEmu.Size = new System.Drawing.Size(85, 19);
             this.rbUseMEmu.TabIndex = 27;
@@ -666,7 +676,7 @@
             // 
             this.rbUseLDPLayer.AutoSize = true;
             this.rbUseLDPLayer.Checked = true;
-            this.rbUseLDPLayer.Location = new System.Drawing.Point(10, 145);
+            this.rbUseLDPLayer.Location = new System.Drawing.Point(10, 190);
             this.rbUseLDPLayer.Name = "rbUseLDPLayer";
             this.rbUseLDPLayer.Size = new System.Drawing.Size(75, 19);
             this.rbUseLDPLayer.TabIndex = 26;
@@ -678,7 +688,7 @@
             // btnRemoveLastName
             // 
             this.btnRemoveLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemoveLastName.Location = new System.Drawing.Point(851, 2);
+            this.btnRemoveLastName.Location = new System.Drawing.Point(850, 2);
             this.btnRemoveLastName.Name = "btnRemoveLastName";
             this.btnRemoveLastName.Size = new System.Drawing.Size(32, 23);
             this.btnRemoveLastName.TabIndex = 25;
@@ -689,7 +699,7 @@
             // btnAddLastName
             // 
             this.btnAddLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddLastName.Location = new System.Drawing.Point(819, 2);
+            this.btnAddLastName.Location = new System.Drawing.Point(818, 2);
             this.btnAddLastName.Name = "btnAddLastName";
             this.btnAddLastName.Size = new System.Drawing.Size(32, 23);
             this.btnAddLastName.TabIndex = 24;
@@ -700,7 +710,7 @@
             // txtLastName
             // 
             this.txtLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtLastName.Location = new System.Drawing.Point(707, 3);
+            this.txtLastName.Location = new System.Drawing.Point(706, 3);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(109, 21);
             this.txtLastName.TabIndex = 23;
@@ -710,15 +720,15 @@
             this.lbLastName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbLastName.FormattingEnabled = true;
             this.lbLastName.ItemHeight = 15;
-            this.lbLastName.Location = new System.Drawing.Point(707, 27);
+            this.lbLastName.Location = new System.Drawing.Point(706, 27);
             this.lbLastName.Name = "lbLastName";
-            this.lbLastName.Size = new System.Drawing.Size(175, 184);
+            this.lbLastName.Size = new System.Drawing.Size(175, 214);
             this.lbLastName.TabIndex = 22;
             // 
             // btnRemoveFirstName
             // 
             this.btnRemoveFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemoveFirstName.Location = new System.Drawing.Point(670, 2);
+            this.btnRemoveFirstName.Location = new System.Drawing.Point(669, 2);
             this.btnRemoveFirstName.Name = "btnRemoveFirstName";
             this.btnRemoveFirstName.Size = new System.Drawing.Size(32, 23);
             this.btnRemoveFirstName.TabIndex = 21;
@@ -729,7 +739,7 @@
             // btnAddFirstName
             // 
             this.btnAddFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddFirstName.Location = new System.Drawing.Point(638, 2);
+            this.btnAddFirstName.Location = new System.Drawing.Point(637, 2);
             this.btnAddFirstName.Name = "btnAddFirstName";
             this.btnAddFirstName.Size = new System.Drawing.Size(32, 23);
             this.btnAddFirstName.TabIndex = 20;
@@ -740,7 +750,7 @@
             // txtFirstName
             // 
             this.txtFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFirstName.Location = new System.Drawing.Point(526, 3);
+            this.txtFirstName.Location = new System.Drawing.Point(525, 3);
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.Size = new System.Drawing.Size(109, 21);
             this.txtFirstName.TabIndex = 19;
@@ -750,9 +760,9 @@
             this.lbFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbFirstName.FormattingEnabled = true;
             this.lbFirstName.ItemHeight = 15;
-            this.lbFirstName.Location = new System.Drawing.Point(526, 27);
+            this.lbFirstName.Location = new System.Drawing.Point(525, 27);
             this.lbFirstName.Name = "lbFirstName";
-            this.lbFirstName.Size = new System.Drawing.Size(175, 184);
+            this.lbFirstName.Size = new System.Drawing.Size(175, 214);
             this.lbFirstName.TabIndex = 18;
             // 
             // cbMinimizeChrome
@@ -807,7 +817,7 @@
             this.tpLDPlayerSetting.Location = new System.Drawing.Point(4, 24);
             this.tpLDPlayerSetting.Name = "tpLDPlayerSetting";
             this.tpLDPlayerSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tpLDPlayerSetting.Size = new System.Drawing.Size(888, 217);
+            this.tpLDPlayerSetting.Size = new System.Drawing.Size(888, 247);
             this.tpLDPlayerSetting.TabIndex = 1;
             this.tpLDPlayerSetting.Text = "Cài đặt LDPlayer";
             this.tpLDPlayerSetting.UseVisualStyleBackColor = true;
@@ -943,7 +953,7 @@
             this.tpMEmuSetting.Location = new System.Drawing.Point(4, 24);
             this.tpMEmuSetting.Name = "tpMEmuSetting";
             this.tpMEmuSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.tpMEmuSetting.Size = new System.Drawing.Size(888, 217);
+            this.tpMEmuSetting.Size = new System.Drawing.Size(888, 247);
             this.tpMEmuSetting.TabIndex = 2;
             this.tpMEmuSetting.Text = "Cài đặt MEmu";
             this.tpMEmuSetting.UseVisualStyleBackColor = true;
@@ -968,7 +978,7 @@
             this.tbLogs.Location = new System.Drawing.Point(4, 24);
             this.tbLogs.Name = "tbLogs";
             this.tbLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tbLogs.Size = new System.Drawing.Size(888, 217);
+            this.tbLogs.Size = new System.Drawing.Size(888, 247);
             this.tbLogs.TabIndex = 3;
             this.tbLogs.Text = "Logs";
             this.tbLogs.UseVisualStyleBackColor = true;
@@ -1004,8 +1014,6 @@
             // 
             this.gbSetting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbSetting.Controls.Add(this.button4);
-            this.gbSetting.Controls.Add(this.button3);
             this.gbSetting.Controls.Add(this.tabSetting);
             this.gbSetting.Controls.Add(this.btnResetSetting);
             this.gbSetting.Controls.Add(this.btnSaveSetting);
@@ -1013,38 +1021,31 @@
             this.gbSetting.Controls.Add(this.button2);
             this.gbSetting.Location = new System.Drawing.Point(10, 7);
             this.gbSetting.Name = "gbSetting";
-            this.gbSetting.Size = new System.Drawing.Size(909, 317);
+            this.gbSetting.Size = new System.Drawing.Size(908, 352);
             this.gbSetting.TabIndex = 16;
             this.gbSetting.TabStop = false;
             this.gbSetting.Text = "Cặt đặt";
             // 
-            // button4
+            // lblIpAddress
             // 
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(324, 275);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(94, 26);
-            this.button4.TabIndex = 17;
-            this.button4.Text = "get code mail";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.lblIpAddress.AutoSize = true;
+            this.lblIpAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIpAddress.Location = new System.Drawing.Point(289, 393);
+            this.lblIpAddress.Name = "lblIpAddress";
+            this.lblIpAddress.Size = new System.Drawing.Size(74, 15);
+            this.lblIpAddress.TabIndex = 17;
+            this.lblIpAddress.Text = "lblIpAddress";
             // 
-            // button3
+            // emulatorInfoBindingSource1
             // 
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(228, 276);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(84, 26);
-            this.button3.TabIndex = 16;
-            this.button3.Text = "get email";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.emulatorInfoBindingSource1.DataSource = typeof(AutoTool.Models.EmulatorInfo);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(925, 691);
+            this.ClientSize = new System.Drawing.Size(924, 686);
+            this.Controls.Add(this.lblIpAddress);
             this.Controls.Add(this.gbSetting);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnStop);
@@ -1057,6 +1058,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(940, 725);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Register Facebook Account";
@@ -1066,6 +1068,7 @@
             this.tabSetting.ResumeLayout(false);
             this.tbRegFbSetting.ResumeLayout(false);
             this.tbRegFbSetting.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.autoNetworkBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvListDevices)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource)).EndInit();
             this.tpLDPlayerSetting.ResumeLayout(false);
@@ -1076,6 +1079,7 @@
             this.tbLogs.ResumeLayout(false);
             this.tbLogs.PerformLayout();
             this.gbSetting.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.emulatorInfoBindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1144,8 +1148,6 @@
         private System.Windows.Forms.Button btnChooseAll;
         private System.Windows.Forms.CheckBox cbLdRmDevices;
         private System.Windows.Forms.CheckBox cbMmRmDevices;
-        private System.Windows.Forms.CheckBox cbUseProxy;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.DataGridViewTextBoxColumn indexDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn chooseDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
@@ -1155,7 +1157,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn proxyDataGridViewTextBoxColumn;
         private System.Windows.Forms.CheckBox cbUseMailServer;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label lblIpAddress;
+        private System.Windows.Forms.ComboBox cbbAutoNetwork;
+        private System.Windows.Forms.BindingSource emulatorInfoBindingSource1;
+        private System.Windows.Forms.BindingSource autoNetworkBindingSource;
+        private System.Windows.Forms.TextBox txtDcomNetworkName;
     }
 }

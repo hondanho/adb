@@ -44,5 +44,11 @@
     <Setting Name="UseMailServer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="AutoNetworkType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="DcomNetworkName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Viettel</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

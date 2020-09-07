@@ -190,5 +190,29 @@ namespace AutoTool.Properties {
                 this["UseMailServer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int AutoNetworkType {
+            get {
+                return ((int)(this["AutoNetworkType"]));
+            }
+            set {
+                this["AutoNetworkType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Viettel")]
+        public string DcomNetworkName {
+            get {
+                return ((string)(this["DcomNetworkName"]));
+            }
+            set {
+                this["DcomNetworkName"] = value;
+            }
+        }
     }
 }

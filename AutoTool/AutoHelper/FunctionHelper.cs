@@ -175,7 +175,7 @@ namespace AutoTool
             return totp.ComputeTotp();
         }
 
-        public static ChromeDriver InitWebDriver(UserSetting userSetting, int idx = 1, string proxy = null)
+        public static ChromeDriver InitWebDriver(RegFbConfig userSetting, int idx = 1, string proxy = null)
         {
             var workingArea = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
             var width = workingArea.Width;
@@ -217,7 +217,7 @@ namespace AutoTool
             chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
             chromeOptions.AddUserProfilePreference("credentials_enable_service", true);
             var chromDriver = new ChromeDriver(service, chromeOptions);
-            if (userSetting.Minimize)
+            if (userSetting.MinimizeChrome)
             {
                 chromDriver.Manage().Window.Minimize();
             }

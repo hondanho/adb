@@ -79,6 +79,7 @@
     <Compile Include="AutoMethods\MEmuFunc.cs" />
     <Compile Include="Constants\AdbConstants.cs" />
     <Compile Include="Constants\LDPlayerConsts.cs" />
+    <Compile Include="Models\AutoNetworkType.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\FbGender.cs" />
     <Compile Include="Models\FbRegResult.cs" />
@@ -96,8 +97,9 @@
     <Compile Include="Models\FbRegStatus.cs" />
     <Compile Include="Models\GlobalVar.cs" />
     <Compile Include="Models\EmulatorConfig.cs" />
+    <Compile Include="Models\AutoNetwork.cs" />
     <Compile Include="Models\RegFbType.cs" />
-    <Compile Include="Models\UserSetting.cs" />
+    <Compile Include="Models\RegFbConfig.cs" />
     <Compile Include="Models\WaitingData.cs" />
     <Compile Include="Network\DcomChanger.cs" />
     <Compile Include="Program.cs" />
@@ -115,6 +117,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Properties\DataSources\AutoTool.Models.AutoNetwork.datasource" />
     <None Include="Properties\DataSources\AutoTool.Models.EmulatorInfo.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

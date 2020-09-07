@@ -91,6 +91,7 @@ namespace AutoTool.AutoMethods
 
         private string _standardizeText(string text)
         {
+            if (string.IsNullOrEmpty(text)) return text;
             return text.Replace(" ", "%s").Replace("&", "\\&").Replace("<", "\\<")
                 .Replace(">", "\\>")
                 .Replace("?", "\\?")

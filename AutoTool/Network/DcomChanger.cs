@@ -1,4 +1,5 @@
 ﻿using AutoTool.AutoMethods;
+using AutoTool.Models;
 using log4net;
 using System;
 using System.IO;
@@ -13,7 +14,7 @@ namespace AutoTool.Network
         private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static bool CheckDuplicateIp = true;
-        private static bool CheckBlackList = true;
+        private static bool CheckBlackList = false;
 
         public static string RunCMD(string cmd)
         {
@@ -65,17 +66,19 @@ namespace AutoTool.Network
             return false;
         }
 
-        private static string GetIP()
+        public static string GetIP(bool GetIpOnly = false)
         {
             string ipAddress;
             string output = RunCMD("nslookup myip.opendns.com. resolver1.opendns.com");
             var ip = Regex.Matches(output, @"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b");
             if (ip.Count == 2)
             {
-                if (CheckDuplicateIp)
-                if (isDuplicate(ip[1].Value))
+                if (!GetIpOnly && CheckDuplicateIp)
                 {
-                    return null;
+                    if (isDuplicate(ip[1].Value))
+                    {
+                        return null;
+                    }
                 }
                 ipAddress = ip[1].Value;
             }
@@ -84,17 +87,19 @@ namespace AutoTool.Network
                 LogError("Get ip error");
                 return null;
             }
-            if (CheckBlackList)
+
+            if (!GetIpOnly && CheckBlackList)
             {
+                var ipBlackListPath = GlobalVar.OutputDirectory + Constant.DcomIpBlackListPath;
                 // check blacklist
                 if (IsBlacklist(ip[1].Value.Trim()))
                 {
-                    File.AppendAllText("Blacklist.txt", DateTime.Now.ToString("dd/MM HH:mm:ss") + "\t" + ip[1] + Environment.NewLine);
+                    File.AppendAllText(ipBlackListPath, DateTime.Now.ToString("dd/MM HH:mm:ss") + "\t" + ip[1] + Environment.NewLine);
                     return null;
                 }
                 //if (isWhoerBlacklist())
                 //{
-                //    File.AppendAllText("Blacklist.txt", DateTime.Now.ToString("dd/MM HH:mm:ss") + "\t" + ip[1] + Environment.NewLine);
+                //    File.AppendAllText(ipBlackListPath, DateTime.Now.ToString("dd/MM HH:mm:ss") + "\t" + ip[1] + Environment.NewLine);
                 //    return null;
                 //}
             }
@@ -103,11 +108,12 @@ namespace AutoTool.Network
 
         private static bool isDuplicate(string ip)
         {
-            if (File.ReadAllText("ip.txt").Contains(ip))
+            var ipPath = GlobalVar.OutputDirectory + Constant.DcomIpPath;
+            if (File.ReadAllText(ipPath).Contains(ip))
             {
                 return true;
             }
-            File.AppendAllText("ip.txt", ip + Environment.NewLine);
+            File.AppendAllText(ipPath, ip + Environment.NewLine);
             return false;
         }
 
